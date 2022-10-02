@@ -1,0 +1,66 @@
+# 调试模式
+debug: true
+# 服务器端口
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+  # 数据源
+  datasource:
+    druid:
+      # JDBC 配置
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      # WebStatFilter 配置
+      web-stat-filter:
+        enabled: true
+        url-pattern: /druid/*
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+      # StatViewServlet 配置
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+      filter:
+        stat: # StatFilter 配置
+          enabled: true
+          log-slow-sql: true # 慢查询记录
+          slow-sql-millis: 1000
+        wall:
+          enabled: true # WallFilter 配置
+      aop-patterns: top.pdev.*
+      filters: stat,wall
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+  mvc:
+    # 404 抛出异常
+    throw-exception-if-no-handler-found: true
+    # 静态资源前缀
+    static-path-pattern: /resources/**
+    contentnegotiation:
+      favor-parameter: true
+  # jackson
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+    locale: zh
+mybatis-plus:
+  configuration:
+    # 开启下划线转驼峰
+    map-underscore-to-camel-case: true
+  global-config:
+    db-config:
+      logic-delete-field: flag  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
