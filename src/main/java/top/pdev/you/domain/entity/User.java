@@ -15,8 +15,10 @@ import top.pdev.you.domain.entity.types.UserId;
 public class User extends BaseEntity {
     private UserId userId;
     private String token;
+    private Integer permission;
 
     public User(UserDO userDO) {
         this.userId = new UserId(userDO.getId());
+        this.permission = userDO.getPermission();
     }
 }

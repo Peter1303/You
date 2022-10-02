@@ -33,9 +33,9 @@ public class UserDO {
     private Long targetId;
 
     /**
-     * 角色
+     * 权限
      */
-    private Integer role;
+    private Integer permission;
 
     /**
      * 令牌
