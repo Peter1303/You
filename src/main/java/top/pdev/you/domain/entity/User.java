@@ -2,6 +2,8 @@ package top.pdev.you.domain.entity;
 
 import lombok.Data;
 import top.pdev.you.domain.entity.base.BaseEntity;
+import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.entity.types.UserId;
 
 /**
  * 用户领域
@@ -11,4 +13,10 @@ import top.pdev.you.domain.entity.base.BaseEntity;
  */
 @Data
 public class User extends BaseEntity {
+    private UserId userId;
+    private String token;
+
+    public User(UserDO userDO) {
+        this.userId = new UserId(userDO.getId());
+    }
 }
