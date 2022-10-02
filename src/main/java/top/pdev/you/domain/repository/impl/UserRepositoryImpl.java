@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.UserRepository;
 
@@ -23,6 +24,18 @@ public class UserRepositoryImpl
         implements UserRepository {
     @Resource
     private UserMapper mapper;
+
+    @Override
+    public User find(UserId userId) {
+        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDO::getId, userId.getId());
+        UserDO userDO = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(userDO).isPresent()) {
+            return null;
+        }
+        // TODO cache
+        return new User(userDO);
+    }
 
     @Override
     public User findByToken(String token) {
