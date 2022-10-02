@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import top.pdev.you.common.constant.Constants;
+import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.infrastructure.util.SpringEnvHelper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -21,14 +21,14 @@ import java.util.HashMap;
 public class Result<E> implements Serializable {
     private static final String DEV = "dev";
     /**
-     * 结果代码枚举
+     * 结果代码
      */
-    private ResultCode code;
+    private Integer code;
     /**
      * 统一返回结果
      */
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Object data = new ArrayList<>();
+    private Object data;
     /**
      * 消息
      */
@@ -44,12 +44,12 @@ public class Result<E> implements Serializable {
 
     /**
      * 默认没有 data 的结果
-     * <p>Example: {"code":200, "data": []}</p>
+     * <p>Example: {"code":200}</p>
      *
      * @param code 代码
      */
     public Result(ResultCode code) {
-        this.code = code;
+        this.code = code.getCode();
         // 错误代码有消息
         if (StrUtil.isNotBlank(code.getMessage())) {
             this.message = code.getMessage();
@@ -63,13 +63,12 @@ public class Result<E> implements Serializable {
      * @param data 数据
      */
     public Result(ResultCode code, Object data) {
-        this.code = code;
+        this.code = code.getCode();
         this.data = data;
     }
 
     /**
      * 默认的返回结果
-     * <p>Example: {"code":200, "data": []}</p>
      *
      * @return 结果
      */
@@ -89,7 +88,6 @@ public class Result<E> implements Serializable {
 
     /**
      * 失败结果
-     * <p>Example: {"code":10000, "data": []}</p>
      *
      * @param code 失败代码
      * @return 结果
@@ -100,7 +98,6 @@ public class Result<E> implements Serializable {
 
     /**
      * 默认失败结果
-     * <p>Example: {"code":10000, "data": []}</p>
      *
      * @return 结果
      */
@@ -110,7 +107,6 @@ public class Result<E> implements Serializable {
 
     /**
      * 默认的系统错误结果
-     * <p>Example: {"code":10000, "data": []}</p>
      *
      * @return 结果
      */
@@ -120,7 +116,6 @@ public class Result<E> implements Serializable {
 
     /**
      * 系统默认带有错误结果
-     * <p>Example: {"code":10000, "data": ["error": {}]}</p>
      *
      * @param ex 异常
      * @return 结果
@@ -131,7 +126,6 @@ public class Result<E> implements Serializable {
 
     /**
      * 系统错误结果
-     * <p>Example: {"code":10000, "data": ["error": {}]}</p>
      *
      * @param ex 异常
      * @return 结果
@@ -186,39 +180,14 @@ public class Result<E> implements Serializable {
      */
     @SuppressWarnings("unchecked")
     public Result<E> put(String tag, Object value) {
-        // 如果是默认的数据
-        if (data instanceof ArrayList) {
-            // 释放
-            ((ArrayList<?>) data).clear();
-            data = new HashMap<>(16);
+        if (data == null) {
+            data = new HashMap<>(1);
         }
-        ((HashMap<String, Object>) data).put(tag, value);
-        return this;
-    }
-
-    /**
-     * 添加数据进入数列
-     * <p>不可以同时和 put 使用</p>
-     *
-     * @param value 数据
-     * @return 实例
-     */
-    @SuppressWarnings("unchecked")
-    public Result<E> add(Object value) {
-        // 没有使用 put 才允许
-        if (data instanceof ArrayList) {
-            ((ArrayList<Object>) data).add(value);
+        if (data instanceof HashMap) {
+            ((HashMap<String, Object>) data).put(tag, value);
+        } else {
+            throw new InternalErrorException("已经有 VO 数据");
         }
         return this;
-    }
-
-    /**
-     * 获取代码
-     * <p>Example: 200</p>
-     *
-     * @return 代码
-     */
-    public int getCode() {
-        return code.getCode();
     }
 }
