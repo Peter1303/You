@@ -38,6 +38,11 @@ public class UserDO {
     private Integer role;
 
     /**
+     * 令牌
+     */
+    private String token;
+
+    /**
      * 时间
      */
     private LocalDateTime time;
