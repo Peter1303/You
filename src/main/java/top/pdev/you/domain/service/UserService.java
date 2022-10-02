@@ -17,4 +17,12 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> login(UserLoginVO vo);
+
+    /**
+     * 添加超级管理员
+     *
+     * @param vo VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> addSuperAdmin(UserLoginVO vo);
 }

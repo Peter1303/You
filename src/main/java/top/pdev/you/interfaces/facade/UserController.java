@@ -25,6 +25,18 @@ public class UserController {
     private UserService userService;
 
     /**
+     * 初始化
+     *
+     * @param vo VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @SkipCheckLogin
+    @PostMapping("init")
+    public Result<?> init(@RequestBody @Valid UserLoginVO vo) {
+        return userService.addSuperAdmin(vo);
+    }
+
+    /**
      * 登录
      *
      * @param vo VO
