@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class ActivityId {
     private Long id;
+
+    public ActivityId(Long id) {
+        this.id = id;
+    }
 }

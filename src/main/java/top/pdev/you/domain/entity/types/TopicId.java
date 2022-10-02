@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class TopicId {
     private Long id;
+
+    public TopicId(Long id) {
+        this.id = id;
+    }
 }

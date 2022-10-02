@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class WechatId {
     private String id;
+
+    public WechatId(String id) {
+        this.id = id;
+    }
 }

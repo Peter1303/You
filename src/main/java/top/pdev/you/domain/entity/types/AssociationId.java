@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class AssociationId {
     private Long id;
+
+    public AssociationId(Long id) {
+        this.id = id;
+    }
 }

@@ -11,4 +11,8 @@ import lombok.Data;
 @Data
 public class PostId {
     private Long id;
+
+    public PostId(Long id) {
+        this.id = id;
+    }
 }
