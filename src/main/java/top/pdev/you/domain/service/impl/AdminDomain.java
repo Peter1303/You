@@ -66,7 +66,7 @@ public class AdminDomain implements AdminService {
             user = userRepository.find(new UserId((Long) uidOrToken));
         } else if (uidOrToken instanceof String) {
             String token = (String) uidOrToken;
-            user = userRepository.findByToken(token);
+            user = userRepository.findByOpenId(token);
         } else {
             throw new InternalErrorException("传值错误");
         }

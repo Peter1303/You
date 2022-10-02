@@ -50,7 +50,7 @@ public class CheckLoginAspect {
         Integer uid = redisService.getObject(RedisKey.loginToken(token), Integer.class);
         if (!Optional.ofNullable(uid).isPresent()) {
             // 没有缓存记录
-            User user = userRepository.findByToken(token);
+            User user = userRepository.findByOpenId(token);
             if (!Optional.ofNullable(user).isPresent()) {
                 throw new BusinessException(ResultCode.PERMISSION_DENIED);
             }
