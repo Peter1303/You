@@ -27,4 +27,11 @@ public interface UserRepository extends IService<UserDO> {
      * @return {@link User}
      */
     User findByOpenId(String openId);
+
+    /**
+     * 超级管理存在
+     *
+     * @return {@link Boolean}
+     */
+    Boolean superAdminExists();
 }

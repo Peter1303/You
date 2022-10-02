@@ -3,6 +3,7 @@ package top.pdev.you.domain.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
@@ -47,5 +48,12 @@ public class UserRepositoryImpl
         }
         // TODO cache
         return new User(userDO);
+    }
+
+    @Override
+    public Boolean superAdminExists() {
+        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDO::getPermission, Permission.SUPER.getValue());
+        return mapper.exists(queryWrapper);
     }
 }
