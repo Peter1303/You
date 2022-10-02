@@ -1,5 +1,6 @@
 package top.pdev.you.infrastructure.util;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -15,6 +16,7 @@ public class JacksonUtil {
         if (objectMapper == null) {
             synchronized (ObjectMapper.class) {
                 objectMapper = new ObjectMapper();
+                objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
             }
         }
         return objectMapper;
