@@ -14,7 +14,6 @@ import top.pdev.you.domain.entity.types.UserId;
 @Data
 public class User extends BaseEntity {
     private UserId userId;
-    private String token;
     private Integer permission;
 
     public User(UserDO userDO) {

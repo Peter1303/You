@@ -38,9 +38,9 @@ public class UserRepositoryImpl
     }
 
     @Override
-    public User findByToken(String token) {
+    public User findByOpenId(String openId) {
         LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDO::getToken, token);
+        queryWrapper.eq(UserDO::getWechatId, openId);
         UserDO userDO = mapper.selectOne(queryWrapper);
         if (!Optional.ofNullable(userDO).isPresent()) {
             return null;
