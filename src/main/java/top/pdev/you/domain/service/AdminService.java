@@ -8,6 +8,13 @@ package top.pdev.you.domain.service;
  */
 public interface AdminService {
     /**
+     * 有超级管理员
+     *
+     * @return boolean
+     */
+    boolean hasSuperAdmin();
+
+    /**
      * 是负责人
      *
      * @param uidOrToken uid 或令牌

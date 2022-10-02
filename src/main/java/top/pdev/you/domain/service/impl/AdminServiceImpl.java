@@ -16,18 +16,23 @@ import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
- * 管理员领域
+ * 管理员服务
  * Created in 2022/8/19 21:53
  *
  * @author Peter1303
  */
 @Service
-public class AdminDomain implements AdminService {
+public class AdminServiceImpl implements AdminService {
     @Resource
     private RedisService redisService;
 
     @Resource
     private UserRepository userRepository;
+
+    @Override
+    public boolean hasSuperAdmin() {
+        return userRepository.superAdminExists();
+    }
 
     @Override
     public boolean isManager(Object uidOrToken) {
