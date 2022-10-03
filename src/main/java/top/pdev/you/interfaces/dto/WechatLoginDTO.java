@@ -1,5 +1,6 @@
 package top.pdev.you.interfaces.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -11,6 +12,10 @@ import lombok.Data;
  */
 @Data
 public class WechatLoginDTO {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty("errcode")
+    private String errCode;
+
     @JsonProperty("openid")
     private String openId;
 }
