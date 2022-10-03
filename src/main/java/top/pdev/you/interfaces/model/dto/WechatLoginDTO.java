@@ -1,4 +1,4 @@
-package top.pdev.you.interfaces.dto;
+package top.pdev.you.interfaces.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

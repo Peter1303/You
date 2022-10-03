@@ -10,7 +10,7 @@ import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.infrastructure.config.WechatProperties;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.JacksonUtil;
-import top.pdev.you.interfaces.dto.WechatLoginDTO;
+import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 
 import javax.annotation.Resource;
 import java.util.Optional;

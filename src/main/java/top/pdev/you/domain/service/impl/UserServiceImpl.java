@@ -5,9 +5,16 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.entity.data.StudentDO;
+import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.factory.StudentFactory;
+import top.pdev.you.domain.factory.TeacherFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
@@ -15,9 +22,10 @@ import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
-import top.pdev.you.interfaces.dto.WechatLoginDTO;
+import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 import top.pdev.you.interfaces.model.vo.LoginResultVO;
-import top.pdev.you.interfaces.model.vo.UserLoginVO;
+import top.pdev.you.interfaces.model.vo.req.RegisterVO;
+import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -44,6 +52,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserFactory userFactory;
+
+    @Resource
+    private TeacherFactory teacherFactory;
+
+    @Resource
+    private StudentFactory studentFactory;
 
     @Override
     public Result<?> login(UserLoginVO vo) {
@@ -79,5 +93,41 @@ public class UserServiceImpl implements UserService {
             }
         }
         throw new BusinessException(ResultCode.FAILED, "登录失败");
+    }
+
+    @Override
+    public Result<?> register(Role role, RegisterVO vo) {
+        WechatLoginDTO loginDTO = wechatService.login(vo.getCode());
+        String openId = loginDTO.getOpenId();
+        if (Optional.ofNullable(userRepository.findByOpenId(openId)).isPresent()) {
+            throw new BusinessException(ResultCode.FAILED, "用户已注册");
+        }
+        switch (role) {
+            case STUDENT:
+                Student student = studentFactory.newStudent();
+                StudentDO studentDO = new StudentDO();
+                studentDO.setNo(vo.getNo());
+                studentDO.setName(vo.getName());
+                studentDO.setContact(vo.getContact());
+                studentDO.setClassId(vo.getClassId());
+                student.save(studentDO);
+                break;
+            case TEACHER:
+                Teacher teacher = teacherFactory.newTeacher();
+                TeacherDO teacherDO = new TeacherDO();
+                teacherDO.setNo(vo.getNo());
+                teacherDO.setName(vo.getName());
+                teacherDO.setContact(vo.getContact());
+                teacher.save(teacherDO);
+                User user = userFactory.newUser();
+                user.setOpenId(openId);
+                user.save(teacher);
+                break;
+            default:
+                break;
+        }
+        LoginResultVO resultVO = new LoginResultVO();
+        resultVO.setToken(openId);
+        return Result.ok().setData(resultVO);
     }
 }

@@ -1,6 +1,6 @@
 package top.pdev.you.application.service;
 
-import top.pdev.you.interfaces.dto.WechatLoginDTO;
+import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 
 /**
  * 微信服务
