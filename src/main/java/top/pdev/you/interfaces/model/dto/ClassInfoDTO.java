@@ -12,4 +12,6 @@ import lombok.Data;
 public class ClassInfoDTO {
     private Long id;
     private String name;
+    private String campus;
+    private String institute;
 }

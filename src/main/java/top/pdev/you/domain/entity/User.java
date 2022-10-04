@@ -6,6 +6,7 @@ import lombok.Data;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
+import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.repository.UserRepository;
@@ -60,6 +61,20 @@ public class User extends BaseEntity {
         userDO.setWechatId(openId);
         userDO.setTime(DateTime.now().toLocalDateTime());
         userDO.setTargetId(teacher.getId());
+        userDO.setPermission(Permission.USER.getValue());
+        save(userDO);
+    }
+
+    /**
+     * 保存
+     *
+     * @param studentDO 学生 DO
+     */
+    public void save(StudentDO studentDO) {
+        UserDO userDO = new UserDO();
+        userDO.setWechatId(openId);
+        userDO.setTime(DateTime.now().toLocalDateTime());
+        userDO.setTargetId(studentDO.getId());
         userDO.setPermission(Permission.USER.getValue());
         save(userDO);
     }

@@ -8,11 +8,9 @@ import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.mapper.ClassMapper;
 import top.pdev.you.domain.repository.ClassRepository;
-import top.pdev.you.interfaces.assembler.ClassAssembler;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,9 +46,6 @@ public class ClassRepositoryImpl
         if (StrUtil.isAllNotBlank(name)) {
             queryWrapper.like(ClassDO::getName, name);
         }
-        List<ClassInfoDTO> result = new ArrayList<>();
-        List<ClassDO> list = mapper.selectList(queryWrapper);
-        list.forEach(clazz -> result.add(ClassAssembler.INSTANCE.convert(clazz)));
-        return result;
+        return mapper.getClassInfoList(name);
     }
 }

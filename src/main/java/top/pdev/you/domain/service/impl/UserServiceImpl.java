@@ -102,6 +102,8 @@ public class UserServiceImpl implements UserService {
         if (Optional.ofNullable(userRepository.findByOpenId(openId)).isPresent()) {
             throw new BusinessException(ResultCode.FAILED, "用户已注册");
         }
+        User user = userFactory.newUser();
+        user.setOpenId(openId);
         switch (role) {
             case STUDENT:
                 Student student = studentFactory.newStudent();
@@ -111,6 +113,7 @@ public class UserServiceImpl implements UserService {
                 studentDO.setContact(vo.getContact());
                 studentDO.setClassId(vo.getClassId());
                 student.save(studentDO);
+                user.save(studentDO);
                 break;
             case TEACHER:
                 Teacher teacher = teacherFactory.newTeacher();
@@ -119,8 +122,6 @@ public class UserServiceImpl implements UserService {
                 teacherDO.setName(vo.getName());
                 teacherDO.setContact(vo.getContact());
                 teacher.save(teacherDO);
-                User user = userFactory.newUser();
-                user.setOpenId(openId);
                 user.save(teacher);
                 break;
             default:

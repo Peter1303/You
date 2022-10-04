@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.pdev.you.domain.mapper.ClassMapper">
+    <select id="getClassInfoList" resultType="top.pdev.you.interfaces.model.dto.ClassInfoDTO">
+        SELECT c.id    AS id,
+               c.name  AS name,
+               cp.name AS campus,
+               i.name  AS institute
+        FROM class c
+                 JOIN campus cp
+                      ON c.campus_id = cp.id
+                 JOIN institute i
+                      on c.institute_id = i.id
+    </select>
+</mapper>
