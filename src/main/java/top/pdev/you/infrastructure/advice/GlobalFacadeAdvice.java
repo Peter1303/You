@@ -109,19 +109,6 @@ public class GlobalFacadeAdvice {
     }
 
     /**
-     * 捕获所有的空指针异常
-     *
-     * @param ex 异常
-     * @return 结果
-     */
-    @ExceptionHandler(NullPointerException.class)
-    @ResponseBody
-    public Result<?> handleException(NullPointerException ex) {
-        log.error("空指针异常", ex);
-        return Result.error(ex);
-    }
-
-    /**
      * 捕获所有的异常
      *
      * @param ex 异常
