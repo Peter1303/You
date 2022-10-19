@@ -10,5 +10,6 @@ public class Constants {
     private Constants() {
     }
 
+    public static final String TOKEN = "token";
     public static final String ERROR = "error";
 }
