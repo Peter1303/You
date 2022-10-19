@@ -5,9 +5,14 @@ import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import top.pdev.you.common.interceptor.TokenInterceptor;
+import top.pdev.you.infrastructure.resover.CurrentUserMethodArgumentResolver;
 import top.pdev.you.infrastructure.util.SpringEnvHelper;
+
+import java.util.List;
 
 /**
  * 配置
@@ -48,5 +53,24 @@ public class YouConfig implements WebMvcConfigurer {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
+    }
+
+    /**
+     * @return 令牌检查拦截器
+     */
+    @Bean
+    public TokenInterceptor getTokenInterceptor() {
+        return new TokenInterceptor();
+    }
+
+    /**
+     * 添加参数解析器
+     *
+     * @param resolvers 解析器
+     */
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        // 当前用户参数解析器
+        resolvers.add(new CurrentUserMethodArgumentResolver());
     }
 }
