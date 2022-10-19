@@ -12,5 +12,17 @@
                       ON c.campus_id = cp.id
                  JOIN institute i
                       on c.institute_id = i.id
+        <where>
+            <if test="vo.name != null">
+                AND c.name LIKE CONCAT('%', #{vo.name}, '%')
+            </if>
+            <if test="vo.instituteId != null">
+                AND c.institute_id = #{vo.instituteId}
+            </if>
+            <if test="vo.instituteId != null">
+                AND c.campus_id = #{vo.campusId}
+            </if>
+        </where>
+        ORDER BY c.name
     </select>
 </mapper>

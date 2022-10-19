@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service;
 
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.interfaces.model.vo.req.NameVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 /**
  * 班级服务
@@ -16,5 +16,5 @@ public interface ClassService {
      * @param vo VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> getClassList(NameVO vo);
+    Result<?> getClassList(SearchVO vo);
 }

@@ -6,7 +6,7 @@ import top.pdev.you.domain.service.ClassService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
 import top.pdev.you.interfaces.model.vo.ListVO;
-import top.pdev.you.interfaces.model.vo.req.NameVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,8 +23,8 @@ public class ClassServiceImpl implements ClassService {
     private ClassRepository classRepository;
 
     @Override
-    public Result<?> getClassList(NameVO vo) {
-        List<ClassInfoDTO> list = classRepository.getClassInfo(vo.getName());
+    public Result<?> getClassList(SearchVO vo) {
+        List<ClassInfoDTO> list = classRepository.getClassInfo(vo);
         ListVO<ClassInfoDTO> listVO = new ListVO<>();
         listVO.setList(list);
         return Result.ok().setData(listVO);

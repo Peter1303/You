@@ -9,7 +9,7 @@ import top.pdev.you.common.annotation.SkipCheckLogin;
 import top.pdev.you.common.validator.intefaces.Clazz;
 import top.pdev.you.domain.service.ClassService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.interfaces.model.vo.req.NameVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 
@@ -27,7 +27,7 @@ public class QueryController {
 
     @SkipCheckLogin
     @PostMapping("class")
-    public Result<?> clazz(@RequestBody @Validated(Clazz.class) NameVO vo) {
+    public Result<?> clazz(@RequestBody @Validated(Clazz.class) SearchVO vo) {
         return classService.getClassList(vo);
     }
 }
