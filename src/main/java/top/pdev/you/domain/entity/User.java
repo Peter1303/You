@@ -6,7 +6,6 @@ import lombok.Data;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.repository.UserRepository;
