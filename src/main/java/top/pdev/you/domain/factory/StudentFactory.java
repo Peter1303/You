@@ -2,6 +2,7 @@ package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.User;
 
 /**
  * 学生工厂
@@ -17,6 +18,16 @@ public class StudentFactory {
      * @return {@link Student}
      */
     public Student newStudent() {
-        return new Student(null);
+        return getStudent(null);
+    }
+
+    /**
+     * 获取学生
+     *
+     * @param user 用户
+     * @return {@link Student}
+     */
+    public Student getStudent(User user) {
+        return new Student(user);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.data.StudentDO;
+import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.infrastructure.result.ResultCode;
@@ -20,7 +21,10 @@ import java.util.Optional;
 @Data
 public class Student {
     private User user;
-    private Long id;
+    private StudentId studentId;
+    private String no;
+    private String name;
+    private String contact;
 
     private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
@@ -30,6 +34,11 @@ public class Student {
             return;
         }
         this.user = user;
+        this.studentId = new StudentId(user.getTargetId());
+        StudentDO studentDO = studentRepository.getDO(studentId);
+        this.name = studentDO.getName();
+        this.no = studentDO.getNo();
+        this.contact = studentDO.getContact();
     }
 
     /**

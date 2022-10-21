@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
                 studentDO.setContact(vo.getContact());
                 studentDO.setClassId(vo.getClassId());
                 student.save(studentDO);
-                user.save(studentDO);
+                user.save(student);
                 break;
             case TEACHER:
                 Teacher teacher = teacherFactory.newTeacher();

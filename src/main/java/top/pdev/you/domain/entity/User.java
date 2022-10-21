@@ -60,7 +60,7 @@ public class User extends BaseEntity {
         UserDO userDO = new UserDO();
         userDO.setWechatId(openId);
         userDO.setTime(DateTime.now().toLocalDateTime());
-        userDO.setTargetId(teacher.getId());
+        userDO.setTargetId(teacher.getTeacherId().getId());
         userDO.setPermission(Permission.USER.getValue());
         save(userDO);
     }
@@ -68,13 +68,13 @@ public class User extends BaseEntity {
     /**
      * 保存
      *
-     * @param studentDO 学生 DO
+     * @param student 学生
      */
-    public void save(StudentDO studentDO) {
+    public void save(Student student) {
         UserDO userDO = new UserDO();
         userDO.setWechatId(openId);
         userDO.setTime(DateTime.now().toLocalDateTime());
-        userDO.setTargetId(studentDO.getId());
+        userDO.setTargetId(student.getStudentId().getId());
         userDO.setPermission(Permission.USER.getValue());
         save(userDO);
     }

@@ -3,8 +3,11 @@ package top.pdev.you.domain.repository.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.data.StudentDO;
+import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.mapper.StudentMapper;
 import top.pdev.you.domain.repository.StudentRepository;
+
+import javax.annotation.Resource;
 
 /**
  * 学生仓库持久类
@@ -16,4 +19,11 @@ import top.pdev.you.domain.repository.StudentRepository;
 public class StudentRepositoryImpl
         extends ServiceImpl<StudentMapper, StudentDO>
         implements StudentRepository {
+    @Resource
+    private StudentMapper studentMapper;
+
+    @Override
+    public StudentDO getDO(StudentId id) {
+        return studentMapper.selectById(id.getId());
+    }
 }

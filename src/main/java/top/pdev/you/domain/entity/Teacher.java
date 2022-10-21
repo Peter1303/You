@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.data.TeacherDO;
+import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.repository.TeacherRepository;
 
 import java.util.Optional;
@@ -17,7 +18,10 @@ import java.util.Optional;
 @Data
 public class Teacher {
     private User user;
-    private Long id;
+    private TeacherId teacherId;
+    private String name;
+    private String no;
+    private String contact;
 
     private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
 
@@ -26,6 +30,11 @@ public class Teacher {
             return;
         }
         this.user = user;
+        this.teacherId = new TeacherId(user.getTargetId());
+        TeacherDO teacherDO = teacherRepository.getDO(teacherId);
+        this.name = teacherDO.getName();
+        this.no = teacherDO.getNo();
+        this.contact = teacherDO.getContact();
     }
 
     /**
@@ -37,6 +46,6 @@ public class Teacher {
         if (!teacherRepository.save(teacherDO)) {
             throw new InternalErrorException("无法保存老师");
         }
-        this.id = teacherDO.getId();
+        this.teacherId = new TeacherId(teacherDO.getId());
     }
 }
