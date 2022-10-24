@@ -19,6 +19,6 @@ public class TokenValidator
         if (StrUtil.isBlankIfStr(value)) {
             return false;
         }
-        return value.matches("^[a-z\\d]{32}$");
+        return value.matches("^[a-zA-Z-\\d]{28}$");
     }
 }
