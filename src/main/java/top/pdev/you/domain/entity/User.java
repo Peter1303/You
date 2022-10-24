@@ -33,7 +33,7 @@ public class User extends BaseEntity {
         }
         this.userId = new UserId(userDO.getId());
         this.openId = userDO.getWechatId();
-        if (Optional.ofNullable(targetId).isPresent()) {
+        if (!Optional.ofNullable(targetId).isPresent()) {
             this.targetId = userDO.getTargetId();
         }
         this.permission = userDO.getPermission();

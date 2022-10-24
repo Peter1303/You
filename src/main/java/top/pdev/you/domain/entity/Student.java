@@ -6,6 +6,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.infrastructure.result.ResultCode;
@@ -28,6 +29,7 @@ public class Student {
 
     private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
+    private final AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
 
     public Student(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
@@ -39,6 +41,10 @@ public class Student {
         this.name = studentDO.getName();
         this.no = studentDO.getNo();
         this.contact = studentDO.getContact();
+    }
+
+    public Association getAssociationUnderManaged() {
+        return associationFactory.getAssociation();
     }
 
     /**

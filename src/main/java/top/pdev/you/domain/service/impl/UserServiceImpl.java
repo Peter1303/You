@@ -4,31 +4,41 @@ import cn.hutool.core.date.DateTime;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.StudentFactory;
 import top.pdev.you.domain.factory.TeacherFactory;
 import top.pdev.you.domain.factory.UserFactory;
+import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
 import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
+import top.pdev.you.interfaces.assembler.AssociationAssembler;
+import top.pdev.you.interfaces.model.dto.AssociationNameDTO;
 import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 import top.pdev.you.interfaces.model.vo.LoginResultVO;
+import top.pdev.you.interfaces.model.vo.UserInfoVO;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 用户服务实现类
@@ -49,6 +59,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private AssociationRepository associationRepository;
 
     @Resource
     private UserFactory userFactory;
@@ -130,5 +143,51 @@ public class UserServiceImpl implements UserService {
         LoginResultVO resultVO = new LoginResultVO();
         resultVO.setToken(openId);
         return Result.ok().setData(resultVO);
+    }
+
+    @Override
+    public Result<?> info(TokenInfo tokenInfo) {
+        // 获取用户
+        User user = userRepository.find(new UserId(tokenInfo.getUid()));
+        Integer permission = user.getPermission();
+        String no = null;
+        String name = null;
+        String association = null;
+        List<AssociationNameDTO> associations = null;
+        // 为学生
+        if (Permission.USER.getValue() == permission
+                || Permission.ADMIN.getValue() == permission) {
+            Student student = studentFactory.getStudent(user);
+            no = student.getNo();
+            name = student.getName();
+            // 如果是负责人那么有其管理的社团
+            if (Permission.ADMIN.getValue() == permission) {
+                Association one = associationRepository.getOne(student);
+                association = one.getName();
+            }
+        }
+        // 为老师
+        if (Permission.MANAGER.getValue() == permission) {
+            Teacher teacher = teacherFactory.getTeacher(user);
+            no = teacher.getNo();
+            name = teacher.getName();
+            List<AssociationDO> managedList = associationRepository.getManagedList(teacher);
+            associations = managedList
+                    .stream()
+                    .map(AssociationAssembler.INSTANCE::convert)
+                    .collect(Collectors.toList());
+        }
+        // 为超管
+        if (Permission.SUPER.getValue() == permission) {
+            name = "超级管理员";
+        }
+        // 信息
+        UserInfoVO vo = new UserInfoVO();
+        vo.setNo(no);
+        vo.setName(name);
+        vo.setPermission(permission);
+        vo.setAssociation(association);
+        vo.setAssociations(associations);
+        return Result.ok(vo);
     }
 }

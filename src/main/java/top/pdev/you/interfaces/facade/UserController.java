@@ -2,11 +2,14 @@ package top.pdev.you.interfaces.facade;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.annotation.SkipCheckLogin;
+import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.validator.intefaces.Student;
 import top.pdev.you.common.validator.intefaces.Teacher;
@@ -66,5 +69,16 @@ public class UserController {
     @PostMapping("register/student")
     public Result<?> registerOfStudent(@RequestBody @Validated(Student.class) RegisterVO vo) {
         return userService.register(Role.STUDENT, vo);
+    }
+
+    /**
+     * 信息
+     *
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    @GetMapping("info")
+    public Result<?> info(@CurrentUser TokenInfo tokenInfo) {
+        return userService.info(tokenInfo);
     }
 }

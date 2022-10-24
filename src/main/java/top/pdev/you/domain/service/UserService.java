@@ -1,5 +1,6 @@
 package top.pdev.you.domain.service;
 
+import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
@@ -28,4 +29,12 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> register(Role role, RegisterVO vo);
+
+    /**
+     * 信息
+     *
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> info(TokenInfo tokenInfo);
 }
