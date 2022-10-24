@@ -6,8 +6,8 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.BusinessException;
-import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
@@ -17,7 +17,6 @@ import top.pdev.you.infrastructure.util.TokenUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 检查登录切面
@@ -47,17 +46,10 @@ public class CheckLoginAspect {
         HttpServletRequest request = RequestUtil.getRequest();
         String token = TokenUtil.getTokenByHeader(request);
         // 检验 Token
-        Integer uid = redisService.getObject(RedisKey.loginToken(token), Integer.class);
-        if (!Optional.ofNullable(uid).isPresent()) {
+        TokenInfo tokenInfo = redisService.getObject(RedisKey.loginToken(token), TokenInfo.class);
+        if (!Optional.ofNullable(tokenInfo).isPresent()) {
             // 没有缓存记录
-            User user = userRepository.findByOpenId(token);
-            if (!Optional.ofNullable(user).isPresent()) {
-                throw new BusinessException(ResultCode.PERMISSION_DENIED);
-            }
-            // 缓存记录
-            redisService.set(RedisKey.loginToken(token),
-                    user.getUserId().getId(),
-                    7, TimeUnit.DAYS);
+            throw new BusinessException(ResultCode.PERMISSION_DENIED);
         }
         // 执行后续的方法
         return point.proceed();

@@ -16,6 +16,7 @@ import top.pdev.you.infrastructure.redis.RedisService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 令牌检查
@@ -47,6 +48,8 @@ public class TokenInterceptor implements HandlerInterceptor {
                 Optional.ofNullable(user).orElseThrow(TokenInvalidException::new);
                 TokenInfo info = new TokenInfo();
                 info.setUid(user.getUserId().getId());
+                // 缓存一个月
+                redisService.set(RedisKey.loginToken(token), info, 30, TimeUnit.DAYS);
             }
         }
         return true;
