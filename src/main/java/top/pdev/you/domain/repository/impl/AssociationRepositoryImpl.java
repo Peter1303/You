@@ -62,7 +62,10 @@ public class AssociationRepositoryImpl
         if (managedList.isEmpty()) {
             return new ArrayList<>();
         }
-        queryWrapper.in(AssociationDO::getId, managedList);
+        queryWrapper.in(AssociationDO::getId,
+                managedList
+                        .stream()
+                        .mapToLong(AssociationManagerDO::getId));
         return mapper.selectList(queryWrapper);
     }
 }

@@ -17,7 +17,7 @@ public class AssociationFactory {
      *
      * @return {@link Association}
      */
-    public Association getAssociation() {
+    public Association newAssociation() {
         return getAssociation(null);
     }
 
