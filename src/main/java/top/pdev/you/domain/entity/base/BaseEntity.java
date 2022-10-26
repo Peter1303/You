@@ -19,8 +19,7 @@ public abstract class BaseEntity {
      */
     protected void checkStudent(Student student) {
         Optional.ofNullable(student).orElseThrow(() -> new InternalErrorException("学生为空"));
-        Optional.ofNullable(student.getUser()).orElseThrow(() -> new InternalErrorException("用户为空"));
-        Optional.ofNullable(student.getUser().getUserId())
-                .orElseThrow(() -> new InternalErrorException("用户 ID 为空"));
+        Optional.ofNullable(student.getStudentDO())
+                .orElseThrow(() -> new InternalErrorException("学生记录为空"));
     }
 }
