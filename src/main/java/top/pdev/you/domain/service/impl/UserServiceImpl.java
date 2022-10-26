@@ -67,12 +67,6 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserFactory userFactory;
 
-    @Resource
-    private TeacherFactory teacherFactory;
-
-    @Resource
-    private StudentFactory studentFactory;
-
     @Override
     public Result<?> login(UserLoginVO vo) {
         WechatLoginDTO dto = wechatService.login(vo.getCode());
@@ -120,7 +114,7 @@ public class UserServiceImpl implements UserService {
         user.setOpenId(openId);
         switch (role) {
             case STUDENT:
-                Student student = studentFactory.newStudent();
+                Student student = userFactory.newStudent();
                 StudentDO studentDO = new StudentDO();
                 studentDO.setNo(vo.getNo());
                 studentDO.setName(vo.getName());
@@ -130,7 +124,7 @@ public class UserServiceImpl implements UserService {
                 user.save(student);
                 break;
             case TEACHER:
-                Teacher teacher = teacherFactory.newTeacher();
+                Teacher teacher = userFactory.newTeacher();
                 TeacherDO teacherDO = new TeacherDO();
                 teacherDO.setNo(vo.getNo());
                 teacherDO.setName(vo.getName());
@@ -158,7 +152,7 @@ public class UserServiceImpl implements UserService {
         // 为学生
         if (Permission.USER.getValue() == permission
                 || Permission.ADMIN.getValue() == permission) {
-            Student student = studentFactory.getStudent(user);
+            Student student = userFactory.getStudent(user);
             no = student.getNo();
             name = student.getName();
             // 如果是负责人那么有其管理的社团
@@ -174,7 +168,7 @@ public class UserServiceImpl implements UserService {
         }
         // 为老师
         if (Permission.MANAGER.getValue() == permission) {
-            Teacher teacher = teacherFactory.getTeacher(user);
+            Teacher teacher = userFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();
             List<AssociationDO> managedList = teacher.getManagedAssociationList();
@@ -212,7 +206,7 @@ public class UserServiceImpl implements UserService {
         // 为学生
         if (Permission.USER.getValue() == permission
                 || Permission.ADMIN.getValue() == permission) {
-            Student student = studentFactory.getStudent(user);
+            Student student = userFactory.getStudent(user);
             no = student.getNo();
             name = student.getName();
             contact = student.getContact();
@@ -223,7 +217,7 @@ public class UserServiceImpl implements UserService {
         }
         // 为老师
         if (Permission.MANAGER.getValue() == permission) {
-            Teacher teacher = teacherFactory.getTeacher(user);
+            Teacher teacher = userFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();
             contact = teacher.getContact();
