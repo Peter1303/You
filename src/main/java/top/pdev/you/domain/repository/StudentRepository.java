@@ -18,4 +18,13 @@ public interface StudentRepository extends IService<StudentDO> {
      * @return {@link StudentDO}
      */
     StudentDO getDO(StudentId id);
+
+    /**
+     * 设置联系方式
+     *
+     * @param id      ID
+     * @param contact 联系
+     * @return boolean
+     */
+    boolean setContact(StudentId id, String contact);
 }

@@ -52,6 +52,15 @@ public class Teacher extends BaseEntity {
     }
 
     /**
+     * 保存联系方式
+     *
+     * @param contact 联系
+     */
+    public void saveContact(String contact) {
+        teacherRepository.setContact(teacherId, contact);
+    }
+
+    /**
      * 保存
      *
      * @param teacherDO 老师 DO

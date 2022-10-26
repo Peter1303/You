@@ -6,7 +6,6 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.factory.AssociationFactory;
@@ -113,6 +112,15 @@ public class Student extends BaseEntity {
             return clz.getGrade();
         }
         return null;
+    }
+
+    /**
+     * 保存联系方式
+     *
+     * @param contact 联系
+     */
+    public void saveContact(String contact) {
+        studentRepository.setContact(studentId, contact);
     }
 
     /**

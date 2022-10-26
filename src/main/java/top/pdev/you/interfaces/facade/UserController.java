@@ -16,6 +16,7 @@ import top.pdev.you.common.validator.intefaces.Teacher;
 import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
+import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
@@ -91,5 +92,11 @@ public class UserController {
     @GetMapping("profile")
     public Result<?> profile(@CurrentUser TokenInfo tokenInfo) {
         return userService.profile(tokenInfo);
+    }
+
+    @PostMapping("profile/set")
+    public Result<?> setProfile(@CurrentUser TokenInfo tokenInfo,
+                                @RequestBody SetProfileVO setProfileVO) {
+        return userService.setProfile(tokenInfo, setProfileVO);
     }
 }

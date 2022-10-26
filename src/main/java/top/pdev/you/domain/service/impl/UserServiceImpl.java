@@ -17,8 +17,6 @@ import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
-import top.pdev.you.domain.factory.StudentFactory;
-import top.pdev.you.domain.factory.TeacherFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.UserRepository;
@@ -34,6 +32,7 @@ import top.pdev.you.interfaces.model.vo.LoginResultVO;
 import top.pdev.you.interfaces.model.vo.UserInfoVO;
 import top.pdev.you.interfaces.model.vo.UserProfileVO;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
+import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
@@ -235,6 +234,25 @@ public class UserServiceImpl implements UserService {
         vo.setInstitute(institute);
         vo.setContact(contact);
         vo.setGrade(grade);
+        vo.setPermission(permission);
         return Result.ok(vo);
+    }
+
+    @Override
+    public Result<?> setProfile(TokenInfo tokenInfo,
+                                SetProfileVO setProfileVO) {
+        User user = userRepository.find(new UserId(tokenInfo.getUid()));
+        Integer permission = user.getPermission();
+        String contact = setProfileVO.getContact();
+        if (permission == Permission.USER.getValue()) {
+            // 更改学生
+            Student student = userFactory.getStudent(user);
+            student.saveContact(contact);
+        } else if (permission == Permission.MANAGER.getValue()) {
+            // 更改老师
+            Teacher teacher = userFactory.getTeacher(user);
+            teacher.setContact(contact);
+        }
+        return Result.ok();
     }
 }

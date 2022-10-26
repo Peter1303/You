@@ -33,4 +33,7 @@ public class UserProfileVO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer grade;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer permission;
 }

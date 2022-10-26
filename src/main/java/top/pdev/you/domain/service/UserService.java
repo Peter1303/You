@@ -4,6 +4,7 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
+import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 /**
@@ -45,4 +46,13 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> profile(TokenInfo tokenInfo);
+
+    /**
+     * 设置资料
+     *
+     * @param tokenInfo    令牌信息
+     * @param setProfileVO 设置资料 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> setProfile(TokenInfo tokenInfo, SetProfileVO setProfileVO);
 }
