@@ -41,6 +41,11 @@ public class ClassRepositoryImpl
     }
 
     @Override
+    public ClassDO getDO(Long id) {
+        return mapper.selectById(id);
+    }
+
+    @Override
     public List<ClassInfoDTO> getClassInfo(SearchVO vo) {
         return mapper.getClassInfoList(vo);
     }

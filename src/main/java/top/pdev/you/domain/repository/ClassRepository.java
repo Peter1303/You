@@ -25,6 +25,14 @@ public interface ClassRepository extends IService<ClassDO> {
     Clazz find(Long id);
 
     /**
+     * 获取 DO
+     *
+     * @param id ID
+     * @return {@link ClassDO}
+     */
+    ClassDO getDO(Long id);
+
+    /**
      * 获取班级信息
      *
      * @param condition 条件
