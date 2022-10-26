@@ -30,4 +30,7 @@ public class UserProfileVO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String contact;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer grade;
 }

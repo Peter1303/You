@@ -208,6 +208,7 @@ public class UserServiceImpl implements UserService {
         String campus = null;
         String institute = null;
         String contact = null;
+        Integer grade = null;
         // 为学生
         if (Permission.USER.getValue() == permission
                 || Permission.ADMIN.getValue() == permission) {
@@ -218,6 +219,7 @@ public class UserServiceImpl implements UserService {
             clazz = student.getClazz();
             campus = student.getCampus();
             institute = student.getInstitute();
+            grade = student.getGrade();
         }
         // 为老师
         if (Permission.MANAGER.getValue() == permission) {
@@ -238,6 +240,7 @@ public class UserServiceImpl implements UserService {
         vo.setCampus(campus);
         vo.setInstitute(institute);
         vo.setContact(contact);
+        vo.setGrade(grade);
         return Result.ok(vo);
     }
 }

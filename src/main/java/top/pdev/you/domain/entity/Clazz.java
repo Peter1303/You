@@ -1,7 +1,9 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.types.Id;
@@ -18,7 +20,9 @@ import java.util.Optional;
 @Data
 public class Clazz extends BaseEntity {
     private Long id;
+    private Integer grade;
 
+    @Getter(AccessLevel.NONE)
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
 
     public Clazz(ClassDO classDO) {
@@ -26,6 +30,7 @@ public class Clazz extends BaseEntity {
             return;
         }
         this.id = classDO.getId();
+        this.grade = classDO.getYear();
     }
 
     /**

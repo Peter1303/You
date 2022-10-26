@@ -18,7 +18,7 @@ public class ClassFactory {
      * @return {@link Clazz}
      */
     public Clazz newClazz() {
-        return newClazz(null);
+        return getClazz(null);
     }
 
     /**
@@ -27,7 +27,7 @@ public class ClassFactory {
      * @param classDO 类 DO
      * @return {@link Clazz}
      */
-    public Clazz newClazz(ClassDO classDO) {
+    public Clazz getClazz(ClassDO classDO) {
         return new Clazz(classDO);
     }
 }

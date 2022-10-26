@@ -6,6 +6,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.factory.AssociationFactory;
@@ -97,6 +98,21 @@ public class Student extends BaseEntity {
         super.checkStudent(this);
         Institute institute = instituteFactory.newInstitute();
         return institute.getStudentInstituteName(this);
+    }
+
+    /**
+     * 获取年级
+     *
+     * @return {@link Integer}
+     */
+    public Integer getGrade() {
+        super.checkStudent(this);
+        Long classId = getStudentDO().getClassId();
+        Clazz clz = classRepository.find(classId);
+        if (Optional.ofNullable(clz).isPresent()) {
+            return clz.getGrade();
+        }
+        return null;
     }
 
     /**
