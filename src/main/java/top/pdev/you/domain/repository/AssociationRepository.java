@@ -39,4 +39,12 @@ public interface AssociationRepository extends IService<AssociationDO> {
      * @return {@link List}<{@link AssociationDO}>
      */
     List<AssociationDO> getManagedList(Teacher teacher);
+
+    /**
+     * 学生参加名单
+     *
+     * @param student 学生
+     * @return {@link List}<{@link AssociationDO}>
+     */
+    List<AssociationDO> ofStudentList(Student student);
 }

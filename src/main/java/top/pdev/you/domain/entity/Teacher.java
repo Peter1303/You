@@ -3,10 +3,13 @@ package top.pdev.you.domain.entity;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.types.TeacherId;
+import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -24,6 +27,7 @@ public class Teacher {
     private String contact;
 
     private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
+    private final AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
 
     public Teacher(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
@@ -35,6 +39,15 @@ public class Teacher {
         this.name = teacherDO.getName();
         this.no = teacherDO.getNo();
         this.contact = teacherDO.getContact();
+    }
+
+    /**
+     * 获取管理社团列表
+     *
+     * @return {@link List}<{@link AssociationDO}>
+     */
+    public List<AssociationDO> getManagedAssociationList() {
+        return associationRepository.getManagedList(this);
     }
 
     /**

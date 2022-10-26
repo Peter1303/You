@@ -43,8 +43,8 @@ public class Student {
         this.contact = studentDO.getContact();
     }
 
-    public Association getAssociationUnderManaged() {
-        return associationFactory.getAssociation();
+    public List<AssociationDO> getAssociations() {
+        return associationRepository.ofStudentList(this);
     }
 
     /**

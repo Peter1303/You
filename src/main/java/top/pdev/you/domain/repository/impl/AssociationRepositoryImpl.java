@@ -9,9 +9,11 @@ import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.AssociationManagerDO;
+import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
+import top.pdev.you.domain.mapper.AssociationParticipateMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 
@@ -32,6 +34,9 @@ public class AssociationRepositoryImpl
         implements AssociationRepository {
     @Resource
     private AssociationMapper mapper;
+
+    @Resource
+    private AssociationParticipateMapper associationParticipateMapper;
 
     @Resource
     private AssociationFactory associationFactory;
@@ -67,5 +72,22 @@ public class AssociationRepositoryImpl
                         .stream()
                         .mapToLong(AssociationManagerDO::getId));
         return mapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public List<AssociationDO> ofStudentList(Student student) {
+        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipantDO::getUid, student.getUser().getUserId().getId());
+        List<AssociationParticipantDO> participantDOs =
+                associationParticipateMapper.selectList(queryWrapper);
+        if (participantDOs.isEmpty()) {
+            return new ArrayList<>();
+        }
+        LambdaQueryWrapper<AssociationDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(AssociationDO::getId,
+                participantDOs
+                        .stream()
+                        .mapToLong(AssociationParticipantDO::getAssociationId));
+        return mapper.selectList(lambdaQueryWrapper);
     }
 }

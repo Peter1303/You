@@ -165,13 +165,18 @@ public class UserServiceImpl implements UserService {
                 Association one = associationRepository.getOne(student);
                 association = one.getName();
             }
+            List<AssociationDO> list = student.getAssociations();
+            associations = list
+                    .stream()
+                    .map(AssociationAssembler.INSTANCE::convert)
+                    .collect(Collectors.toList());
         }
         // 为老师
         if (Permission.MANAGER.getValue() == permission) {
             Teacher teacher = teacherFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();
-            List<AssociationDO> managedList = associationRepository.getManagedList(teacher);
+            List<AssociationDO> managedList = teacher.getManagedAssociationList();
             associations = managedList
                     .stream()
                     .map(AssociationAssembler.INSTANCE::convert)
