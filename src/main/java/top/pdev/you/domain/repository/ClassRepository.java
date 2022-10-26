@@ -3,6 +3,7 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.entity.data.ClassDO;
+import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -30,4 +31,12 @@ public interface ClassRepository extends IService<ClassDO> {
      * @return {@link List}<{@link ClassInfoDTO}>
      */
     List<ClassInfoDTO> getClassInfo(SearchVO condition);
+
+    /**
+     * 获取班级名字
+     *
+     * @param id ID
+     * @return {@link String}
+     */
+    String getName(Id id);
 }

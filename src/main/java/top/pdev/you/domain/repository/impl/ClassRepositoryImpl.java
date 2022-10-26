@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.entity.data.ClassDO;
+import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.mapper.ClassMapper;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
@@ -42,5 +43,16 @@ public class ClassRepositoryImpl
     @Override
     public List<ClassInfoDTO> getClassInfo(SearchVO vo) {
         return mapper.getClassInfoList(vo);
+    }
+
+    @Override
+    public String getName(Id id) {
+        LambdaQueryWrapper<ClassDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ClassDO::getId, id.getId());
+        ClassDO classDO = mapper.selectOne(queryWrapper);
+        if (Optional.ofNullable(classDO).isPresent()) {
+            return classDO.getName();
+        }
+        return null;
     }
 }
