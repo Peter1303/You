@@ -1,6 +1,9 @@
 package top.pdev.you.domain.entity.types;
 
 import lombok.Data;
+import top.pdev.you.common.exception.InternalErrorException;
+
+import java.util.Optional;
 
 /**
  * ID
@@ -13,6 +16,8 @@ public class Id {
     private Long id;
 
     public Id(Long id) {
+        Optional.ofNullable(id)
+                .orElseThrow(() -> new InternalErrorException("ID 不可为空"));
         this.id = id;
     }
 }
