@@ -37,4 +37,12 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> info(TokenInfo tokenInfo);
+
+    /**
+     * 资料
+     *
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> profile(TokenInfo tokenInfo);
 }

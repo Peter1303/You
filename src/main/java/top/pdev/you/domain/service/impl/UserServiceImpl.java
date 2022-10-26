@@ -32,6 +32,7 @@ import top.pdev.you.interfaces.model.dto.AssociationNameDTO;
 import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 import top.pdev.you.interfaces.model.vo.LoginResultVO;
 import top.pdev.you.interfaces.model.vo.UserInfoVO;
+import top.pdev.you.interfaces.model.vo.UserProfileVO;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
@@ -193,6 +194,50 @@ public class UserServiceImpl implements UserService {
         vo.setPermission(permission);
         vo.setAssociation(association);
         vo.setAssociations(associations);
+        return Result.ok(vo);
+    }
+
+    @Override
+    public Result<?> profile(TokenInfo tokenInfo) {
+        // 获取用户
+        User user = userRepository.find(new UserId(tokenInfo.getUid()));
+        Integer permission = user.getPermission();
+        String no = null;
+        String name = null;
+        String clazz = null;
+        String campus = null;
+        String institute = null;
+        String contact = null;
+        // 为学生
+        if (Permission.USER.getValue() == permission
+                || Permission.ADMIN.getValue() == permission) {
+            Student student = studentFactory.getStudent(user);
+            no = student.getNo();
+            name = student.getName();
+            contact = student.getContact();
+            clazz = student.getClazz();
+            campus = student.getCampus();
+            institute = student.getInstitute();
+        }
+        // 为老师
+        if (Permission.MANAGER.getValue() == permission) {
+            Teacher teacher = teacherFactory.getTeacher(user);
+            no = teacher.getNo();
+            name = teacher.getName();
+            contact = teacher.getContact();
+        }
+        // 为超管
+        if (Permission.SUPER.getValue() == permission) {
+            name = "超级管理员";
+        }
+        // 资料
+        UserProfileVO vo = new UserProfileVO();
+        vo.setNo(no);
+        vo.setName(name);
+        vo.setClazz(clazz);
+        vo.setCampus(campus);
+        vo.setInstitute(institute);
+        vo.setContact(contact);
         return Result.ok(vo);
     }
 }

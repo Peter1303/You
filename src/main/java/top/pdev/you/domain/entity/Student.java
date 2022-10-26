@@ -4,13 +4,20 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.entity.base.BaseEntity;
+import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.factory.AssociationFactory;
+import top.pdev.you.domain.factory.CampusFactory;
+import top.pdev.you.domain.factory.ClassFactory;
+import top.pdev.you.domain.factory.InstituteFactory;
+import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.infrastructure.result.ResultCode;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,10 +33,21 @@ public class Student extends BaseEntity {
     private String no;
     private String name;
     private String contact;
+    private String clazz;
+    private String campus;
+
+    /**
+     * 记录
+     */
+    private StudentDO studentDO;
 
     private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
+    private final AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
+    private final ClassFactory classFactory = SpringUtil.getBean(ClassFactory.class);
     private final AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
+    private final CampusFactory campusFactory = SpringUtil.getBean(CampusFactory.class);
+    private final InstituteFactory instituteFactory = SpringUtil.getBean(InstituteFactory.class);
 
     public Student(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
@@ -37,7 +55,7 @@ public class Student extends BaseEntity {
         }
         this.user = user;
         this.studentId = new StudentId(user.getTargetId());
-        StudentDO studentDO = studentRepository.getDO(studentId);
+        this.studentDO = studentRepository.getDO(studentId);
         this.name = studentDO.getName();
         this.no = studentDO.getNo();
         this.contact = studentDO.getContact();
@@ -45,6 +63,40 @@ public class Student extends BaseEntity {
 
     public List<AssociationDO> getAssociations() {
         return associationRepository.ofStudentList(this);
+    }
+
+    /**
+     * 获取班级
+     *
+     * @return {@link String}
+     */
+    public String getClazz() {
+        super.checkStudent(this);
+        Clazz cls = classFactory.newClazz();
+        this.clazz = cls.getStudentClassName(this);
+        return this.clazz;
+    }
+
+    /**
+     * 获取校区
+     *
+     * @return {@link String}
+     */
+    public String getCampus() {
+        super.checkStudent(this);
+        Campus c = campusFactory.newCampus();
+        return c.getStudentCampusName(this);
+    }
+
+    /**
+     * 获取学院
+     *
+     * @return {@link String}
+     */
+    public String getInstitute() {
+        super.checkStudent(this);
+        Institute institute = instituteFactory.newInstitute();
+        return institute.getStudentInstituteName(this);
     }
 
     /**

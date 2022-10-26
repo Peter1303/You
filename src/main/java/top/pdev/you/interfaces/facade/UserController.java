@@ -81,4 +81,15 @@ public class UserController {
     public Result<?> info(@CurrentUser TokenInfo tokenInfo) {
         return userService.info(tokenInfo);
     }
+
+    /**
+     * 资料
+     *
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    @GetMapping("profile")
+    public Result<?> profile(@CurrentUser TokenInfo tokenInfo) {
+        return userService.profile(tokenInfo);
+    }
 }
