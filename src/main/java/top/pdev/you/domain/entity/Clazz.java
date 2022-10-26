@@ -1,6 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
 
 import java.util.Optional;
@@ -12,7 +13,7 @@ import java.util.Optional;
  * @author Peter1303
  */
 @Data
-public class Clazz {
+public class Clazz extends BaseEntity {
     private Long id;
 
     public Clazz(ClassDO classDO) {

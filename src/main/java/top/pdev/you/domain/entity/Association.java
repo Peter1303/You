@@ -1,6 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.Id;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
  * @author Peter1303
  */
 @Data
-public class Association {
+public class Association extends BaseEntity {
     private Id id;
 
     private String name;

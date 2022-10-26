@@ -20,7 +20,7 @@ import java.util.Optional;
  * @author Peter1303
  */
 @Data
-public class Student {
+public class Student extends BaseEntity {
     private User user;
     private StudentId studentId;
     private String no;
