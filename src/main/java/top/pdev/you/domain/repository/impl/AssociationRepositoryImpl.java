@@ -1,7 +1,6 @@
 package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Association;
@@ -16,6 +15,7 @@ import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.mapper.AssociationParticipateMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
+import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 @Repository
 public class AssociationRepositoryImpl
-        extends ServiceImpl<AssociationMapper, AssociationDO>
+        extends BaseRepository<AssociationMapper, AssociationDO>
         implements AssociationRepository {
     @Resource
     private AssociationMapper mapper;

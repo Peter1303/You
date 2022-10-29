@@ -1,16 +1,14 @@
 package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
-import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.mapper.StudentMapper;
 import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
-import java.util.Optional;
 
 /**
  * 学生仓库持久类
@@ -20,7 +18,7 @@ import java.util.Optional;
  */
 @Repository
 public class StudentRepositoryImpl
-        extends ServiceImpl<StudentMapper, StudentDO>
+        extends BaseRepository<StudentMapper, StudentDO>
         implements StudentRepository {
     @Resource
     private StudentMapper studentMapper;

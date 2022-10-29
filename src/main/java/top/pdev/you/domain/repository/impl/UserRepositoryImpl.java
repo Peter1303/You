@@ -1,7 +1,6 @@
 package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
@@ -9,6 +8,7 @@ import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @Repository
 public class UserRepositoryImpl
-        extends ServiceImpl<UserMapper, UserDO>
+        extends BaseRepository<UserMapper, UserDO>
         implements UserRepository {
     @Resource
     private UserMapper mapper;
