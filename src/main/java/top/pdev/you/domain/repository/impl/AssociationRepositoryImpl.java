@@ -56,7 +56,7 @@ public class AssociationRepositoryImpl
 
     @Override
     public Association getOne(Id id) {
-        Optional.ofNullable(id).orElseThrow(() -> new InternalErrorException("社团 ID 为空"));
+        checkId(id);
         return associationFactory.getAssociation(getById(id.getId()));
     }
 

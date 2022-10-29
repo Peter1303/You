@@ -30,7 +30,7 @@ public class StudentRepositoryImpl
 
     @Override
     public boolean setContact(StudentId id, String contact) {
-        Optional.ofNullable(id).orElseThrow(() -> new InternalErrorException("ID 为空"));
+        checkId(id);
         LambdaUpdateWrapper<StudentDO> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(StudentDO::getId, id.getId())
                 .set(StudentDO::getContact, contact);
