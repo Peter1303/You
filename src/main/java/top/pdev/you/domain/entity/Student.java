@@ -120,7 +120,9 @@ public class Student extends BaseEntity {
      * @param contact 联系
      */
     public void saveContact(String contact) {
-        studentRepository.setContact(studentId, contact);
+        if (!studentRepository.setContact(studentId, contact)) {
+            throw new BusinessException("无法保存联系方式");
+        }
     }
 
     /**

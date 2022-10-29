@@ -2,6 +2,7 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
@@ -57,7 +58,9 @@ public class Teacher extends BaseEntity {
      * @param contact 联系
      */
     public void saveContact(String contact) {
-        teacherRepository.setContact(teacherId, contact);
+        if (!teacherRepository.setContact(teacherId, contact)) {
+            throw new BusinessException("无法保存联系方式");
+        }
     }
 
     /**
