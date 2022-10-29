@@ -251,7 +251,7 @@ public class UserServiceImpl implements UserService {
         } else if (permission == Permission.MANAGER.getValue()) {
             // 更改老师
             Teacher teacher = userFactory.getTeacher(user);
-            teacher.setContact(contact);
+            teacher.saveContact(contact);
         }
         return Result.ok();
     }
