@@ -36,4 +36,10 @@ public class StudentRepositoryImpl
                 .set(StudentDO::getContact, contact);
         return studentMapper.update(null, updateWrapper) != 0;
     }
+
+    @Override
+    public boolean delete(StudentId id) {
+        checkId(id);
+        return studentMapper.deleteById(id.getId()) != 0;
+    }
 }

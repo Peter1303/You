@@ -56,4 +56,10 @@ public class UserRepositoryImpl
         queryWrapper.eq(UserDO::getPermission, Permission.SUPER.getValue());
         return mapper.exists(queryWrapper);
     }
+
+    @Override
+    public boolean delete(UserId id) {
+        checkId(id);
+        return mapper.deleteById(id.getId()) != 0;
+    }
 }

@@ -36,4 +36,10 @@ public class TeacherRepositoryImpl
                 .set(TeacherDO::getContact, contact);
         return teacherMapper.update(null, updateWrapper) != 0;
     }
+
+    @Override
+    public boolean delete(TeacherId id) {
+        checkId(id);
+        return teacherMapper.deleteById(id.getId()) != 0;
+    }
 }

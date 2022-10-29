@@ -2,6 +2,7 @@ package top.pdev.you.interfaces.facade;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -98,5 +99,10 @@ public class UserController {
     public Result<?> setProfile(@CurrentUser TokenInfo tokenInfo,
                                 @RequestBody SetProfileVO setProfileVO) {
         return userService.setProfile(tokenInfo, setProfileVO);
+    }
+
+    @DeleteMapping("account")
+    public Result<?> deleteAccount(@CurrentUser TokenInfo tokenInfo) {
+        return userService.deleteAccount(tokenInfo);
     }
 }

@@ -27,4 +27,12 @@ public interface StudentRepository extends IService<StudentDO> {
      * @return boolean
      */
     boolean setContact(StudentId id, String contact);
+
+    /**
+     * 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean delete(StudentId id);
 }

@@ -255,4 +255,11 @@ public class UserServiceImpl implements UserService {
         }
         return Result.ok();
     }
+
+    @Override
+    public Result<?> deleteAccount(TokenInfo tokenInfo) {
+        User user = userRepository.find(new UserId(tokenInfo.getUid()));
+        user.delete();
+        return Result.ok();
+    }
 }

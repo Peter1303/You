@@ -4,10 +4,15 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.entity.types.UserId;
+import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
 
 import java.util.Optional;
@@ -26,6 +31,8 @@ public class User extends BaseEntity {
     private Integer permission;
 
     private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
+    private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
+    private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
 
     public User(UserDO userDO) {
         if (!Optional.ofNullable(userDO).isPresent()) {
@@ -76,5 +83,20 @@ public class User extends BaseEntity {
         userDO.setTargetId(student.getStudentId().getId());
         userDO.setPermission(Permission.USER.getValue());
         save(userDO);
+    }
+
+    /**
+     * 删除
+     */
+    public void delete() {
+        if (permission == Permission.SUPER.getValue()) {
+            throw new BusinessException("核心管理员不可删除");
+        }
+        if (permission == Permission.ADMIN.getValue()) {
+            teacherRepository.delete(new TeacherId(targetId));
+        } else {
+            studentRepository.delete(new StudentId(targetId));
+        }
+        userRepository.delete(userId);
     }
 }

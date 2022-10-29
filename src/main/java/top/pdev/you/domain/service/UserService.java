@@ -55,4 +55,12 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> setProfile(TokenInfo tokenInfo, SetProfileVO setProfileVO);
+
+    /**
+     * 删除账号
+     *
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> deleteAccount(TokenInfo tokenInfo);
 }

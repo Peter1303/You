@@ -27,4 +27,12 @@ public interface TeacherRepository extends IService<TeacherDO> {
      * @return boolean
      */
     boolean setContact(TeacherId id, String contact);
+
+    /**
+     * 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean delete(TeacherId id);
 }
