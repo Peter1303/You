@@ -28,6 +28,11 @@ public class BusinessException extends RuntimeException {
         this.message = message;
     }
 
+    public BusinessException(String message) {
+        code = ResultCode.FAILED;
+        this.message = message;
+    }
+
     public BusinessException(ResultCode code, String message, Throwable cause) {
         this.code = code;
         this.message = message;
