@@ -38,6 +38,8 @@ public class Teacher extends BaseEntity {
         this.user = user;
         this.teacherId = new TeacherId(user.getTargetId());
         TeacherDO teacherDO = teacherRepository.getDO(teacherId);
+        Optional.ofNullable(teacherDO)
+                .orElseThrow(() -> new BusinessException("没有找到老师"));
         this.name = teacherDO.getName();
         this.no = teacherDO.getNo();
         this.contact = teacherDO.getContact();

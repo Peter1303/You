@@ -150,12 +150,12 @@ public class UserServiceImpl implements UserService {
         List<AssociationNameDTO> associations = null;
         // 为学生
         if (Permission.USER.getValue() == permission
-                || Permission.ADMIN.getValue() == permission) {
+                || Permission.MANAGER.getValue() == permission) {
             Student student = userFactory.getStudent(user);
             no = student.getNo();
             name = student.getName();
             // 如果是负责人那么有其管理的社团
-            if (Permission.ADMIN.getValue() == permission) {
+            if (Permission.MANAGER.getValue() == permission) {
                 Association one = associationRepository.getOne(student);
                 association = one.getName();
             }
@@ -166,7 +166,7 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
         }
         // 为老师
-        if (Permission.MANAGER.getValue() == permission) {
+        if (Permission.ADMIN.getValue() == permission) {
             Teacher teacher = userFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
         Integer grade = null;
         // 为学生
         if (Permission.USER.getValue() == permission
-                || Permission.ADMIN.getValue() == permission) {
+                || Permission.MANAGER.getValue() == permission) {
             Student student = userFactory.getStudent(user);
             no = student.getNo();
             name = student.getName();
@@ -215,7 +215,7 @@ public class UserServiceImpl implements UserService {
             grade = student.getGrade();
         }
         // 为老师
-        if (Permission.MANAGER.getValue() == permission) {
+        if (Permission.ADMIN.getValue() == permission) {
             Teacher teacher = userFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();

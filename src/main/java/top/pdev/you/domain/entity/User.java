@@ -67,7 +67,7 @@ public class User extends BaseEntity {
         userDO.setWechatId(openId);
         userDO.setTime(DateTime.now().toLocalDateTime());
         userDO.setTargetId(teacher.getTeacherId().getId());
-        userDO.setPermission(Permission.USER.getValue());
+        userDO.setPermission(Permission.ADMIN.getValue());
         save(userDO);
     }
 

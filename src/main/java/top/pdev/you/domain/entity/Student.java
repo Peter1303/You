@@ -56,6 +56,8 @@ public class Student extends BaseEntity {
         this.user = user;
         this.studentId = new StudentId(user.getTargetId());
         this.studentDO = studentRepository.getDO(studentId);
+        Optional.ofNullable(studentDO)
+                .orElseThrow(() -> new BusinessException("没有找到学生"));
         this.name = studentDO.getName();
         this.no = studentDO.getNo();
         this.contact = studentDO.getContact();
