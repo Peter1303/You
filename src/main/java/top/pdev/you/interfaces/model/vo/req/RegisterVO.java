@@ -28,6 +28,6 @@ public class RegisterVO {
     @Length(min = 2, max = 6)
     private String name;
 
-    @Length(min = 1, max = 255)
+    @Length(min = 4, max = 255)
     private String contact;
 }
