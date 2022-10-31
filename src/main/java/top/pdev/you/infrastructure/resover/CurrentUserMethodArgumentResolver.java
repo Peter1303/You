@@ -14,6 +14,8 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.TokenInvalidException;
 import top.pdev.you.infrastructure.redis.RedisService;
 
+import java.util.Optional;
+
 /**
  * 当前用户解析器
  * Created in 2022/10/19 10:10
@@ -41,6 +43,9 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
             throw new TokenInvalidException();
         }
         // 从缓存中读取
-        return redisService.getObject(RedisKey.loginToken(token), TokenInfo.class);
+        TokenInfo object = redisService.getObject(RedisKey.loginToken(token), TokenInfo.class);
+        Optional.ofNullable(object)
+                .orElseThrow(TokenInvalidException::new);
+        return object;
     }
 }
