@@ -25,6 +25,7 @@ import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
+import top.pdev.you.infrastructure.util.TokenUtil;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
 import top.pdev.you.interfaces.model.dto.AssociationNameDTO;
 import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
@@ -36,6 +37,7 @@ import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -257,9 +259,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<?> deleteAccount(TokenInfo tokenInfo) {
+    public Result<?> deleteAccount(TokenInfo tokenInfo,
+                                   HttpServletRequest request) {
         User user = userRepository.find(new UserId(tokenInfo.getUid()));
         user.delete();
+        String token = TokenUtil.getTokenByHeader(request);
+        redisService.delete(RedisKey.loginToken(token));
         return Result.ok();
     }
 }

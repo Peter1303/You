@@ -7,6 +7,8 @@ import top.pdev.you.interfaces.model.vo.req.RegisterVO;
 import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 用户服务
  * Created in 2022/10/2 17:55
@@ -60,7 +62,8 @@ public interface UserService {
      * 删除账号
      *
      * @param tokenInfo 令牌信息
+     * @param request   请求
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> deleteAccount(TokenInfo tokenInfo);
+    Result<?> deleteAccount(TokenInfo tokenInfo, HttpServletRequest request);
 }

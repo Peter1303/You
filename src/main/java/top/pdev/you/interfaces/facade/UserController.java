@@ -21,6 +21,7 @@ import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
 import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -102,7 +103,8 @@ public class UserController {
     }
 
     @DeleteMapping("account")
-    public Result<?> deleteAccount(@CurrentUser TokenInfo tokenInfo) {
-        return userService.deleteAccount(tokenInfo);
+    public Result<?> deleteAccount(@CurrentUser TokenInfo tokenInfo,
+                                   HttpServletRequest request) {
+        return userService.deleteAccount(tokenInfo, request);
     }
 }
