@@ -144,5 +144,6 @@ public class Student extends BaseEntity {
         if (!studentRepository.save(studentDO)) {
             throw new InternalErrorException("无法保存学生");
         }
+        this.studentId = new StudentId(studentDO.getId());
     }
 }
