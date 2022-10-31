@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 public class UserLoginVO {
-    @Length(min = 6, max = 64)
+    @Length(min = 32, max = 32)
     @NotBlank(message = "临时凭证不可为空")
     private String code;
 }
