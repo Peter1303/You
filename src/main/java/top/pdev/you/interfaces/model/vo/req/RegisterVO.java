@@ -25,7 +25,7 @@ public class RegisterVO {
     @Length(min = 1, max = 64)
     private String no;
 
-    @Length(min = 2, max = 6)
+    @Length(min = 2, max = 32)
     private String name;
 
     @Length(min = 4, max = 255)
