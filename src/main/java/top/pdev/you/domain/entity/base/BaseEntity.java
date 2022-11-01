@@ -17,7 +17,7 @@ public abstract class BaseEntity {
      *
      * @param student 学生
      */
-    protected void checkStudent(Student student) {
+    protected void check(Student student) {
         Optional.ofNullable(student).orElseThrow(() -> new InternalErrorException("学生为空"));
         Optional.ofNullable(student.getStudentDO())
                 .orElseThrow(() -> new InternalErrorException("学生记录为空"));

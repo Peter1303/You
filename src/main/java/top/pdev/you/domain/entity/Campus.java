@@ -39,7 +39,7 @@ public class Campus extends BaseEntity {
      * @return {@link String}
      */
     public String getStudentCampusName(Student student) {
-        super.checkStudent(student);
+        super.check(student);
         StudentDO studentDO = student.getStudentDO();
         Long classId = studentDO.getClassId();
         ClassDO classDO = classRepository.getDO(classId);

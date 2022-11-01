@@ -73,7 +73,7 @@ public class Student extends BaseEntity {
      * @return {@link String}
      */
     public String getClazz() {
-        super.checkStudent(this);
+        super.check(this);
         Clazz cls = classFactory.newClazz();
         this.clazz = cls.getStudentClassName(this);
         return this.clazz;
@@ -85,7 +85,7 @@ public class Student extends BaseEntity {
      * @return {@link String}
      */
     public String getCampus() {
-        super.checkStudent(this);
+        super.check(this);
         Campus c = campusFactory.newCampus();
         return c.getStudentCampusName(this);
     }
@@ -96,7 +96,7 @@ public class Student extends BaseEntity {
      * @return {@link String}
      */
     public String getInstitute() {
-        super.checkStudent(this);
+        super.check(this);
         Institute institute = instituteFactory.newInstitute();
         return institute.getStudentInstituteName(this);
     }
@@ -107,7 +107,7 @@ public class Student extends BaseEntity {
      * @return {@link Integer}
      */
     public Integer getGrade() {
-        super.checkStudent(this);
+        super.check(this);
         Long classId = getStudentDO().getClassId();
         Clazz clz = classRepository.find(classId);
         if (Optional.ofNullable(clz).isPresent()) {
