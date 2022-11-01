@@ -34,4 +34,11 @@ public class CampusRepositoryImpl
         }
         return null;
     }
+
+    @Override
+    public boolean exists(Long campusId) {
+        LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(CampusDO::getId, campusId);
+        return mapper.exists(queryWrapper);
+    }
 }

@@ -60,4 +60,13 @@ public class ClassRepositoryImpl
         }
         return null;
     }
+
+    @Override
+    public boolean exists(String name, Long instituteId, Long campusId) {
+        LambdaQueryWrapper<ClassDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ClassDO::getName, name)
+                .eq(ClassDO::getInstituteId, instituteId)
+                .eq(ClassDO::getCampusId, campusId);
+        return mapper.exists(queryWrapper);
+    }
 }

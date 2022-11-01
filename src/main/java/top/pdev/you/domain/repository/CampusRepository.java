@@ -18,4 +18,12 @@ public interface CampusRepository extends IService<CampusDO> {
      * @return {@link String}
      */
     String getName(Id id);
+
+    /**
+     * 存在
+     *
+     * @param campusId 校区 ID
+     * @return boolean
+     */
+    boolean exists(Long campusId);
 }

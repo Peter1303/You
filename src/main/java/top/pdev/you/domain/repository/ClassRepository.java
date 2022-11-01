@@ -47,4 +47,14 @@ public interface ClassRepository extends IService<ClassDO> {
      * @return {@link String}
      */
     String getName(Id id);
+
+    /**
+     * 班级存在
+     *
+     * @param name        名字
+     * @param instituteId 学院 ID
+     * @param campusId    校区 ID
+     * @return boolean
+     */
+    boolean exists(String name, Long instituteId, Long campusId);
 }

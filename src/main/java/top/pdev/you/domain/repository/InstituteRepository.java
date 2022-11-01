@@ -18,4 +18,12 @@ public interface InstituteRepository extends IService<InstituteDO> {
      * @return {@link String}
      */
     String getName(Id id);
+
+    /**
+     * 存在
+     *
+     * @param instituteId 学院 ID
+     * @return boolean
+     */
+    boolean exists(Long instituteId);
 }

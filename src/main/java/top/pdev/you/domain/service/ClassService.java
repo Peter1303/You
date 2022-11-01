@@ -1,6 +1,8 @@
 package top.pdev.you.domain.service;
 
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.vo.req.AddClassVO;
+import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 /**
@@ -17,4 +19,20 @@ public interface ClassService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> getClassList(SearchVO vo);
+
+    /**
+     * 添加
+     *
+     * @param addClassVO 添加班级 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> add(AddClassVO addClassVO);
+
+    /**
+     * 删除
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> delete(IdVO idVO);
 }
