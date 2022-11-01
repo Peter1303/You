@@ -16,7 +16,7 @@ import javax.validation.constraints.Positive;
 @Data
 public class AddClassVO {
     @NotNull
-    @Length(min = 1, max = 255)
+    @Length(min = 1, max = 60)
     private String name;
 
     @NotNull

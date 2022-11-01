@@ -2,7 +2,9 @@ package top.pdev.you.interfaces.model.vo.req;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
+import top.pdev.you.common.validator.intefaces.Campus;
 import top.pdev.you.common.validator.intefaces.Clazz;
+import top.pdev.you.common.validator.intefaces.Institute;
 import top.pdev.you.common.validator.intefaces.Student;
 import top.pdev.you.common.validator.intefaces.Teacher;
 
@@ -16,7 +18,7 @@ import javax.validation.constraints.Positive;
  */
 @Data
 public class SearchVO {
-    @Length(max = 60, groups = {Clazz.class})
+    @Length(max = 60, groups = {Clazz.class, Campus.class, Institute.class})
     @Length(max = 6, groups = {Teacher.class, Student.class})
     private String name;
 
