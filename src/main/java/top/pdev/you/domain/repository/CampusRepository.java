@@ -26,4 +26,12 @@ public interface CampusRepository extends IService<CampusDO> {
      * @return boolean
      */
     boolean exists(Long campusId);
+
+    /**
+     * 存在
+     *
+     * @param name 名字
+     * @return boolean
+     */
+    boolean exists(String name);
 }

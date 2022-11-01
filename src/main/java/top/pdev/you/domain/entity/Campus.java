@@ -2,6 +2,7 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.entity.data.ClassDO;
@@ -47,5 +48,20 @@ public class Campus extends BaseEntity {
             return campusRepository.getName(new Id(classDO.getCampusId()));
         }
         return null;
+    }
+
+    /**
+     * 保存
+     *
+     * @param campusDO 校园 DO
+     */
+    public void save(CampusDO campusDO) {
+        // 是否存在相同的
+        if (campusRepository.exists(campusDO.getName())) {
+            throw new BusinessException("已经存在相同的校区");
+        }
+        if (!campusRepository.save(campusDO)) {
+            throw new BusinessException("保存校区失败");
+        }
     }
 }
