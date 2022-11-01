@@ -1,6 +1,9 @@
 package top.pdev.you.interfaces.model.vo.req;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 添加学院 VO
@@ -10,5 +13,7 @@ import lombok.Data;
  */
 @Data
 public class AddInstituteVO {
+    @NotNull
+    @Length(min = 1, max = 255)
     private String name;
 }
