@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class SetProfileVO {
-    @Length(min = 1, max = 255)
+    @Length(min = 4, max = 255)
     @NotNull
     private String contact;
 }
