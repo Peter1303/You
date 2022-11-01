@@ -41,4 +41,11 @@ public class InstituteRepositoryImpl
         queryWrapper.eq(InstituteDO::getId, instituteId);
         return mapper.exists(queryWrapper);
     }
+
+    @Override
+    public boolean exists(String name) {
+        LambdaQueryWrapper<InstituteDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(InstituteDO::getName, name);
+        return mapper.exists(queryWrapper);
+    }
 }

@@ -26,4 +26,12 @@ public interface InstituteRepository extends IService<InstituteDO> {
      * @return boolean
      */
     boolean exists(Long instituteId);
+
+    /**
+     * 存在
+     *
+     * @param name 名字
+     * @return boolean
+     */
+    boolean exists(String name);
 }

@@ -2,6 +2,7 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.data.InstituteDO;
@@ -46,5 +47,20 @@ public class Institute extends BaseEntity {
             return instituteRepository.getName(new Id(classDO.getInstituteId()));
         }
         return null;
+    }
+
+    /**
+     * 保存
+     *
+     * @param instituteDO 学院 DO
+     */
+    public void save(InstituteDO instituteDO) {
+        // 检查存在
+        if (instituteRepository.exists(instituteDO.getName())) {
+            throw new BusinessException("该学院已经存在");
+        }
+        if (!instituteRepository.save(instituteDO)) {
+            throw new BusinessException("保存学院失败");
+        }
     }
 }
