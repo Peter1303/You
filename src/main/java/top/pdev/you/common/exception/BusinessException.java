@@ -19,6 +19,10 @@ public class BusinessException extends RuntimeException {
     @Getter
     private Throwable cause;
 
+    public BusinessException() {
+        code = ResultCode.FAILED;
+    }
+
     public BusinessException(ResultCode code) {
         this.code = code;
     }

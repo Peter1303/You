@@ -9,21 +9,18 @@ import top.pdev.you.infrastructure.result.ResultCode;
  *
  * @author Peter1303
  */
-public class PermissionDeniedException extends RuntimeException {
+public class PermissionDeniedException extends BusinessException {
     @Getter
-    private String message;
+    private final String message = "权限不足";
 
     @Getter
     private final ResultCode code = ResultCode.PERMISSION_DENIED;
 
-    @Getter
-    private Throwable cause;
-
     public PermissionDeniedException() {
+        super(ResultCode.PERMISSION_DENIED);
     }
 
     public PermissionDeniedException(String message, Throwable cause) {
-        this.message = message;
-        this.cause = cause;
+        super(ResultCode.PERMISSION_DENIED, message, cause);
     }
 }
