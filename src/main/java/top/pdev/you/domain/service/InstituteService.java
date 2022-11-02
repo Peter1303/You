@@ -3,6 +3,7 @@ package top.pdev.you.domain.service;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddInstituteVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 /**
  * 学院服务
@@ -26,4 +27,12 @@ public interface InstituteService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> delete(IdVO idVO);
+
+    /**
+     * 获取学院列表
+     *
+     * @param searchVO 搜索 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> getInstituteList(SearchVO searchVO);
 }

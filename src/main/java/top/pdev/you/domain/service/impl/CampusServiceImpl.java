@@ -8,10 +8,14 @@ import top.pdev.you.domain.factory.CampusFactory;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.service.CampusService;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.dto.CampusInfoDTO;
+import top.pdev.you.interfaces.model.vo.ListVO;
 import top.pdev.you.interfaces.model.vo.req.AddCampusVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 校区服务实现类
@@ -42,5 +46,13 @@ public class CampusServiceImpl implements CampusService {
             throw new BusinessException("删除校区失败");
         }
         return Result.ok();
+    }
+
+    @Override
+    public Result<?> getCampusList(SearchVO searchVO) {
+        List<CampusInfoDTO> list = campusRepository.getCampusInfo(searchVO.getName());
+        ListVO<CampusInfoDTO> listVO = new ListVO<>();
+        listVO.setList(list);
+        return Result.ok(listVO);
     }
 }

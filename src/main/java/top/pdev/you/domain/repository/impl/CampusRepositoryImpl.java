@@ -7,9 +7,13 @@ import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.mapper.CampusMapper;
 import top.pdev.you.domain.repository.CampusRepository;
+import top.pdev.you.interfaces.assembler.CampusAssembler;
+import top.pdev.you.interfaces.model.dto.CampusInfoDTO;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 校区仓库实现类
@@ -33,6 +37,16 @@ public class CampusRepositoryImpl
             return campusDO.getName();
         }
         return null;
+    }
+
+    @Override
+    public List<CampusInfoDTO> getCampusInfo(String name) {
+        LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(CampusDO::getName, name);
+        List<CampusDO> list = mapper.selectList(queryWrapper);
+        return list.stream()
+                .map(CampusAssembler.INSTANCE::convert)
+                .collect(Collectors.toList());
     }
 
     @Override

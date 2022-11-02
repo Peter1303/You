@@ -7,9 +7,13 @@ import top.pdev.you.domain.entity.data.InstituteDO;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.mapper.InstituteMapper;
 import top.pdev.you.domain.repository.InstituteRepository;
+import top.pdev.you.interfaces.assembler.InstituteAssembler;
+import top.pdev.you.interfaces.model.dto.InstituteInfoDTO;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 学院仓库实现类
@@ -33,6 +37,16 @@ public class InstituteRepositoryImpl
             return instituteDO.getName();
         }
         return null;
+    }
+
+    @Override
+    public List<InstituteInfoDTO> getInstituteInfo(String name) {
+        LambdaQueryWrapper<InstituteDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(InstituteDO::getName, name);
+        List<InstituteDO> list = mapper.selectList(queryWrapper);
+        return list.stream()
+                .map(InstituteAssembler.INSTANCE::convert)
+                .collect(Collectors.toList());
     }
 
     @Override

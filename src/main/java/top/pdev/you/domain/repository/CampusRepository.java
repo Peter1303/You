@@ -3,6 +3,9 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.entity.types.Id;
+import top.pdev.you.interfaces.model.dto.CampusInfoDTO;
+
+import java.util.List;
 
 /**
  * 校区仓库
@@ -18,6 +21,14 @@ public interface CampusRepository extends IService<CampusDO> {
      * @return {@link String}
      */
     String getName(Id id);
+
+    /**
+     * 获取校区信息
+     *
+     * @param name 名字
+     * @return {@link List}<{@link CampusInfoDTO}>
+     */
+    List<CampusInfoDTO> getCampusInfo(String name);
 
     /**
      * 存在

@@ -8,10 +8,14 @@ import top.pdev.you.domain.factory.InstituteFactory;
 import top.pdev.you.domain.repository.InstituteRepository;
 import top.pdev.you.domain.service.InstituteService;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.dto.InstituteInfoDTO;
+import top.pdev.you.interfaces.model.vo.ListVO;
 import top.pdev.you.interfaces.model.vo.req.AddInstituteVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 学院服务实现类
@@ -54,5 +58,19 @@ public class InstituteServiceImpl implements InstituteService {
             throw new BusinessException("删除学院失败");
         }
         return Result.ok();
+    }
+
+    /**
+     * 获取学院列表
+     *
+     * @param searchVO 搜索 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Override
+    public Result<?> getInstituteList(SearchVO searchVO) {
+        List<InstituteInfoDTO> list = instituteRepository.getInstituteInfo(searchVO.getName());
+        ListVO<InstituteInfoDTO> listVO = new ListVO<>();
+        listVO.setList(list);
+        return Result.ok(listVO);
     }
 }
