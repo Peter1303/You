@@ -33,10 +33,10 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public Result<?> getClassList(SearchVO vo) {
-        List<ClassInfoDTO> list = classRepository.getClassInfo(vo);
+        List<ClassInfoDTO> list = classRepository.getClassInfo(vo.getName());
         ListVO<ClassInfoDTO> listVO = new ListVO<>();
         listVO.setList(list);
-        return Result.ok().setData(listVO);
+        return Result.ok(listVO);
     }
 
     @Override
