@@ -5,6 +5,7 @@ import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import java.util.List;
 
@@ -34,10 +35,10 @@ public interface ClassRepository extends IService<ClassDO> {
     /**
      * 获取班级信息
      *
-     * @param name 名字
+     * @param searchVO 搜索 VO
      * @return {@link List}<{@link ClassInfoDTO}>
      */
-    List<ClassInfoDTO> getClassInfo(String name);
+    List<ClassInfoDTO> getClassInfo(SearchVO searchVO);
 
     /**
      * 获取班级名字

@@ -9,6 +9,7 @@ import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.mapper.ClassMapper;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,8 +46,8 @@ public class ClassRepositoryImpl
     }
 
     @Override
-    public List<ClassInfoDTO> getClassInfo(String name) {
-        return mapper.getClassInfoList(name);
+    public List<ClassInfoDTO> getClassInfo(SearchVO searchVO) {
+        return mapper.getClassInfoList(searchVO);
     }
 
     @Override

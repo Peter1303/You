@@ -14,7 +14,7 @@
                       on c.institute_id = i.id
         <where>
             <if test="vo.name != null">
-                AND c.name LIKE CONCAT('%', #{name}, '%')
+                AND c.name LIKE CONCAT('%', #{vo.name}, '%')
             </if>
             <if test="vo.instituteId != null">
                 AND c.institute_id = #{vo.instituteId}
