@@ -1,6 +1,7 @@
 package top.pdev.you.domain.entity.data;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @TableName("activity_participant_info")
 @Data
-public class ActivityParticipantInfo {
+public class ActivityParticipantInfoDO {
     /**
      * ID
      */
@@ -28,9 +29,10 @@ public class ActivityParticipantInfo {
     private Long activityId;
 
     /**
-     * uid
+     * 学生 ID
      */
-    private Long uid;
+    @TableField("student_id")
+    private Long studentId;
 
     /**
      * 类型

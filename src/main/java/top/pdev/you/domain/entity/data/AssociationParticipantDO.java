@@ -1,5 +1,6 @@
 package top.pdev.you.domain.entity.data;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -20,12 +21,8 @@ public class AssociationParticipantDO {
     private Long associationId;
 
     /**
-     * uid
+     * 学生 ID
      */
-    private Long uid;
-
-    /**
-     * 时间
-     */
-    private LocalDateTime time;
+    @TableField("student_id")
+    private Long studentId;
 }

@@ -77,7 +77,7 @@ public class AssociationRepositoryImpl
     @Override
     public List<AssociationDO> ofStudentList(Student student) {
         LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getUid, student.getUser().getUserId().getId());
+        queryWrapper.eq(AssociationParticipantDO::getStudentId, student.getStudentId().getId());
         List<AssociationParticipantDO> participantDOs =
                 associationParticipateMapper.selectList(queryWrapper);
         if (participantDOs.isEmpty()) {
