@@ -39,7 +39,7 @@ public class UserRepositoryImpl
     }
 
     @Override
-    public User findByOpenId(String openId) {
+    public User findByToken(String openId) {
         LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDO::getWechatId, openId);
         UserDO userDO = mapper.selectOne(queryWrapper);

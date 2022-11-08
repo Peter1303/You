@@ -7,7 +7,10 @@ import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.PermissionDeniedException;
+import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
 import top.pdev.you.infrastructure.util.RequestUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
@@ -28,33 +31,41 @@ public class AccessPermissionAspect {
     @Resource
     private AdminService adminService;
 
+    @Resource
+    private UserRepository userRepository;
+
     @Before("execution(* top.pdev.you.interfaces.facade.*.*(..)) " +
             "&& @annotation(accessPermission) ")
     public void checkPermission(JoinPoint point, AccessPermission accessPermission) {
         Permission permission = accessPermission.permission();
+        boolean lower = accessPermission.lower();
         HttpServletRequest request = RequestUtil.getRequest();
         String token = TokenUtil.getTokenByHeader(request);
+        User user = userRepository.findByToken(token);
+        Integer currPermission = user.getPermission();
         boolean manager = adminService.isManager(token);
         boolean admin = adminService.isAdmin(token);
         boolean superAdmin = adminService.isSuperAdmin(token);
-        switch (permission) {
-            case MANAGER:
-                if (!manager) {
-                    throw new PermissionDeniedException();
-                }
-                break;
-            case ADMIN:
-                if (!admin) {
-                    throw new PermissionDeniedException();
-                }
-                break;
-            case SUPER:
-                if (!superAdmin) {
-                    throw new PermissionDeniedException();
-                }
-                break;
-            default:
-                break;
+        if (lower) {
+            if (permission.getValue() < currPermission) {
+                throw new BusinessException("功能不可用");
+            }
+        } else {
+            boolean ok = true;
+            switch (permission) {
+                case SUPER:
+                    ok = superAdmin;
+                    break;
+                case ADMIN:
+                    ok = admin;
+                    break;
+                case MANAGER:
+                    ok = manager;
+                    break;
+            }
+            if (!ok) {
+                throw new PermissionDeniedException();
+            }
         }
     }
 }

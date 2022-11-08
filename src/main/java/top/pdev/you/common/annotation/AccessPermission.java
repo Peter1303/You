@@ -19,4 +19,11 @@ import java.lang.annotation.Target;
 @Documented
 public @interface AccessPermission {
     Permission permission() default Permission.USER;
+
+    /**
+     * 需要比目标权限低
+     *
+     * @return boolean
+     */
+    boolean lower() default false;
 }

@@ -21,12 +21,12 @@ public interface UserRepository extends IService<UserDO> {
     User find(UserId userId);
 
     /**
-     * 查找通过开放 ID
+     * 通过令牌查找
      *
      * @param openId 开放 ID
      * @return {@link User}
      */
-    User findByOpenId(String openId);
+    User findByToken(String openId);
 
     /**
      * 超级管理存在

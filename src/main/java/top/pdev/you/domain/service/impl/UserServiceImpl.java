@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
                                 .setMessage("超级管理员");
                     }
                 }
-                User user = userRepository.findByOpenId(openId);
+                User user = userRepository.findByToken(openId);
                 if (Optional.ofNullable(user).isPresent()) {
                     return Result.ok().setData(loginResultVO);
                 }
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     public Result<?> register(Role role, RegisterVO vo) {
         WechatLoginDTO loginDTO = wechatService.login(vo.getCode());
         String openId = loginDTO.getOpenId();
-        if (Optional.ofNullable(userRepository.findByOpenId(openId)).isPresent()) {
+        if (Optional.ofNullable(userRepository.findByToken(openId)).isPresent()) {
             throw new BusinessException(ResultCode.FAILED, "用户已注册");
         }
         User user = userFactory.newUser();
