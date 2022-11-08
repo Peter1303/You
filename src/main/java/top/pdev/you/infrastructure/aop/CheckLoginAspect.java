@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import top.pdev.you.common.constant.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.BusinessException;
-import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.RequestUtil;
@@ -30,9 +29,6 @@ import java.util.Optional;
 public class CheckLoginAspect {
     @Resource
     private RedisService redisService;
-
-    @Resource
-    private UserRepository userRepository;
 
     /**
      * 检查登录
