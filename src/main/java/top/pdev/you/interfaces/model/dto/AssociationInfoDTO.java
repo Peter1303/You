@@ -1,5 +1,6 @@
 package top.pdev.you.interfaces.model.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 /**
@@ -13,6 +14,9 @@ public class AssociationInfoDTO {
     private Long id;
     private String name;
     private String summary;
-    private String logo;
-    private Integer type;
+
+    @TableField("student_id")
+    private Long studentId;
+
+    private Integer numbers;
 }

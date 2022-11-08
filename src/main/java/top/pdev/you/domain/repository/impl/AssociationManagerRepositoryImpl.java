@@ -8,7 +8,6 @@ import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationManagerDO;
 import top.pdev.you.domain.mapper.AssociationManagerMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
-import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 
 import javax.annotation.Resource;
 import java.util.List;

@@ -71,7 +71,7 @@ public class AdminServiceImpl implements AdminService {
             user = userRepository.find(new UserId((Long) uidOrToken));
         } else if (uidOrToken instanceof String) {
             String token = (String) uidOrToken;
-            user = userRepository.findByOpenId(token);
+            user = userRepository.findByToken(token);
         } else {
             throw new InternalErrorException("传值错误");
         }

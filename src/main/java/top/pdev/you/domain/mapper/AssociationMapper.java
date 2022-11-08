@@ -2,7 +2,12 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
+
+import java.util.List;
 
 /**
  * 社团持久化
@@ -12,4 +17,11 @@ import top.pdev.you.domain.entity.data.AssociationDO;
  */
 @Mapper
 public interface AssociationMapper extends BaseMapper<AssociationDO> {
+    /**
+     * 获取信息列表
+     *
+     * @param searchVO 搜索 VO
+     * @return {@link List}<{@link AssociationInfoDTO}>
+     */
+    List<AssociationInfoDTO> getInfoList(@Param("vo") SearchVO searchVO);
 }

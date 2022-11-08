@@ -16,6 +16,8 @@ import top.pdev.you.domain.mapper.AssociationParticipateMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
+import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -89,5 +91,17 @@ public class AssociationRepositoryImpl
                         .stream()
                         .mapToLong(AssociationParticipantDO::getAssociationId));
         return mapper.selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public List<AssociationInfoDTO> getInfoList(SearchVO searchVO) {
+        return mapper.getInfoList(searchVO);
+    }
+
+    @Override
+    public boolean exists(String name) {
+        LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(AssociationDO::getName, name);
+        return mapper.exists(queryWrapper);
     }
 }

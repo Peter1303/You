@@ -6,6 +6,9 @@ import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.Id;
+import top.pdev.you.domain.entity.types.UserId;
+import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
+import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import java.util.List;
 
@@ -47,4 +50,20 @@ public interface AssociationRepository extends IService<AssociationDO> {
      * @return {@link List}<{@link AssociationDO}>
      */
     List<AssociationDO> ofStudentList(Student student);
+
+    /**
+     * 获取信息列表
+     *
+     * @param searchVO 搜索 VO
+     * @return {@link List}<{@link AssociationInfoDTO}>
+     */
+    List<AssociationInfoDTO> getInfoList(SearchVO searchVO);
+
+    /**
+     * 存在
+     *
+     * @param name 名字
+     * @return boolean
+     */
+    boolean exists(String name);
 }

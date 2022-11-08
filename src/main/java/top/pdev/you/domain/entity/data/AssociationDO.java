@@ -21,11 +21,6 @@ public class AssociationDO {
     private Long id;
 
     /**
-     * 标志
-     */
-    private String logo;
-
-    /**
      * 名称
      */
     private String name;
