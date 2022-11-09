@@ -13,6 +13,6 @@ public class AssociationInfoVO {
     private Long id;
     private String name;
     private String summary;
-    private Boolean joined;
+    private Integer status;
     private Integer numbers;
 }
