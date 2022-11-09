@@ -1,5 +1,6 @@
 package top.pdev.you.interfaces.facade;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -36,6 +37,7 @@ public class AssociationController {
      * @param addAssociationVO 添加社团 VO
      * @return {@link Result}<{@link ?}>
      */
+    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("")
     public Result<?> add(@RequestBody @Validated AddAssociationVO addAssociationVO) {

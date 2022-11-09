@@ -96,12 +96,14 @@ public class UserController {
         return userService.profile(tokenInfo);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @PostMapping("profile/set")
     public Result<?> setProfile(@CurrentUser TokenInfo tokenInfo,
                                 @RequestBody SetProfileVO setProfileVO) {
         return userService.setProfile(tokenInfo, setProfileVO);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("account")
     public Result<?> deleteAccount(@CurrentUser TokenInfo tokenInfo,
                                    HttpServletRequest request) {

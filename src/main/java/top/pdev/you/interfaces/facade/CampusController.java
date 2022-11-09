@@ -1,5 +1,6 @@
 package top.pdev.you.interfaces.facade;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,6 +34,7 @@ public class CampusController {
      * @param addCampusVO 添加校区 VO
      * @return {@link Result}<{@link ?}>
      */
+    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("")
     public Result<?> add(@RequestBody @Validated AddCampusVO addCampusVO) {
@@ -45,6 +47,7 @@ public class CampusController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
+    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {
