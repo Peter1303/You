@@ -21,6 +21,7 @@ import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
@@ -91,5 +92,18 @@ public class AssociationServiceImpl implements AssociationService {
                         })
                         .collect(Collectors.toList());
         return Result.ok(list);
+    }
+
+    @Override
+    public Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO) {
+        // 需要审核
+        if (!directly) {
+            AssociationId associationId = new AssociationId(idVO.getId());
+            Association association = associationFactory.getAssociation(associationId);
+            User user = userRepository.find(new UserId(tokenInfo.getUid()));
+            Student student = userFactory.getStudent(user);
+            association.request(student);
+        }
+        return Result.ok();
     }
 }

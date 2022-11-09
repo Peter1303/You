@@ -33,4 +33,14 @@ public class AssociationAuditRepositoryImpl
                 .eq(AssociationAuditDO::getAssociationId, associationId.getId());
         return mapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public boolean exists(StudentId studentId, AssociationId id) {
+        checkId(studentId);
+        checkId(id);
+        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId.getId())
+                .eq(AssociationAuditDO::getAssociationId, id.getId());
+        return mapper.exists(queryWrapper);
+    }
 }

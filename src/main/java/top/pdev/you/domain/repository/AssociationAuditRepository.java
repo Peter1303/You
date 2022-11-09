@@ -20,4 +20,13 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
      * @return boolean
      */
     AssociationAuditDO getOne(StudentId studentId, AssociationId associationId);
+
+    /**
+     * 存在
+     *
+     * @param studentId 学生 ID
+     * @param id        ID
+     * @return boolean
+     */
+    boolean exists(StudentId studentId, AssociationId id);
 }

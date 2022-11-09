@@ -2,6 +2,7 @@ package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
@@ -59,7 +60,10 @@ public class AssociationRepositoryImpl
     @Override
     public Association getOne(Id id) {
         checkId(id);
-        return associationFactory.getAssociation(getById(id.getId()));
+        AssociationDO associationDO = getById(id.getId());
+        Optional.ofNullable(associationDO)
+                .orElseThrow(() -> new BusinessException("没有这个社团"));
+        return associationFactory.getAssociation(associationDO);
     }
 
     @Override

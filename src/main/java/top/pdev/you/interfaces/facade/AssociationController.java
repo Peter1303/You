@@ -15,6 +15,7 @@ import top.pdev.you.common.validator.intefaces.Association;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
@@ -56,5 +57,20 @@ public class AssociationController {
     public Result<?> list(@RequestBody @Validated(Association.class) SearchVO searchVO,
                           @CurrentUser TokenInfo tokenInfo) {
         return associationService.list(searchVO, tokenInfo);
+    }
+
+    /**
+     * 请求加入
+     *
+     * @param idVO      ID VO
+     * @param tokenInfo 令牌信息
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.MANAGER, lower = true)
+    @PutMapping("join/request")
+    public Result<?> joinRequest(@RequestBody @Validated IdVO idVO,
+                                 @CurrentUser TokenInfo tokenInfo) {
+        return associationService.join(false, tokenInfo, idVO);
     }
 }

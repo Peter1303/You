@@ -3,6 +3,8 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
+import top.pdev.you.domain.entity.types.AssociationId;
+import top.pdev.you.domain.entity.types.StudentId;
 
 import java.util.List;
 
@@ -21,4 +23,13 @@ public interface AssociationParticipateRepository
      * @return {@link List}<{@link AssociationParticipantDO}>
      */
     List<AssociationParticipantDO> getParticipateList(Student student);
+
+    /**
+     * 存在
+     *
+     * @param studentId     学生 ID
+     * @param associationId 社团 ID
+     * @return boolean
+     */
+    boolean exists(StudentId studentId, AssociationId associationId);
 }

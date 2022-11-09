@@ -3,6 +3,7 @@ package top.pdev.you.domain.service;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 /**
@@ -28,4 +29,14 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> list(SearchVO searchVO, TokenInfo tokenInfo);
+
+    /**
+     * 加入
+     *
+     * @param directly  直接
+     * @param tokenInfo 令牌信息
+     * @param idVO      ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO);
 }
