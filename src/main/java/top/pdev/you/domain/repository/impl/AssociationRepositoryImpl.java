@@ -12,8 +12,8 @@ import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
-import top.pdev.you.domain.mapper.AssociationParticipateMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
+import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
@@ -38,7 +38,7 @@ public class AssociationRepositoryImpl
     private AssociationMapper mapper;
 
     @Resource
-    private AssociationParticipateMapper associationParticipateMapper;
+    private AssociationParticipateRepository associationParticipateRepository;
 
     @Resource
     private AssociationFactory associationFactory;
@@ -78,10 +78,8 @@ public class AssociationRepositoryImpl
 
     @Override
     public List<AssociationDO> ofStudentList(Student student) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getStudentId, student.getStudentId().getId());
         List<AssociationParticipantDO> participantDOs =
-                associationParticipateMapper.selectList(queryWrapper);
+                associationParticipateRepository.getParticipateList(student);
         if (participantDOs.isEmpty()) {
             return new ArrayList<>();
         }
