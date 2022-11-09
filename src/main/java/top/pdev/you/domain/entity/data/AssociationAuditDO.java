@@ -1,5 +1,6 @@
 package top.pdev.you.domain.entity.data;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -20,9 +21,10 @@ public class AssociationAuditDO {
     private Long associationId;
 
     /**
-     * uid
+     * 学生 ID
      */
-    private Long uid;
+    @TableField("student_id")
+    private Long studentId;
 
     /**
      * 状态
