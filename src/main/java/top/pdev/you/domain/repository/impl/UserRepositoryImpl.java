@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.UserDO;
+import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.UserRepository;
@@ -28,8 +29,25 @@ public class UserRepositoryImpl
 
     @Override
     public User find(UserId userId) {
+        checkId(userId);
         LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDO::getId, userId.getId());
+        UserDO userDO = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(userDO).isPresent()) {
+            return null;
+        }
+        // TODO cache
+        return new User(userDO);
+    }
+
+    @Override
+    public User find(StudentId studentId) {
+        checkId(studentId);
+        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDO::getTargetId, studentId.getId())
+                .and(wrapper -> wrapper.between(UserDO::getPermission,
+                        Permission.USER.getValue(),
+                        Permission.MANAGER.getValue()));
         UserDO userDO = mapper.selectOne(queryWrapper);
         if (!Optional.ofNullable(userDO).isPresent()) {
             return null;

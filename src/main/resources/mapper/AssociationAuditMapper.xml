@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.pdev.you.domain.mapper.AssociationAuditMapper">
+    <select id="getAuditList" resultType="top.pdev.you.interfaces.model.dto.AssociationAuditDTO">
+        SELECT aa.id         AS id,
+               a.name        AS name,
+               aa.student_id AS student_id,
+               aa.time       AS time
+        FROM association_audit aa
+                 JOIN association a ON a.id = aa.association_id
+        WHERE aa.status IS NULL
+    </select>
+</mapper>

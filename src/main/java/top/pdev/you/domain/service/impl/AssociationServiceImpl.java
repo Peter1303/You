@@ -19,6 +19,9 @@ import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
+import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
+import top.pdev.you.interfaces.model.dto.StudentInfoDTO;
+import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
@@ -105,5 +108,25 @@ public class AssociationServiceImpl implements AssociationService {
             association.request(student);
         }
         return Result.ok();
+    }
+
+    @Override
+    public Result<?> auditList() {
+        List<AssociationAuditDTO> auditList = associationAuditRepository.getAuditList();
+        List<AssociationAuditVO> list = auditList.stream()
+                .map(item -> {
+                    AssociationAuditVO auditVO = AssociationAssembler.INSTANCE.convert2auditInfoVO(item);
+                    Student student = userFactory.getStudent(new StudentId(item.getStudentId()));
+                    StudentInfoDTO dto = new StudentInfoDTO();
+                    dto.setName(student.getName());
+                    dto.setClazz(student.getClazz());
+                    dto.setNo(student.getNo());
+                    dto.setCampus(student.getCampus());
+                    dto.setInstitute(student.getInstitute());
+                    auditVO.setStudent(dto);
+                    return auditVO;
+                })
+                .collect(Collectors.toList());
+        return Result.ok(list);
     }
 }

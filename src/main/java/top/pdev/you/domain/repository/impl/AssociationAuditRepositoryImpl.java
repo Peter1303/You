@@ -8,8 +8,10 @@ import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.mapper.AssociationAuditMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
+import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 社团审核仓库实现类
@@ -42,5 +44,10 @@ public class AssociationAuditRepositoryImpl
         queryWrapper.eq(AssociationAuditDO::getStudentId, studentId.getId())
                 .eq(AssociationAuditDO::getAssociationId, id.getId());
         return mapper.exists(queryWrapper);
+    }
+
+    @Override
+    public List<AssociationAuditDTO> getAuditList() {
+        return mapper.getAuditList();
     }
 }

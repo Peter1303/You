@@ -2,6 +2,7 @@ package top.pdev.you.interfaces.facade;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -72,5 +73,16 @@ public class AssociationController {
     public Result<?> joinRequest(@RequestBody @Validated IdVO idVO,
                                  @CurrentUser TokenInfo tokenInfo) {
         return associationService.join(false, tokenInfo, idVO);
+    }
+
+    /**
+     * 审核列表
+     *
+     * @return {@link Result}<{@link ?}>
+     */
+    @AccessPermission(permission = Permission.MANAGER)
+    @GetMapping("audit")
+    public Result<?> auditList() {
+        return associationService.auditList();
     }
 }

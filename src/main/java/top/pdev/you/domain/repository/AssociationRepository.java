@@ -6,7 +6,6 @@ import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.Id;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 

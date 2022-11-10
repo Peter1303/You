@@ -10,7 +10,6 @@ import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;

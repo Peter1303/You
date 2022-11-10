@@ -39,4 +39,11 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO);
+
+    /**
+     * 审核列表
+     *
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> auditList();
 }

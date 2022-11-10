@@ -1,7 +1,9 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
@@ -15,6 +17,7 @@ import top.pdev.you.domain.factory.InstituteFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.infrastructure.result.ResultCode;
 
 import java.util.List;
@@ -41,15 +44,37 @@ public class Student extends BaseEntity {
      */
     private StudentDO studentDO;
 
-    private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
-    private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-    private final AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
-    private final ClassFactory classFactory = SpringUtil.getBean(ClassFactory.class);
-    private final AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
-    private final CampusFactory campusFactory = SpringUtil.getBean(CampusFactory.class);
-    private final InstituteFactory instituteFactory = SpringUtil.getBean(InstituteFactory.class);
+    @Getter(AccessLevel.NONE)
+    private final StudentRepository studentRepository =
+            SpringUtil.getBean(StudentRepository.class);
+    @Getter(AccessLevel.NONE)
+    private final UserRepository userRepository =
+            SpringUtil.getBean(UserRepository.class);
+    @Getter(AccessLevel.NONE)
+    private final ClassRepository classRepository =
+            SpringUtil.getBean(ClassRepository.class);
+    @Getter(AccessLevel.NONE)
+    private final AssociationRepository associationRepository =
+            SpringUtil.getBean(AssociationRepository.class);
+    @Getter(AccessLevel.NONE)
+    private final ClassFactory classFactory =
+            SpringUtil.getBean(ClassFactory.class);
+    @Getter(AccessLevel.NONE)
+    private final AssociationFactory associationFactory =
+            SpringUtil.getBean(AssociationFactory.class);
+    @Getter(AccessLevel.NONE)
+    private final CampusFactory campusFactory =
+            SpringUtil.getBean(CampusFactory.class);
+    @Getter(AccessLevel.NONE)
+    private final InstituteFactory instituteFactory =
+            SpringUtil.getBean(InstituteFactory.class);
 
-    public Student(User user) {
+    /**
+     * 初始化
+     *
+     * @param user 用户
+     */
+    private void init(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
@@ -61,6 +86,14 @@ public class Student extends BaseEntity {
         this.name = studentDO.getName();
         this.no = studentDO.getNo();
         this.contact = studentDO.getContact();
+    }
+
+    public Student(User user) {
+        init(user);
+    }
+
+    public Student(StudentId id) {
+        init(userRepository.find(id));
     }
 
     public List<AssociationDO> getAssociations() {

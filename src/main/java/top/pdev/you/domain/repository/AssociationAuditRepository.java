@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
+
+import java.util.List;
 
 /**
  * 社团审核仓库
@@ -29,4 +32,11 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
      * @return boolean
      */
     boolean exists(StudentId studentId, AssociationId id);
+
+    /**
+     * 获取审核列表
+     *
+     * @return {@link List}<{@link AssociationAuditDTO}>
+     */
+    List<AssociationAuditDTO> getAuditList();
 }
