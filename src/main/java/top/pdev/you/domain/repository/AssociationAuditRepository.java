@@ -25,6 +25,21 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
     AssociationAuditDO getOne(StudentId studentId, AssociationId associationId);
 
     /**
+     * 获取一个
+     *
+     * @param id ID
+     * @return {@link AssociationAuditDO}
+     */
+    AssociationAuditDO getOne(Id id);
+
+    /**
+     * 获取审核列表
+     *
+     * @return {@link List}<{@link AssociationAuditDTO}>
+     */
+    List<AssociationAuditDTO> getAuditList();
+
+    /**
      * 存在
      *
      * @param studentId 学生 ID

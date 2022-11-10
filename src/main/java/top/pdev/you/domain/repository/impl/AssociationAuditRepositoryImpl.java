@@ -37,6 +37,22 @@ public class AssociationAuditRepositoryImpl
     }
 
     @Override
+    public AssociationAuditDO getOne(Id id) {
+        checkId(id);
+        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAuditDO::getId, id.getId());
+        AssociationAuditDO auditDO = mapper.selectOne(queryWrapper);
+        Optional.ofNullable(auditDO)
+                .orElseThrow(() -> new BusinessException("找不到审核项目"));
+        return auditDO;
+    }
+
+    @Override
+    public List<AssociationAuditDTO> getAuditList() {
+        return mapper.getAuditList();
+    }
+
+    @Override
     public boolean exists(StudentId studentId, AssociationId id) {
         checkId(studentId);
         checkId(id);
