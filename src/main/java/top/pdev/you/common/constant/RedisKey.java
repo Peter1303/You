@@ -50,4 +50,13 @@ public class RedisKey {
     public static String init() {
         return "system.init";
     }
+
+    /**
+     * 获取微信访问令牌
+     *
+     * @return {@link String}
+     */
+    public static String getWechatAccessToken() {
+        return "wechatAccessToken";
+    }
 }
