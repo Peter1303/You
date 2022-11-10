@@ -97,4 +97,11 @@ public class AssociationController {
     public Result<?> pass(@RequestBody @Validated IdVO idVO) {
         return associationService.pass(idVO);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.MANAGER)
+    @PostMapping("reject")
+    public Result<?> reject(@RequestBody @Validated IdVO idVO) {
+        return associationService.reject(idVO);
+    }
 }

@@ -54,4 +54,12 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> pass(IdVO idVO);
+
+    /**
+     * 拒绝
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> reject(IdVO idVO);
 }

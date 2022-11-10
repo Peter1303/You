@@ -150,20 +150,39 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public Result<?> pass(IdVO idVO) {
+        auditAssociationRequest(idVO, true);
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> reject(IdVO idVO) {
+        auditAssociationRequest(idVO, false);
+        return Result.ok();
+    }
+
+    /**
+     * 审计社团请求
+     *
+     * @param idVO   ID VO
+     * @param accept 接受
+     */
+    private void auditAssociationRequest(IdVO idVO, boolean accept) {
         Id id = new Id(idVO.getId());
         AssociationAuditDO auditDO = associationAuditRepository.getOne(id);
         checkAudit(auditDO);
         Student student = userFactory.getStudent(new StudentId(auditDO.getStudentId()));
         Association association =
                 associationFactory.getAssociation(new AssociationId(auditDO.getAssociationId()));
-        association.accept(student);
+        if (accept) {
+            association.accept(student);
+        }
         // 更改审核记录
-        associationAuditRepository.changeStatus(id, true);
+        associationAuditRepository.changeStatus(id, accept);
         AssociationAuditEvent event = new AssociationAuditEvent(this);
         event.setAssociation(association);
         event.setStudent(student);
-        event.setPassed(true);
+        event.setPassed(accept);
+        // 推送事件
         applicationEventPublisher.publishEvent(event);
-        return Result.ok();
     }
 }
