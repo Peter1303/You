@@ -14,4 +14,5 @@ public class ClassInfoDTO {
     private String name;
     private String campus;
     private String institute;
+    private Integer grade;
 }

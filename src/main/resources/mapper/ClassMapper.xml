@@ -6,7 +6,8 @@
         SELECT c.id    AS id,
                c.name  AS name,
                cp.name AS campus,
-               i.name  AS institute
+               i.name  AS institute,
+               c.year  AS grade
         FROM class c
                  JOIN campus cp
                       ON c.campus_id = cp.id
