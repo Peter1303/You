@@ -46,4 +46,12 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> auditList();
+
+    /**
+     * 通过
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> pass(IdVO idVO);
 }

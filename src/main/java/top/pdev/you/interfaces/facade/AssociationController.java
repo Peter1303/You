@@ -85,4 +85,16 @@ public class AssociationController {
     public Result<?> auditList() {
         return associationService.auditList();
     }
+
+    /**
+     * 通过
+     *
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.MANAGER)
+    @PostMapping("pass")
+    public Result<?> pass(@RequestBody @Validated IdVO idVO) {
+        return associationService.pass(idVO);
+    }
 }

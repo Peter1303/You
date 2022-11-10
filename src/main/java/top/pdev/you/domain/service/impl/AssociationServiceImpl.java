@@ -1,14 +1,18 @@
 package top.pdev.you.domain.service.impl;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.AssociationId;
+import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.AssociationFactory;
@@ -55,6 +59,9 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Resource
     private UserFactory userFactory;
+
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public Result<?> add(AddAssociationVO addAssociationVO) {
@@ -128,5 +135,35 @@ public class AssociationServiceImpl implements AssociationService {
                 })
                 .collect(Collectors.toList());
         return Result.ok(list);
+    }
+
+    /**
+     * 检查审核
+     *
+     * @param auditDO 审核 DO
+     */
+    private void checkAudit(AssociationAuditDO auditDO) {
+        if (Optional.ofNullable(auditDO.getStatus()).isPresent()) {
+            throw new BusinessException("已经审核了");
+        }
+    }
+
+    @Override
+    public Result<?> pass(IdVO idVO) {
+        Id id = new Id(idVO.getId());
+        AssociationAuditDO auditDO = associationAuditRepository.getOne(id);
+        checkAudit(auditDO);
+        Student student = userFactory.getStudent(new StudentId(auditDO.getStudentId()));
+        Association association =
+                associationFactory.getAssociation(new AssociationId(auditDO.getAssociationId()));
+        association.accept(student);
+        // 更改审核记录
+        associationAuditRepository.changeStatus(id, true);
+        AssociationAuditEvent event = new AssociationAuditEvent(this);
+        event.setAssociation(association);
+        event.setStudent(student);
+        event.setPassed(true);
+        applicationEventPublisher.publishEvent(event);
+        return Result.ok();
     }
 }

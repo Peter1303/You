@@ -1,6 +1,8 @@
 package top.pdev.you.domain.entity.data;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -15,6 +17,9 @@ import java.time.LocalDateTime;
 @TableName("association_audit")
 @Data
 public class AssociationAuditDO {
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
     /**
      * 社团 ID
      */

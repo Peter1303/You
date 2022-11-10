@@ -3,6 +3,7 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.types.AssociationId;
+import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
@@ -49,9 +50,10 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
     boolean exists(StudentId studentId, AssociationId id);
 
     /**
-     * 获取审核列表
+     * 改变状态
      *
-     * @return {@link List}<{@link AssociationAuditDTO}>
+     * @param id     ID
+     * @param status 状态
      */
-    List<AssociationAuditDTO> getAuditList();
+    void changeStatus(Id id, boolean status);
 }

@@ -9,6 +9,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
@@ -91,6 +92,21 @@ public class Association extends BaseEntity {
         }
         if (!associationAuditRepository.save(associationAuditDO)) {
             throw new BusinessException("无法保存加入社团审核");
+        }
+    }
+
+    /**
+     * 接受入社
+     *
+     * @param student 学生
+     */
+    public void accept(Student student) {
+        check(student);
+        AssociationParticipantDO associationParticipantDO = new AssociationParticipantDO();
+        associationParticipantDO.setAssociationId(this.getId().getId());
+        associationParticipantDO.setStudentId(student.getStudentId().getId());
+        if (!associationParticipateRepository.save(associationParticipantDO)) {
+            throw new BusinessException("加入社团失败");
         }
     }
 }
