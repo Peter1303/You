@@ -35,6 +35,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -77,27 +79,37 @@ public class AssociationServiceImpl implements AssociationService {
     public Result<?> list(SearchVO searchVO, TokenInfo tokenInfo) {
         Long uid = tokenInfo.getUid();
         User user = userRepository.find(new UserId(uid));
-        Student student = userFactory.getStudent(user);
-        StudentId studentId = student.getStudentId();
+        // 出学生之外只能显示列表
+        AtomicBoolean isStudent = new AtomicBoolean(false);
+        AtomicReference<StudentId> studentId = new AtomicReference<>(null);
+        try {
+            Student student = userFactory.getStudent(user);
+            studentId.set(student.getStudentId());
+            isStudent.set(true);
+        } catch (Exception ignored) {
+        }
         List<AssociationInfoVO> list =
                 associationRepository.getInfoList(searchVO)
                         .stream()
                         .map(item -> {
                             AssociationInfoVO infoVO =
                                     AssociationAssembler.INSTANCE.convert2infoVO(item);
-                            int status = AssociationStatus.NOT;
-                            // 有该学生即已经加入
-                            if (Objects.equals(item.getStudentId(), studentId.getId())) {
-                                status = AssociationStatus.JOINED;
-                            } else {
-                                // 如果存在审核记录那么需要检查是否通过
-                                AssociationAuditDO one = associationAuditRepository.getOne(studentId,
-                                        new AssociationId(item.getId()));
-                                if (Optional.ofNullable(one).isPresent()) {
-                                    status = AssociationStatus.AUDIT;
+                            if (isStudent.get()) {
+                                int status = AssociationStatus.NOT;
+                                // 有该学生即已经加入
+                                StudentId id = studentId.get();
+                                if (Objects.equals(item.getStudentId(), id.getId())) {
+                                    status = AssociationStatus.JOINED;
+                                } else {
+                                    // 如果存在审核记录那么需要检查是否通过
+                                    AssociationAuditDO one = associationAuditRepository.getOne(id,
+                                            new AssociationId(item.getId()));
+                                    if (Optional.ofNullable(one).isPresent()) {
+                                        status = AssociationStatus.AUDIT;
+                                    }
                                 }
+                                infoVO.setStatus(status);
                             }
-                            infoVO.setStatus(status);
                             return infoVO;
                         })
                         .collect(Collectors.toList());

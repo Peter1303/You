@@ -53,7 +53,7 @@ public class AssociationController {
      * @param tokenInfo 令牌信息
      * @return {@link Result}<{@link ?}>
      */
-    @AccessPermission(permission = Permission.MANAGER, lower = true)
+    @AccessPermission(permission = Permission.MANAGER)
     @PostMapping("")
     public Result<?> list(@RequestBody @Validated(Association.class) SearchVO searchVO,
                           @CurrentUser TokenInfo tokenInfo) {
