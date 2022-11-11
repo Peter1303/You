@@ -14,6 +14,7 @@ import top.pdev.you.infrastructure.result.ResultCode;
 
 import javax.annotation.Resource;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 管理员服务
@@ -76,7 +77,8 @@ public class AdminServiceImpl implements AdminService {
             throw new InternalErrorException("传值错误");
         }
         if (Optional.ofNullable(user).isPresent()) {
-            redisService.set(RedisKey.permission(uidOrToken), user.getPermission());
+            redisService.set(RedisKey.permission(uidOrToken), user.getPermission(),
+                    1, TimeUnit.DAYS);
         }
     }
 }
