@@ -5,6 +5,7 @@ import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.entity.types.TeacherId;
 
 /**
  * 用户工厂
@@ -58,7 +59,7 @@ public class UserFactory {
      * @return {@link Teacher}
      */
     public Teacher newTeacher() {
-        return getTeacher(null);
+        return getTeacher((User) null);
     }
 
     /**
@@ -69,5 +70,15 @@ public class UserFactory {
      */
     public Teacher getTeacher(User user) {
         return new Teacher(user);
+    }
+
+    /**
+     * 获取老师
+     *
+     * @param teacherId 老师 ID
+     * @return {@link Teacher}
+     */
+    public Teacher getTeacher(TeacherId teacherId) {
+        return new Teacher(teacherId);
     }
 }

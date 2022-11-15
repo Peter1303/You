@@ -15,6 +15,7 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.validator.intefaces.Association;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
@@ -108,5 +109,31 @@ public class AssociationController {
     @PostMapping("reject")
     public Result<?> reject(@RequestBody @Validated IdVO idVO) {
         return associationService.reject(idVO);
+    }
+
+    /**
+     * 添加负责人
+     *
+     * @param addAdminVO 添加负责人 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.ADMIN)
+    @PutMapping("manager")
+    public Result<?> addManager(@RequestBody @Validated AddAdminVO addAdminVO) {
+        return associationService.addManager(addAdminVO);
+    }
+
+    /**
+     * 添加指导老师
+     *
+     * @param addAdminVO 添加指导老师 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.ADMIN)
+    @PutMapping("admin")
+    public Result<?> addAdmin(@RequestBody @Validated AddAdminVO addAdminVO) {
+        return associationService.addAdmin(addAdminVO);
     }
 }

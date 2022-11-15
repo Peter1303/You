@@ -1,9 +1,11 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.entity.types.UserId;
 
 /**
@@ -29,6 +31,8 @@ public interface UserRepository extends IService<UserDO> {
      */
     User find(StudentId studentId);
 
+    User find(TeacherId teacherId);
+
     /**
      * 通过令牌查找
      *
@@ -51,4 +55,13 @@ public interface UserRepository extends IService<UserDO> {
      * @return boolean
      */
     boolean delete(UserId id);
+
+    /**
+     * 设置权限
+     *
+     * @param userId     用户 ID
+     * @param permission 权限
+     * @return boolean
+     */
+    boolean setPermission(UserId userId, Permission permission);
 }

@@ -8,12 +8,14 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
@@ -27,6 +29,7 @@ import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 import top.pdev.you.interfaces.model.dto.StudentInfoDTO;
 import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
+import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
@@ -170,6 +173,43 @@ public class AssociationServiceImpl implements AssociationService {
     public Result<?> reject(IdVO idVO) {
         auditAssociationRequest(idVO, false);
         return Result.ok();
+    }
+
+    @Override
+    public Result<?> addManager(AddAdminVO addAdminVO) {
+        addAdmin(new AssociationId(addAdminVO.getAssociationId()),
+                new StudentId(addAdminVO.getUid()));
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> addAdmin(AddAdminVO addAdminVO) {
+        addAdmin(new AssociationId(addAdminVO.getAssociationId()),
+                new TeacherId(addAdminVO.getUid()));
+        return Result.ok();
+    }
+
+    private void addAdmin(AssociationId associationId, Id id) {
+        Association association =
+                associationRepository.getOne(associationId);
+        User user = userRepository.find(new UserId(id.getId()));
+        // 检查社团是否已经被相关的管理接管
+        if (association.adminExists(user)) {
+            throw new BusinessException("已经存在了管理者");
+        }
+        Optional.ofNullable(user)
+                .orElseThrow(() -> new BusinessException("没有找到用户"));
+        id.setId(user.getTargetId());
+        // 负责人
+        if (id instanceof StudentId) {
+            Student student = userFactory.getStudent((StudentId) id);
+            association.addAdmin(student);
+        }
+        // 指导老师
+        if (id instanceof TeacherId) {
+            Teacher teacher = userFactory.getTeacher((TeacherId) id);
+            association.addAdmin(teacher);
+        }
     }
 
     /**

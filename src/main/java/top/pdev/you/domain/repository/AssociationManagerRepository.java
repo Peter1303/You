@@ -3,7 +3,9 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.AssociationManagerDO;
+import top.pdev.you.domain.entity.types.AssociationId;
 
 import java.util.List;
 
@@ -29,4 +31,13 @@ public interface AssociationManagerRepository extends IService<AssociationManage
      * @return {@link List}<{@link AssociationManagerDO}>
      */
     List<AssociationManagerDO> getManagedList(Teacher teacher);
+
+    /**
+     * 管理存在
+     *
+     * @param associationId 协会 ID
+     * @param user          用户
+     * @return boolean
+     */
+    boolean adminExists(AssociationId associationId, User user);
 }

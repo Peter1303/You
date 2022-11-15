@@ -2,6 +2,7 @@ package top.pdev.you.domain.service;
 
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
@@ -62,4 +63,20 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> reject(IdVO idVO);
+
+    /**
+     * 添加负责人
+     *
+     * @param addAdminVO 添加负责人 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> addManager(AddAdminVO addAdminVO);
+
+    /**
+     * 添加指导老师
+     *
+     * @param addAdminVO 添加指导老师 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> addAdmin(AddAdminVO addAdminVO);
 }

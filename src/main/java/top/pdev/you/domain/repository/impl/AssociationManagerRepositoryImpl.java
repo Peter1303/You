@@ -1,13 +1,15 @@
 package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.AssociationManagerDO;
+import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.mapper.AssociationManagerMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
+import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.List;
  */
 @Repository
 public class AssociationManagerRepositoryImpl
-        extends ServiceImpl<AssociationManagerMapper, AssociationManagerDO>
+        extends BaseRepository<AssociationManagerMapper, AssociationManagerDO>
         implements AssociationManagerRepository {
     @Resource
     private AssociationManagerMapper mapper;
@@ -37,5 +39,14 @@ public class AssociationManagerRepositoryImpl
         LambdaQueryWrapper<AssociationManagerDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationManagerDO::getUid, teacher.getUser().getUserId().getId());
         return mapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public boolean adminExists(AssociationId associationId, User user) {
+        check(user);
+        LambdaQueryWrapper<AssociationManagerDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManagerDO::getUid, user.getUserId().getId())
+                .eq(AssociationManagerDO::getType, user.getPermission());
+        return mapper.exists(queryWrapper);
     }
 }

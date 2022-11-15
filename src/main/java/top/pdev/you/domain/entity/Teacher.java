@@ -10,6 +10,7 @@ import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
+import top.pdev.you.domain.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,21 +29,32 @@ public class Teacher extends BaseEntity {
     private String no;
     private String contact;
 
+    private TeacherDO teacherDO;
+
     private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
+    private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
     private final AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
 
-    public Teacher(User user) {
+    private void init(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
         this.user = user;
         this.teacherId = new TeacherId(user.getTargetId());
-        TeacherDO teacherDO = teacherRepository.getDO(teacherId);
+        teacherDO = teacherRepository.getDO(teacherId);
         Optional.ofNullable(teacherDO)
                 .orElseThrow(() -> new BusinessException("没有找到老师"));
         this.name = teacherDO.getName();
         this.no = teacherDO.getNo();
         this.contact = teacherDO.getContact();
+    }
+
+    public Teacher(User user) {
+        init(user);
+    }
+
+    public Teacher(TeacherId teacherId) {
+        init(userRepository.find(teacherId));
     }
 
     /**

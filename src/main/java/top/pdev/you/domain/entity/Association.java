@@ -5,14 +5,17 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.data.AssociationManagerDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
+import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 
@@ -44,6 +47,10 @@ public class Association extends BaseEntity {
     private final AssociationParticipateRepository associationParticipateRepository =
             SpringUtil.getBean(AssociationParticipateRepository.class);
 
+    @Getter(AccessLevel.NONE)
+    private final AssociationManagerRepository associationManagerRepository =
+            SpringUtil.getBean(AssociationManagerRepository.class);
+
     public Association(AssociationDO associationDO) {
         if (!Optional.ofNullable(associationDO).isPresent()) {
             return;
@@ -51,6 +58,16 @@ public class Association extends BaseEntity {
         this.id = new AssociationId(associationDO.getId());
         this.name = associationDO.getName();
         this.summary = associationDO.getSummary();
+    }
+
+    /**
+     * 管理存在
+     *
+     * @param user 用户
+     * @return boolean
+     */
+    public boolean adminExists(User user) {
+        return associationManagerRepository.adminExists(getId(), user);
     }
 
     /**
@@ -107,6 +124,47 @@ public class Association extends BaseEntity {
         associationParticipantDO.setStudentId(student.getStudentId().getId());
         if (!associationParticipateRepository.save(associationParticipantDO)) {
             throw new BusinessException("加入社团失败");
+        }
+    }
+
+    /**
+     * 添加管理
+     *
+     * @param student 学生
+     */
+    public void addAdmin(Student student) {
+        check(student);
+        AssociationManagerDO managerDO = new AssociationManagerDO();
+        managerDO.setAssociationId(getId().getId());
+        managerDO.setUid(student.getUser().getUserId().getId());
+        // 变更权限
+        student.getUser().permissionTo(Permission.MANAGER);
+        managerDO.setType(Permission.MANAGER.getValue());
+        setAdmin(managerDO);
+    }
+
+    /**
+     * 添加管理
+     *
+     * @param teacher 老师
+     */
+    public void addAdmin(Teacher teacher) {
+        check(teacher);
+        AssociationManagerDO managerDO = new AssociationManagerDO();
+        managerDO.setAssociationId(getId().getId());
+        managerDO.setUid(teacher.getUser().getUserId().getId());
+        managerDO.setType(Permission.ADMIN.getValue());
+        setAdmin(managerDO);
+    }
+
+    /**
+     * 设置管理
+     *
+     * @param managerDO 管理 DO
+     */
+    private void setAdmin(AssociationManagerDO managerDO) {
+        if (!associationManagerRepository.save(managerDO)) {
+            throw new BusinessException("无法保存社团管理人员");
         }
     }
 }

@@ -99,4 +99,16 @@ public class User extends BaseEntity {
         }
         userRepository.delete(userId);
     }
+
+    /**
+     * 权限到
+     *
+     * @param permission 权限
+     */
+    public void permissionTo(Permission permission) {
+        if (!userRepository.setPermission(getUserId(), permission)) {
+            throw new BusinessException("变更权限失败");
+        }
+        setPermission(permission.getValue());
+    }
 }

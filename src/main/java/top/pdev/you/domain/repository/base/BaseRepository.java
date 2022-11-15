@@ -2,7 +2,9 @@ package top.pdev.you.domain.repository.base;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.types.Id;
 
 import java.util.Optional;
@@ -22,5 +24,9 @@ public class BaseRepository<M extends BaseMapper<T>, T>
      */
     protected void checkId(Id id) {
         Optional.ofNullable(id).orElseThrow(() -> new InternalErrorException("ID 为空"));
+    }
+
+    protected void check(User user) {
+        Optional.ofNullable(user).orElseThrow(() -> new BusinessException("找不到用户"));
     }
 }
