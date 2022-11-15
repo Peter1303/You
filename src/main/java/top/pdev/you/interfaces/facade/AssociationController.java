@@ -97,6 +97,12 @@ public class AssociationController {
         return associationService.pass(idVO);
     }
 
+    /**
+     * 拒绝
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER)
     @PostMapping("reject")
