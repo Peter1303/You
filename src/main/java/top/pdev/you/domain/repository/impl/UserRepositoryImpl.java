@@ -78,6 +78,6 @@ public class UserRepositoryImpl
     @Override
     public boolean delete(UserId id) {
         checkId(id);
-        return mapper.deleteById(id.getId()) != 0;
+        return removeById(id.getId());
     }
 }
