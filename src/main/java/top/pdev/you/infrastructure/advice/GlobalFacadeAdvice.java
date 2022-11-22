@@ -5,6 +5,7 @@ import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +16,6 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -85,14 +85,24 @@ public class GlobalFacadeAdvice {
     /**
      * 404 错误处理
      *
-     * @param ex      异常
-     * @param request 请求
+     * @param ex 异常
      * @return 结果
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseBody
-    public Result<?> handleException(NoHandlerFoundException ex,
-                                     HttpServletRequest request) {
+    public Result<?> handleException(NoHandlerFoundException ex) {
+        return Result.failed(ResultCode.NOT_FOUND);
+    }
+
+    /**
+     * 404 错误处理
+     *
+     * @param ex 异常
+     * @return 结果
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseBody
+    public Result<?> handleException(HttpRequestMethodNotSupportedException ex) {
         return Result.failed(ResultCode.NOT_FOUND);
     }
 
