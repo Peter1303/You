@@ -42,7 +42,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
-    @PutMapping("")
+    @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddAssociationVO addAssociationVO) {
         return associationService.add(addAssociationVO);
     }
@@ -54,8 +54,8 @@ public class AssociationController {
      * @param tokenInfo 令牌信息
      * @return {@link Result}<{@link ?}>
      */
-    @PostMapping("")
-    public Result<?> list(@RequestBody @Validated(Association.class) SearchVO searchVO,
+    @GetMapping("")
+    public Result<?> list(@Validated(Association.class) SearchVO searchVO,
                           @CurrentUser TokenInfo tokenInfo) {
         return associationService.list(searchVO, tokenInfo);
     }
@@ -69,7 +69,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER, lower = true)
-    @PutMapping("join/request")
+    @PostMapping("join/request")
     public Result<?> joinRequest(@RequestBody @Validated IdVO idVO,
                                  @CurrentUser TokenInfo tokenInfo) {
         return associationService.join(false, tokenInfo, idVO);
@@ -93,7 +93,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER)
-    @PostMapping("pass")
+    @PutMapping("pass")
     public Result<?> pass(@RequestBody @Validated IdVO idVO) {
         return associationService.pass(idVO);
     }
@@ -106,7 +106,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER)
-    @PostMapping("reject")
+    @PutMapping("reject")
     public Result<?> reject(@RequestBody @Validated IdVO idVO) {
         return associationService.reject(idVO);
     }
@@ -119,7 +119,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.ADMIN)
-    @PutMapping("manager")
+    @PostMapping("manager")
     public Result<?> addManager(@RequestBody @Validated AddAdminVO addAdminVO) {
         return associationService.addManager(addAdminVO);
     }
@@ -132,7 +132,7 @@ public class AssociationController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.ADMIN)
-    @PutMapping("admin")
+    @PostMapping("admin")
     public Result<?> addAdmin(@RequestBody @Validated AddAdminVO addAdminVO) {
         return associationService.addAdmin(addAdminVO);
     }

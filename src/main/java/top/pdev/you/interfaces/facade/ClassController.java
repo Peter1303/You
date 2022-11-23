@@ -3,7 +3,7 @@ package top.pdev.you.interfaces.facade;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +36,7 @@ public class ClassController {
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
-    @PutMapping("")
+    @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddClassVO addClassVO) {
         return classService.add(addClassVO);
     }

@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class UserController {
      * @return {@link Result}<{@link ?}>
      */
     @SkipCheckLogin
-    @PostMapping("login")
+    @PutMapping("login")
     public Result<?> login(@RequestBody @Valid UserLoginVO vo) {
         return userService.login(vo);
     }
@@ -97,7 +98,7 @@ public class UserController {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    @PostMapping("profile/set")
+    @PutMapping("profile/set")
     public Result<?> setProfile(@CurrentUser TokenInfo tokenInfo,
                                 @RequestBody SetProfileVO setProfileVO) {
         return userService.setProfile(tokenInfo, setProfileVO);
