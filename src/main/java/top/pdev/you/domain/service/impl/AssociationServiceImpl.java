@@ -79,6 +79,13 @@ public class AssociationServiceImpl implements AssociationService {
     }
 
     @Override
+    public Result<?> delete(IdVO idVO) {
+        Association association = associationFactory.getAssociation(new AssociationId(idVO.getId()));
+        association.delete();
+        return Result.ok();
+    }
+
+    @Override
     public Result<?> list(SearchVO searchVO, TokenInfo tokenInfo) {
         Long uid = tokenInfo.getUid();
         User user = userRepository.find(new UserId(uid));

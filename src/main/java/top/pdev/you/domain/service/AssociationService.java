@@ -23,6 +23,14 @@ public interface AssociationService {
     Result<?> add(AddAssociationVO addAssociationVO);
 
     /**
+     * 删除
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> delete(IdVO idVO);
+
+    /**
      * 列表
      *
      * @param searchVO  搜索 VO

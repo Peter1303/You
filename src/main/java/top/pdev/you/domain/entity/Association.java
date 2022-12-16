@@ -167,4 +167,13 @@ public class Association extends BaseEntity {
             throw new BusinessException("无法保存社团管理人员");
         }
     }
+
+    /**
+     * 删除
+     */
+    public void delete() {
+        if (!associationRepository.removeById(id.getId())) {
+            throw new BusinessException("无法删除社团");
+        }
+    }
 }
