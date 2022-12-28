@@ -4,8 +4,7 @@ import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.types.StudentId;
-import top.pdev.you.domain.entity.types.TeacherId;
+import top.pdev.you.domain.entity.data.UserDO;
 
 /**
  * 用户工厂
@@ -21,7 +20,17 @@ public class UserFactory {
      * @return {@link User}
      */
     public User newUser() {
-        return new User(null);
+        return getUser(null);
+    }
+
+    /**
+     * 获取用户
+     *
+     * @param userDO 用户 DO
+     * @return {@link User}
+     */
+    public User getUser(UserDO userDO) {
+        return new User(userDO);
     }
 
     /**
@@ -30,7 +39,7 @@ public class UserFactory {
      * @return {@link Student}
      */
     public Student newStudent() {
-        return getStudent((User) null);
+        return getStudent(null);
     }
 
     /**
@@ -44,22 +53,12 @@ public class UserFactory {
     }
 
     /**
-     * 获取学生
-     *
-     * @param studentId 学生 ID
-     * @return {@link Student}
-     */
-    public Student getStudent(StudentId studentId) {
-        return new Student(studentId);
-    }
-
-    /**
      * 新老师
      *
      * @return {@link Teacher}
      */
     public Teacher newTeacher() {
-        return getTeacher((User) null);
+        return getTeacher(null);
     }
 
     /**
@@ -70,15 +69,5 @@ public class UserFactory {
      */
     public Teacher getTeacher(User user) {
         return new Teacher(user);
-    }
-
-    /**
-     * 获取老师
-     *
-     * @param teacherId 老师 ID
-     * @return {@link Teacher}
-     */
-    public Teacher getTeacher(TeacherId teacherId) {
-        return new Teacher(teacherId);
     }
 }

@@ -92,10 +92,6 @@ public class Student extends BaseEntity {
         init(user);
     }
 
-    public Student(StudentId id) {
-        init(userRepository.find(id));
-    }
-
     public List<AssociationDO> getAssociations() {
         return associationRepository.ofStudentList(this);
     }

@@ -2,10 +2,14 @@ package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.mapper.StudentMapper;
 import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
@@ -22,6 +26,18 @@ public class StudentRepositoryImpl
         implements StudentRepository {
     @Resource
     private StudentMapper studentMapper;
+
+    @Resource
+    private UserRepository userRepository;
+
+    @Resource
+    private UserFactory userFactory;
+
+    @Override
+    public Student find(StudentId id) {
+        User user = userRepository.find(id);
+        return userFactory.getStudent(user);
+    }
 
     @Override
     public StudentDO getDO(StudentId id) {

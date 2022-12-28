@@ -1,6 +1,7 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.types.TeacherId;
 
@@ -11,6 +12,14 @@ import top.pdev.you.domain.entity.types.TeacherId;
  * @author Peter1303
  */
 public interface TeacherRepository extends IService<TeacherDO> {
+    /**
+     * 查找
+     *
+     * @param id ID
+     * @return {@link Teacher}
+     */
+    Teacher find(TeacherId id);
+
     /**
      * 获取 DO
      *

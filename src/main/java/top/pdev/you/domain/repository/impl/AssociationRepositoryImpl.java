@@ -10,6 +10,7 @@ import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.AssociationManagerDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
+import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
@@ -46,6 +47,12 @@ public class AssociationRepositoryImpl
 
     @Resource
     private AssociationManagerRepository associationManagerRepository;
+
+    @Override
+    public Association find(AssociationId associationId) {
+        checkId(associationId);
+        return getOne(associationId);
+    }
 
     @Override
     public Association getOne(Student student) {

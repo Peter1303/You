@@ -21,6 +21,8 @@ import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
+import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
@@ -63,6 +65,12 @@ public class AssociationServiceImpl implements AssociationService {
     private UserRepository userRepository;
 
     @Resource
+    private StudentRepository studentRepository;
+
+    @Resource
+    private TeacherRepository teacherRepository;
+
+    @Resource
     private UserFactory userFactory;
 
     @Resource
@@ -80,7 +88,7 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public Result<?> delete(IdVO idVO) {
-        Association association = associationFactory.getAssociation(new AssociationId(idVO.getId()));
+        Association association = associationRepository.find(new AssociationId(idVO.getId()));
         association.delete();
         return Result.ok();
     }
@@ -131,7 +139,7 @@ public class AssociationServiceImpl implements AssociationService {
         // 需要审核
         if (!directly) {
             AssociationId associationId = new AssociationId(idVO.getId());
-            Association association = associationFactory.getAssociation(associationId);
+            Association association = associationRepository.find(associationId);
             User user = userRepository.find(new UserId(tokenInfo.getUid()));
             Student student = userFactory.getStudent(user);
             association.request(student);
@@ -145,7 +153,7 @@ public class AssociationServiceImpl implements AssociationService {
         List<AssociationAuditVO> list = auditList.stream()
                 .map(item -> {
                     AssociationAuditVO auditVO = AssociationAssembler.INSTANCE.convert2auditInfoVO(item);
-                    Student student = userFactory.getStudent(new StudentId(item.getStudentId()));
+                    Student student = studentRepository.find(new StudentId(item.getStudentId()));
                     StudentInfoDTO dto = new StudentInfoDTO();
                     dto.setName(student.getName());
                     dto.setClazz(student.getClazz());
@@ -209,12 +217,12 @@ public class AssociationServiceImpl implements AssociationService {
         id.setId(user.getTargetId());
         // 负责人
         if (id instanceof StudentId) {
-            Student student = userFactory.getStudent((StudentId) id);
+            Student student = studentRepository.find((StudentId) id);
             association.addAdmin(student);
         }
         // 指导老师
         if (id instanceof TeacherId) {
-            Teacher teacher = userFactory.getTeacher((TeacherId) id);
+            Teacher teacher = teacherRepository.find((TeacherId) id);
             association.addAdmin(teacher);
         }
     }
@@ -229,9 +237,9 @@ public class AssociationServiceImpl implements AssociationService {
         Id id = new Id(idVO.getId());
         AssociationAuditDO auditDO = associationAuditRepository.getOne(id);
         checkAudit(auditDO);
-        Student student = userFactory.getStudent(new StudentId(auditDO.getStudentId()));
+        Student student = studentRepository.find(new StudentId(auditDO.getStudentId()));
         Association association =
-                associationFactory.getAssociation(new AssociationId(auditDO.getAssociationId()));
+                associationRepository.find(new AssociationId(auditDO.getAssociationId()));
         if (accept) {
             association.accept(student);
         }

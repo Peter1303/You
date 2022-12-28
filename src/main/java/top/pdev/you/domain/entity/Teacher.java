@@ -53,10 +53,6 @@ public class Teacher extends BaseEntity {
         init(user);
     }
 
-    public Teacher(TeacherId teacherId) {
-        init(userRepository.find(teacherId));
-    }
-
     /**
      * 获取管理社团列表
      *

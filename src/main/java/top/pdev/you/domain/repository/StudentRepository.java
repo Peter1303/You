@@ -1,6 +1,7 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
 
@@ -11,6 +12,14 @@ import top.pdev.you.domain.entity.types.StudentId;
  * @author Peter1303
  */
 public interface StudentRepository extends IService<StudentDO> {
+    /**
+     * 查找
+     *
+     * @param id ID
+     * @return {@link Student}
+     */
+    Student find(StudentId id);
+
     /**
      * 获取 DO
      *
