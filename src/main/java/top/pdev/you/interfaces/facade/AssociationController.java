@@ -18,6 +18,7 @@ import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -59,6 +60,32 @@ public class AssociationController {
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {
         return associationService.delete(idVO);
+    }
+
+    /**
+     * 设置名字
+     *
+     * @param nameVO 名字 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.SUPER)
+    @PutMapping("name")
+    public Result<?> setName(@RequestBody @Validated ChangeNameVO nameVO) {
+        return associationService.setName(nameVO);
+    }
+
+    /**
+     * 设置描述
+     *
+     * @param nameVO 名字 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.SUPER)
+    @PutMapping("summary")
+    public Result<?> setSummary(@RequestBody @Validated ChangeNameVO nameVO) {
+        return associationService.setSummary(nameVO);
     }
 
     /**

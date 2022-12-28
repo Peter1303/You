@@ -33,6 +33,7 @@ import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -201,6 +202,20 @@ public class AssociationServiceImpl implements AssociationService {
     public Result<?> addAdmin(AddAdminVO addAdminVO) {
         addAdmin(new AssociationId(addAdminVO.getAssociationId()),
                 new TeacherId(addAdminVO.getUid()));
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> setName(ChangeNameVO nameVO) {
+        Association association = associationRepository.find(new AssociationId(nameVO.getId()));
+        association.changeName(nameVO.getName());
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> setSummary(ChangeNameVO nameVO) {
+        Association association = associationRepository.find(new AssociationId(nameVO.getId()));
+        association.changeSummary(nameVO.getName());
         return Result.ok();
     }
 

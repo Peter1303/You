@@ -4,6 +4,7 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
+import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -87,4 +88,20 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> addAdmin(AddAdminVO addAdminVO);
+
+    /**
+     * 设置名称
+     *
+     * @param nameVO 名字 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> setName(ChangeNameVO nameVO);
+
+    /**
+     * 设置描述
+     *
+     * @param nameVO 名字 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> setSummary(ChangeNameVO nameVO);
 }

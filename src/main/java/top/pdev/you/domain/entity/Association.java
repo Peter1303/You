@@ -35,6 +35,8 @@ public class Association extends BaseEntity {
 
     private String summary;
 
+    private AssociationDO associationDO;
+
     @Getter(AccessLevel.NONE)
     private final AssociationRepository associationRepository =
             SpringUtil.getBean(AssociationRepository.class);
@@ -55,6 +57,7 @@ public class Association extends BaseEntity {
         if (!Optional.ofNullable(associationDO).isPresent()) {
             return;
         }
+        this.associationDO = associationDO;
         this.id = new AssociationId(associationDO.getId());
         this.name = associationDO.getName();
         this.summary = associationDO.getSummary();
@@ -174,6 +177,39 @@ public class Association extends BaseEntity {
     public void delete() {
         if (!associationRepository.removeById(id.getId())) {
             throw new BusinessException("无法删除社团");
+        }
+    }
+
+    /**
+     * 改变名字
+     *
+     * @param name 名字
+     */
+    public void changeName(String name) {
+        setName(name);
+        associationDO.setName(name);
+        update("无法更改社团名字");
+    }
+
+    /**
+     * 更改描述
+     *
+     * @param summary 描述
+     */
+    public void changeSummary(String summary) {
+        setSummary(summary);
+        associationDO.setSummary(summary);
+        update("无法更改社团描述");
+    }
+
+    /**
+     * 更新
+     *
+     * @param errorMsg 错误味精
+     */
+    private void update(String errorMsg) {
+        if (!associationRepository.saveOrUpdate(associationDO)) {
+            throw new BusinessException(errorMsg);
         }
     }
 }
