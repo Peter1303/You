@@ -64,6 +64,7 @@ public class Result<E> implements Serializable {
      */
     public Result(ResultCode code, Object data) {
         this.code = code.getCode();
+        this.message = code.getMessage();
         this.data = data;
     }
 
