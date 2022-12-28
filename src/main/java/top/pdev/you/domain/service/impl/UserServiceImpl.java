@@ -1,6 +1,8 @@
 package top.pdev.you.domain.service.impl;
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
@@ -18,6 +20,8 @@ import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.UserFactory;
+import top.pdev.you.domain.mapper.AssociationMapper;
+import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
@@ -27,7 +31,7 @@ import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.TokenUtil;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
-import top.pdev.you.interfaces.model.dto.AssociationNameDTO;
+import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.WechatLoginDTO;
 import top.pdev.you.interfaces.model.vo.LoginResultVO;
 import top.pdev.you.interfaces.model.vo.UserInfoVO;
@@ -38,6 +42,7 @@ import top.pdev.you.interfaces.model.vo.req.UserLoginVO;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -149,7 +154,7 @@ public class UserServiceImpl implements UserService {
         String no = null;
         String name = null;
         String association = null;
-        List<AssociationNameDTO> associations = null;
+        List<AssociationBaseInfoDTO> associations = null;
         // 为学生
         if (Permission.USER.getValue() == permission
                 || Permission.MANAGER.getValue() == permission) {
@@ -266,5 +271,57 @@ public class UserServiceImpl implements UserService {
         String token = TokenUtil.getTokenByHeader(request);
         redisService.delete(RedisKey.loginToken(token));
         return Result.ok();
+    }
+
+    @Override
+    public Result<?> getUsers() {
+        // 时间不足 暂时用 MVC 后续可改为注入
+        AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
+        UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
+        List<UserDO> list = userMapper.selectList(new LambdaQueryWrapper<>());
+        List<UserInfoVO> userInfoList = new ArrayList<>();
+        list.forEach(userDO -> {
+            // 如果是超级管理那么跳过
+            if (!Optional.ofNullable(userDO.getTargetId()).isPresent()) {
+                return;
+            }
+            User user = userFactory.getUser(userDO);
+            Integer permission = user.getPermission();
+            String no;
+            String name;
+            String contact;
+            String clazz = null;
+            List<AssociationBaseInfoDTO> associations;
+            if (permission == Permission.ADMIN.getValue()) {
+                Teacher teacher = userFactory.getTeacher(user);
+                no = teacher.getNo();
+                name = teacher.getName();
+                contact = teacher.getContact();
+                associations = associationMapper.getListByAdmin(userDO.getId());
+            } else {
+                Student student = userFactory.getStudent(user);
+                no = student.getNo();
+                name = student.getName();
+                contact = student.getContact();
+                clazz = student.getClazz();
+                // 如果是负责人那么只需要其管理的社团
+                if (permission == Permission.MANAGER.getValue()) {
+                    associations = associationMapper.getListByAdmin(userDO.getId());
+                } else {
+                    associations = associationMapper.getListByParticipant(
+                            student.getStudentId().getId());
+                }
+            }
+            UserInfoVO infoVO = new UserInfoVO();
+            infoVO.setId(userDO.getId());
+            infoVO.setNo(no);
+            infoVO.setPermission(permission);
+            infoVO.setName(name);
+            infoVO.setContact(contact);
+            infoVO.setAssociations(associations);
+            infoVO.setClazz(clazz);
+            userInfoList.add(infoVO);
+        });
+        return Result.ok().setData(userInfoList);
     }
 }

@@ -66,4 +66,11 @@ public interface UserService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> deleteAccount(TokenInfo tokenInfo, HttpServletRequest request);
+
+    /**
+     * 获取用户
+     *
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> getUsers();
 }

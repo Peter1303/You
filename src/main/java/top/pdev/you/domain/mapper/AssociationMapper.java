@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -24,4 +25,20 @@ public interface AssociationMapper extends BaseMapper<AssociationDO> {
      * @return {@link List}<{@link AssociationInfoDTO}>
      */
     List<AssociationInfoDTO> getInfoList(@Param("vo") SearchVO searchVO);
+
+    /**
+     * 通过成员获取列表
+     *
+     * @param studentId 学生 ID
+     * @return {@link List}<{@link AssociationBaseInfoDTO}>
+     */
+    List<AssociationBaseInfoDTO> getListByParticipant(@Param("sid") long studentId);
+
+    /**
+     * 通过管理者获取列表
+     *
+     * @param uid uid
+     * @return {@link List}<{@link AssociationBaseInfoDTO}>
+     */
+    List<AssociationBaseInfoDTO> getListByAdmin(@Param("uid") long uid);
 }

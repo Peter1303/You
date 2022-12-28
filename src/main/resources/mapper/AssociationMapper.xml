@@ -19,4 +19,24 @@
             </if>
         </where>
     </select>
+    <select id="getListByParticipant" resultType="top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO">
+        SELECT a.id         AS id,
+               a.name       AS name,
+               a.summary    AS summary
+        FROM association a
+                 JOIN association_participant ap
+                      ON ap.association_id = a.id
+                 JOIN student s
+                      ON s.id = ap.student_id
+        WHERE ap.student_id = #{sid}
+    </select>
+    <select id="getListByAdmin" resultType="top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO">
+        SELECT a.id         AS id,
+               a.name       AS name,
+               a.summary    AS summary
+        FROM association a
+                 JOIN association_manager am
+                      ON am.association_id = a.id
+        WHERE am.uid = #{uid}
+    </select>
 </mapper>

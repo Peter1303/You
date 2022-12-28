@@ -5,8 +5,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
+import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
-import top.pdev.you.interfaces.model.dto.AssociationNameDTO;
 import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 
@@ -20,8 +20,10 @@ import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 public interface AssociationAssembler {
     AssociationAssembler INSTANCE = Mappers.getMapper(AssociationAssembler.class);
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
-    AssociationNameDTO convert(AssociationDO associationDO);
+    @Mapping(source = "summary", target = "summary")
+    AssociationBaseInfoDTO convert(AssociationDO associationDO);
 
     @Mapping(target = "status", ignore = true)
     @Mapping(source = "id", target = "id")

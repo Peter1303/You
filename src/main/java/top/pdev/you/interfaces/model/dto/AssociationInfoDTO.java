@@ -10,11 +10,7 @@ import lombok.Data;
  * @author Peter1303
  */
 @Data
-public class AssociationInfoDTO {
-    private Long id;
-    private String name;
-    private String summary;
-
+public class AssociationInfoDTO extends AssociationBaseInfoDTO {
     @TableField("student_id")
     private Long studentId;
 
