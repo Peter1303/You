@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findById(new PostId(idVO.getId()));
         PostInfoVO infoVO = convert(post);
         infoVO.setContent(post.getContent());
-        return Result.ok().setData(infoVO);
+        return Result.ok(infoVO);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class PostServiceImpl implements PostService {
             infoVO.setSummary(post.getContent().substring(0, 40) + "...");
             return infoVO;
         }).collect(Collectors.toList());
-        return Result.ok().setData(list);
+        return Result.ok(list);
     }
 
     @Override
