@@ -1,6 +1,7 @@
 package top.pdev.you.interfaces.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,17 @@ import java.time.LocalDateTime;
  */
 @Data
 public class PostInfoVO {
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
+
     private String name;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String summary;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String content;
+
     private Long likes;
     private Long comments;
     private Boolean liked = false;

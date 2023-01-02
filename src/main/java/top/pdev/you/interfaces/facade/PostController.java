@@ -47,6 +47,17 @@ public class PostController {
         return postService.post(tokenInfo, postVO);
     }
 
+    /**
+     * 细节
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @GetMapping("")
+    public Result<?> details(@Validated IdVO idVO) {
+        return postService.details(idVO);
+    }
+
 
     /**
      * 发布社团帖子

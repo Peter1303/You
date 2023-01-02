@@ -85,31 +85,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Result<?> details(IdVO idVO) {
+        Post post = postRepository.findById(new PostId(idVO.getId()));
+        PostInfoVO infoVO = convert(post);
+        infoVO.setContent(post.getContent());
+        return Result.ok().setData(infoVO);
+    }
+
+    @Override
     public Result<?> list(PostListVO postListVO) {
         Long id = postListVO.getId();
         List<Post> posts = postRepository.getList(new AssociationId(id));
         List<PostInfoVO> list = posts.stream().map(post -> {
-            PostInfoVO infoVO = PostAssembler.INSTANCE.convert(post);
-            Long userId = post.getUserId();
-            User user = userRepository.find(new UserId(userId));
-            Integer permission = user.getPermission();
-            String name = null;
-            if (permission == Permission.USER.getValue()
-                    || permission == Permission.MANAGER.getValue()) {
-                Student student = userFactory.getStudent(user);
-                name = student.getName();
-            } else if (permission == Permission.ADMIN.getValue()) {
-                Teacher teacher = userFactory.getTeacher(user);
-                name = teacher.getName();
-            } else if (permission == Permission.SUPER.getValue()) {
-                name = "超级管理";
-            }
-            infoVO.setName(name);
+            PostInfoVO infoVO = convert(post);
             infoVO.setSummary(post.getContent().substring(0, 40) + "...");
-            PostId postId = new PostId(post.getId());
-            infoVO.setLikes(likeRepository.countLikesByPostId(postId));
-            infoVO.setComments(commentRepository.countCommentByPostId(postId));
-            infoVO.setLiked(likeRepository.liked(user.getUserId(), postId));
             return infoVO;
         }).collect(Collectors.toList());
         return Result.ok().setData(list);
@@ -131,5 +120,35 @@ public class PostServiceImpl implements PostService {
         // TODO changeTopicId
         post.changeContent(changePostVO.getContent());
         return Result.ok();
+    }
+
+    /**
+     * 转换
+     *
+     * @param post 帖子
+     * @return {@link PostInfoVO}
+     */
+    private PostInfoVO convert(Post post) {
+        PostInfoVO infoVO = PostAssembler.INSTANCE.convert(post);
+        Long userId = post.getUserId();
+        User user = userRepository.find(new UserId(userId));
+        Integer permission = user.getPermission();
+        String name = null;
+        if (permission == Permission.USER.getValue()
+                || permission == Permission.MANAGER.getValue()) {
+            Student student = userFactory.getStudent(user);
+            name = student.getName();
+        } else if (permission == Permission.ADMIN.getValue()) {
+            Teacher teacher = userFactory.getTeacher(user);
+            name = teacher.getName();
+        } else if (permission == Permission.SUPER.getValue()) {
+            name = "超级管理";
+        }
+        infoVO.setName(name);
+        PostId postId = new PostId(post.getId());
+        infoVO.setLikes(likeRepository.countLikesByPostId(postId));
+        infoVO.setComments(commentRepository.countCommentByPostId(postId));
+        infoVO.setLiked(likeRepository.liked(user.getUserId(), postId));
+        return infoVO;
     }
 }

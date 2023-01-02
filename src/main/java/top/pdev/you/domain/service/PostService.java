@@ -33,6 +33,14 @@ public interface PostService {
     Result<?> associationPost(TokenInfo tokenInfo, PostVO postVO);
 
     /**
+     * 细节
+     *
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> details(IdVO idVO);
+
+    /**
      * 列表
      *
      * @param postListVO 帖子列表 VO
