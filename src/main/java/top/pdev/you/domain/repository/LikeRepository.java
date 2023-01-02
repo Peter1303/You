@@ -1,7 +1,9 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.data.LikeDO;
+import top.pdev.you.domain.entity.types.LikeId;
 import top.pdev.you.domain.entity.types.PostId;
 import top.pdev.you.domain.entity.types.UserId;
 
@@ -12,6 +14,14 @@ import top.pdev.you.domain.entity.types.UserId;
  * @author Peter1303
  */
 public interface LikeRepository extends IService<LikeDO> {
+    /**
+     * 通过 ID 查找
+     *
+     * @param likeId 就像 ID
+     * @return {@link Like}
+     */
+    Like findById(LikeId likeId);
+
     /**
      * 通过帖子 ID 统计点赞
      *

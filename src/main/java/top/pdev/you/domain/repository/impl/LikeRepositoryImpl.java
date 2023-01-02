@@ -2,7 +2,10 @@ package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.data.LikeDO;
+import top.pdev.you.domain.entity.types.LikeId;
 import top.pdev.you.domain.entity.types.PostId;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.mapper.LikeMapper;
@@ -10,6 +13,7 @@ import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * 点赞仓库实现类
@@ -23,6 +27,16 @@ public class LikeRepositoryImpl
         implements LikeRepository {
     @Resource
     private LikeMapper mapper;
+
+    @Override
+    public Like findById(LikeId likeId) {
+        checkId(likeId);
+        LikeDO likeDO = getById(likeId.getId());
+        if (!Optional.ofNullable(likeDO).isPresent()) {
+            throw new BusinessException("找不到点赞");
+        }
+        return new Like(likeDO);
+    }
 
     @Override
     public Long countLikesByPostId(PostId id) {
