@@ -32,10 +32,10 @@ public interface PostRepository extends IService<PostDO> {
     Boolean exists(PostId id);
 
     /**
-     * 获取列表
+     * 通过社团 ID 获取列表
      *
      * @param associationId 社团 ID
      * @return {@link List}<{@link Post}>
      */
-    List<Post> getList(AssociationId associationId);
+    List<Post> findByAssociationId(AssociationId associationId);
 }

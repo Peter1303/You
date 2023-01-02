@@ -51,7 +51,7 @@ public class PostRepositoryImpl
     }
 
     @Override
-    public List<Post> getList(AssociationId associationId) {
+    public List<Post> findByAssociationId(AssociationId associationId) {
         LambdaQueryWrapper<PostDO> queryWrapper = new LambdaQueryWrapper<>();
         if (Optional.ofNullable(associationId.getId()).isPresent()) {
             queryWrapper.eq(PostDO::getAssociationId, associationId.getId());

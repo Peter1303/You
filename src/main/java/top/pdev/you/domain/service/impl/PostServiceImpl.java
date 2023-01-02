@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> list(PostListVO postListVO) {
         Long id = postListVO.getId();
-        List<Post> posts = postRepository.getList(new AssociationId(id));
+        List<Post> posts = postRepository.findByAssociationId(new AssociationId(id));
         List<PostInfoVO> list = posts.stream().map(post -> {
             PostInfoVO infoVO = convert(post);
             infoVO.setSummary(post.getContent().substring(0, 40) + "...");
