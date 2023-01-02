@@ -3,10 +3,10 @@ package top.pdev.you.infrastructure.advice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,9 +66,9 @@ public class GlobalFacadeAdvice {
      * @param ex 异常
      * @return 结果
      */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(BindException.class)
     @ResponseBody
-    public Result<?> handleException(MethodArgumentNotValidException ex) {
+    public Result<?> handleException(BindException ex) {
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
         HashMap<String, String> errors = new HashMap<>(16);
@@ -133,6 +133,7 @@ public class GlobalFacadeAdvice {
         } else {
             log.error(ex.getMessage(), ex);
         }
+        ex.printStackTrace();
         return Result.error(ex);
     }
 }
