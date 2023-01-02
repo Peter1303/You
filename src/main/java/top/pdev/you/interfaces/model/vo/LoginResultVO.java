@@ -1,7 +1,6 @@
 package top.pdev.you.interfaces.model.vo;
 
 import lombok.Data;
-import top.pdev.you.interfaces.model.vo.base.BaseVo;
 
 /**
  * 登录结果
@@ -10,6 +9,6 @@ import top.pdev.you.interfaces.model.vo.base.BaseVo;
  * @author Peter1303
  */
 @Data
-public class LoginResultVO extends BaseVo {
+public class LoginResultVO {
     private String token;
 }
