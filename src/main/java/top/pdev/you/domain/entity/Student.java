@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.entity.base.BaseEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.entity.types.StudentId;
@@ -30,7 +30,7 @@ import java.util.Optional;
  * @author Peter1303
  */
 @Data
-public class Student extends BaseEntity {
+public class Student extends RoleEntity {
     private User user;
     private StudentId studentId;
     private String no;

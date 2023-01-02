@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.exception.BusinessException;
@@ -151,18 +153,16 @@ public class UserServiceImpl implements UserService {
         // 获取用户
         User user = userRepository.find(new UserId(tokenInfo.getUid()));
         Integer permission = user.getPermission();
-        String no = null;
-        String name = null;
         String association = null;
         List<AssociationBaseInfoDTO> associations = null;
+        RoleEntity role = user.getRoleDomain();
+        String name = role.getName();
+        String no = role.getNo();
         // 为学生
-        if (Permission.USER.getValue() == permission
-                || Permission.MANAGER.getValue() == permission) {
-            Student student = userFactory.getStudent(user);
-            no = student.getNo();
-            name = student.getName();
+        if (role instanceof Student) {
+            Student student = (Student) role;
             // 如果是负责人那么有其管理的社团
-            if (Permission.MANAGER.getValue() == permission) {
+            if (role instanceof ManagerEntity) {
                 Association one = associationRepository.getOne(student);
                 association = one.getName();
             }
@@ -173,19 +173,14 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
         }
         // 为老师
-        if (Permission.ADMIN.getValue() == permission) {
-            Teacher teacher = userFactory.getTeacher(user);
+        if (role instanceof Teacher) {
+            Teacher teacher = (Teacher) role;
             no = teacher.getNo();
-            name = teacher.getName();
             List<AssociationDO> managedList = teacher.getManagedAssociationList();
             associations = managedList
                     .stream()
                     .map(AssociationAssembler.INSTANCE::convert)
                     .collect(Collectors.toList());
-        }
-        // 为超管
-        if (Permission.SUPER.getValue() == permission) {
-            name = "超级管理员";
         }
         // 信息
         UserInfoVO vo = new UserInfoVO();
@@ -202,35 +197,27 @@ public class UserServiceImpl implements UserService {
         // 获取用户
         User user = userRepository.find(new UserId(tokenInfo.getUid()));
         Integer permission = user.getPermission();
-        String no = null;
-        String name = null;
         String clazz = null;
         String campus = null;
         String institute = null;
-        String contact = null;
         Integer grade = null;
+        RoleEntity role = user.getRoleDomain();
         // 为学生
-        if (Permission.USER.getValue() == permission
-                || Permission.MANAGER.getValue() == permission) {
+        String name = role.getName();
+        String no = role.getNo();
+        String contact = role.getContact();
+        if (role instanceof Student) {
             Student student = userFactory.getStudent(user);
-            no = student.getNo();
-            name = student.getName();
-            contact = student.getContact();
             clazz = student.getClazz();
             campus = student.getCampus();
             institute = student.getInstitute();
             grade = student.getGrade();
         }
         // 为老师
-        if (Permission.ADMIN.getValue() == permission) {
+        if (role instanceof Teacher) {
             Teacher teacher = userFactory.getTeacher(user);
             no = teacher.getNo();
             name = teacher.getName();
-            contact = teacher.getContact();
-        }
-        // 为超管
-        if (Permission.SUPER.getValue() == permission) {
-            name = "超级管理员";
         }
         // 资料
         UserProfileVO vo = new UserProfileVO();
@@ -249,15 +236,15 @@ public class UserServiceImpl implements UserService {
     public Result<?> setProfile(TokenInfo tokenInfo,
                                 SetProfileVO setProfileVO) {
         User user = userRepository.find(new UserId(tokenInfo.getUid()));
-        Integer permission = user.getPermission();
         String contact = setProfileVO.getContact();
-        if (permission == Permission.USER.getValue()) {
+        RoleEntity role = user.getRoleDomain();
+        if (role instanceof Student) {
             // 更改学生
-            Student student = userFactory.getStudent(user);
+            Student student = (Student) role;
             student.saveContact(contact);
-        } else if (permission == Permission.MANAGER.getValue()) {
+        } else if (role instanceof Teacher) {
             // 更改老师
-            Teacher teacher = userFactory.getTeacher(user);
+            Teacher teacher = (Teacher) role;
             teacher.saveContact(contact);
         }
         return Result.ok();
@@ -286,22 +273,19 @@ public class UserServiceImpl implements UserService {
                 return;
             }
             User user = userFactory.getUser(userDO);
+            RoleEntity role = user.getRoleDomain();
             Integer permission = user.getPermission();
-            String no;
-            String name;
             String contact;
             String clazz = null;
+            String no = role.getNo();
+            String name = role.getName();
             List<AssociationBaseInfoDTO> associations;
-            if (permission == Permission.ADMIN.getValue()) {
-                Teacher teacher = userFactory.getTeacher(user);
-                no = teacher.getNo();
-                name = teacher.getName();
+            if (role instanceof Teacher) {
+                Teacher teacher = (Teacher) role;
                 contact = teacher.getContact();
                 associations = associationMapper.getListByAdmin(userDO.getId());
             } else {
-                Student student = userFactory.getStudent(user);
-                no = student.getNo();
-                name = student.getName();
+                Student student = (Student) role;
                 contact = student.getContact();
                 clazz = student.getClazz();
                 // 如果是负责人那么只需要其管理的社团

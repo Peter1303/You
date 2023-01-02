@@ -2,7 +2,11 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
@@ -11,6 +15,7 @@ import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.entity.types.UserId;
+import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
@@ -30,9 +35,17 @@ public class User extends BaseEntity {
     private Long targetId;
     private Integer permission;
 
+    @Getter(AccessLevel.NONE)
     private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
+
+    @Getter(AccessLevel.NONE)
     private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
+
+    @Getter(AccessLevel.NONE)
     private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
+
+    @Getter(AccessLevel.NONE)
+    private final UserFactory userFactory = SpringUtil.getBean(UserFactory.class);
 
     public User(UserDO userDO) {
         if (!Optional.ofNullable(userDO).isPresent()) {
@@ -110,5 +123,26 @@ public class User extends BaseEntity {
             throw new BusinessException("变更权限失败");
         }
         setPermission(permission.getValue());
+    }
+
+    /**
+     * 获取角色域
+     *
+     * @return {@link RoleEntity}
+     */
+    public RoleEntity getRoleDomain() {
+        if (permission == Permission.USER.getValue()) {
+            return userFactory.getStudent(this);
+        } else if (permission == Permission.MANAGER.getValue()) {
+            return new ManagerEntity(this);
+        } else if (permission == Permission.ADMIN.getValue()) {
+            return userFactory.getTeacher(this);
+        }
+        return new RoleEntity() {
+            @Override
+            public String getName() {
+                return "超级管理员";
+            }
+        };
     }
 }

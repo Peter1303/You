@@ -4,7 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.entity.base.BaseEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.entity.types.TeacherId;
@@ -22,7 +22,7 @@ import java.util.Optional;
  * @author Peter1303
  */
 @Data
-public class Teacher extends BaseEntity {
+public class Teacher extends RoleEntity {
     private User user;
     private TeacherId teacherId;
     private String name;

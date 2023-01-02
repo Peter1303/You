@@ -2,16 +2,13 @@ package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.entity.TokenInfo;
-import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.Post;
-import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.entity.types.PostId;
 import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.PostFactory;
-import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.CommentRepository;
 import top.pdev.you.domain.repository.LikeRepository;
@@ -56,9 +53,6 @@ public class PostServiceImpl implements PostService {
 
     @Resource
     private PostFactory postFactory;
-
-    @Resource
-    private UserFactory userFactory;
 
     @Override
     public Result<?> post(TokenInfo tokenInfo, PostVO postVO) {
@@ -132,18 +126,8 @@ public class PostServiceImpl implements PostService {
         PostInfoVO infoVO = PostAssembler.INSTANCE.convert(post);
         Long userId = post.getUserId();
         User user = userRepository.find(new UserId(userId));
-        Integer permission = user.getPermission();
-        String name = null;
-        if (permission == Permission.USER.getValue()
-                || permission == Permission.MANAGER.getValue()) {
-            Student student = userFactory.getStudent(user);
-            name = student.getName();
-        } else if (permission == Permission.ADMIN.getValue()) {
-            Teacher teacher = userFactory.getTeacher(user);
-            name = teacher.getName();
-        } else if (permission == Permission.SUPER.getValue()) {
-            name = "超级管理";
-        }
+        RoleEntity role = user.getRoleDomain();
+        String name = role.getName();
         infoVO.setName(name);
         PostId postId = new PostId(post.getId());
         infoVO.setLikes(likeRepository.countLikesByPostId(postId));
