@@ -172,7 +172,7 @@ public class AssociationController {
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
-    @AccessPermission(permission = Permission.ADMIN)
+    @AccessPermission(permission = Permission.SUPER)
     @PostMapping("admin")
     public Result<?> addAdmin(@RequestBody @Validated AddAdminVO addAdminVO) {
         return associationService.addAdmin(addAdminVO);

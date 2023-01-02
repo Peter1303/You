@@ -77,7 +77,7 @@ public class UserController {
         return userService.register(Role.STUDENT, vo);
     }
 
-    @AccessPermission(permission = Permission.SUPER)
+    @AccessPermission(permission = Permission.ADMIN)
     @GetMapping("")
     public Result<?> getUsers() {
         return userService.getUsers();
