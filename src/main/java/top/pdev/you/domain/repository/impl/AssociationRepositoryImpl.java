@@ -25,6 +25,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 社团管理仓库实现类
@@ -80,10 +81,11 @@ public class AssociationRepositoryImpl
         if (managedList.isEmpty()) {
             return new ArrayList<>();
         }
-        queryWrapper.in(AssociationDO::getId,
-                managedList
-                        .stream()
-                        .mapToLong(AssociationManagerDO::getId));
+        List<Long> list = managedList
+                .stream()
+                .map(AssociationManagerDO::getId)
+                .collect(Collectors.toList());
+        queryWrapper.in(AssociationDO::getId, list);
         return mapper.selectList(queryWrapper);
     }
 
