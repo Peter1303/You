@@ -11,7 +11,7 @@ import lombok.Data;
  *
  * @author Peter1303
  */
-@TableName("like")
+@TableName("`like`")
 @Data
 public class LikeDO {
     /**

@@ -8,6 +8,6 @@ package top.pdev.you.domain.entity.types;
  */
 public class AssociationId extends Id {
     public AssociationId(Long id) {
-        super(id);
+        super(id, false);
     }
 }

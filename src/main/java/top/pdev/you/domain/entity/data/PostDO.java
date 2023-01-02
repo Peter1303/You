@@ -1,6 +1,7 @@
 package top.pdev.you.domain.entity.data;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -26,6 +27,12 @@ public class PostDO {
      * 社团 ID
      */
     private Long associationId;
+
+    /**
+     * 用户 ID
+     */
+    @TableField("user_id")
+    private Long userId;
 
     /**
      * 内容
