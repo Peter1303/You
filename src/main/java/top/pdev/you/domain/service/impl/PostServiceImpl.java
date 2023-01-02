@@ -105,7 +105,7 @@ public class PostServiceImpl implements PostService {
                 name = "超级管理";
             }
             infoVO.setName(name);
-            infoVO.setSummary(post.getContent().substring(0, 10));
+            infoVO.setSummary(post.getContent().substring(0, 40) + "...");
             PostId postId = new PostId(post.getId());
             infoVO.setLikes(likeRepository.countLikesByPostId(postId));
             infoVO.setComments(commentRepository.countCommentByPostId(postId));
