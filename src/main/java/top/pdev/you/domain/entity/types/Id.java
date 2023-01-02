@@ -15,9 +15,19 @@ import java.util.Optional;
 public class Id {
     private Long id;
 
-    public Id(Long id) {
-        Optional.ofNullable(id)
-                .orElseThrow(() -> new InternalErrorException("ID 不可为空"));
+    public void init(Long id, boolean check) {
+        if (check) {
+            Optional.ofNullable(id)
+                    .orElseThrow(() -> new InternalErrorException("ID 不可为空"));
+        }
         this.id = id;
+    }
+
+    public Id(Long id) {
+        init(id, true);
+    }
+
+    public Id(Long id, boolean check) {
+        init(id, check);
     }
 }
