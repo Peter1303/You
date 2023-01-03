@@ -2,12 +2,11 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.TeacherDO;
-import top.pdev.you.domain.entity.types.TeacherId;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
@@ -23,13 +22,13 @@ import java.util.Optional;
  */
 @Data
 public class Teacher extends RoleEntity {
-    private User user;
-    private TeacherId teacherId;
+    private Long id;
+    private Long userId;
     private String name;
     private String no;
     private String contact;
 
-    private TeacherDO teacherDO;
+    private User user;
 
     private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
     private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
@@ -39,18 +38,31 @@ public class Teacher extends RoleEntity {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
-        this.user = user;
-        this.teacherId = new TeacherId(user.getTargetId());
-        teacherDO = teacherRepository.getDO(teacherId);
-        Optional.ofNullable(teacherDO)
-                .orElseThrow(() -> new BusinessException("没有找到老师"));
+        this.userId = user.getId();
+        Teacher teacher = teacherRepository.findByUserId(userId);
+        this.id = teacher.getId();
+        this.name = teacher.getName();
+        this.no = teacher.getNo();
+        this.contact = teacher.getContact();
+    }
+
+    public Teacher(User user) {
+        init(user);
+    }
+
+    public Teacher(TeacherDO teacherDO) {
+        this.id = teacherDO.getId();
         this.name = teacherDO.getName();
         this.no = teacherDO.getNo();
         this.contact = teacherDO.getContact();
     }
 
-    public Teacher(User user) {
-        init(user);
+    @Override
+    public User getUser() {
+        if (!Optional.ofNullable(user).isPresent()) {
+            user = userRepository.findById(userId);
+        }
+        return user;
     }
 
     /**
@@ -68,7 +80,11 @@ public class Teacher extends RoleEntity {
      * @param contact 联系
      */
     public void saveContact(String contact) {
-        if (!teacherRepository.setContact(teacherId, contact)) {
+        this.contact = contact;
+        TeacherDO teacherDO = new TeacherDO();
+        teacherDO.setId(this.id);
+        teacherDO.setContact(contact);
+        if (!teacherRepository.updateById(teacherDO)) {
             throw new BusinessException("无法保存联系方式");
         }
     }
@@ -82,6 +98,6 @@ public class Teacher extends RoleEntity {
         if (!teacherRepository.save(teacherDO)) {
             throw new InternalErrorException("无法保存老师");
         }
-        this.teacherId = new TeacherId(teacherDO.getId());
+        this.id = teacherDO.getId();
     }
 }

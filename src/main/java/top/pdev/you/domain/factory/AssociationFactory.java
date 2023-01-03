@@ -2,7 +2,7 @@ package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Association;
-import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.AssociationManager;
 
 /**
  * 社团工厂
@@ -18,16 +18,15 @@ public class AssociationFactory {
      * @return {@link Association}
      */
     public Association newAssociation() {
-        return getAssociation(null);
+        return new Association(null);
     }
 
     /**
-     * 获取社团
+     * 新社团管理领域
      *
-     * @param associationDO 协会 DO
-     * @return {@link Association}
+     * @return {@link AssociationManager}
      */
-    public Association getAssociation(AssociationDO associationDO) {
-        return new Association(associationDO);
+    public AssociationManager newAssociationManger() {
+        return new AssociationManager();
     }
 }

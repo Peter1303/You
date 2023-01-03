@@ -28,11 +28,6 @@ public class UserDO {
     private String wechatId;
 
     /**
-     * 目标 ID
-     */
-    private Long targetId;
-
-    /**
      * 权限
      */
     private Integer permission;

@@ -2,9 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
-import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import java.util.List;
@@ -19,19 +16,19 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
     /**
      * 获取一个
      *
-     * @param studentId     学生 ID
-     * @param associationId 社团 ID
-     * @return boolean
+     * @param id ID
+     * @return {@link AssociationAuditDO}
      */
-    AssociationAuditDO getOne(StudentId studentId, AssociationId associationId);
+    AssociationAuditDO findById(Long id);
 
     /**
      * 获取一个
      *
-     * @param id ID
-     * @return {@link AssociationAuditDO}
+     * @param studentId     学生 ID
+     * @param associationId 社团 ID
+     * @return boolean
      */
-    AssociationAuditDO getOne(Id id);
+    AssociationAuditDO findByStudentIdAndAssociationId(Long studentId, Long associationId);
 
     /**
      * 获取审核列表
@@ -47,13 +44,5 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
      * @param id        ID
      * @return boolean
      */
-    boolean exists(StudentId studentId, AssociationId id);
-
-    /**
-     * 改变状态
-     *
-     * @param id     ID
-     * @param status 状态
-     */
-    void changeStatus(Id id, boolean status);
+    boolean existsByStudentIdAndAssociationId(Long studentId, Long id);
 }

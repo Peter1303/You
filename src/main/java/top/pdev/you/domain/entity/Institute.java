@@ -1,13 +1,14 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.entity.data.InstituteDO;
-import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.InstituteRepository;
 
@@ -22,8 +23,14 @@ import java.util.Optional;
 @Data
 public class Institute extends BaseEntity {
     private Long id;
+    private String name;
 
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private final InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
+
+    @Setter(AccessLevel.NONE)
+    @Getter(AccessLevel.NONE)
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
 
     public Institute(InstituteDO instituteDO) {
@@ -31,6 +38,7 @@ public class Institute extends BaseEntity {
             return;
         }
         this.id = instituteDO.getId();
+        this.name = instituteDO.getName();
     }
 
     /**
@@ -39,12 +47,11 @@ public class Institute extends BaseEntity {
      * @return {@link String}
      */
     public String getStudentInstituteName(Student student) {
-        super.check(student);
-        StudentDO studentDO = student.getStudentDO();
-        Long classId = studentDO.getClassId();
+        Long classId = student.getClassId();
         ClassDO classDO = classRepository.getDO(classId);
         if (Optional.ofNullable(classDO).isPresent()) {
-            return instituteRepository.getName(new Id(classDO.getInstituteId()));
+            Institute institute = instituteRepository.findById(classDO.getInstituteId());
+            return institute.getName();
         }
         return null;
     }
@@ -56,7 +63,7 @@ public class Institute extends BaseEntity {
      */
     public void save(InstituteDO instituteDO) {
         // 检查存在
-        if (instituteRepository.exists(instituteDO.getName())) {
+        if (instituteRepository.existsByName(instituteDO.getName())) {
             throw new BusinessException("该学院已经存在");
         }
         if (!instituteRepository.save(instituteDO)) {

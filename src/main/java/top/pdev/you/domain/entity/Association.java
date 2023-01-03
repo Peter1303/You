@@ -5,15 +5,14 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import lombok.Setter;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.AssociationManagerDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.StudentId;
+import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
@@ -29,7 +28,7 @@ import java.util.Optional;
  */
 @Data
 public class Association extends BaseEntity {
-    private AssociationId id;
+    private Long id;
 
     private String name;
 
@@ -49,28 +48,14 @@ public class Association extends BaseEntity {
     private final AssociationParticipateRepository associationParticipateRepository =
             SpringUtil.getBean(AssociationParticipateRepository.class);
 
-    @Getter(AccessLevel.NONE)
-    private final AssociationManagerRepository associationManagerRepository =
-            SpringUtil.getBean(AssociationManagerRepository.class);
-
     public Association(AssociationDO associationDO) {
         if (!Optional.ofNullable(associationDO).isPresent()) {
             return;
         }
         this.associationDO = associationDO;
-        this.id = new AssociationId(associationDO.getId());
+        this.id = associationDO.getId();
         this.name = associationDO.getName();
         this.summary = associationDO.getSummary();
-    }
-
-    /**
-     * 管理存在
-     *
-     * @param user 用户
-     * @return boolean
-     */
-    public boolean adminExists(User user) {
-        return associationManagerRepository.adminExists(getId(), user);
     }
 
     /**
@@ -80,13 +65,13 @@ public class Association extends BaseEntity {
      */
     public void save(AssociationDO associationDO) {
         // 查找是否已经存在社团
-        if (associationRepository.exists(associationDO.getName())) {
+        if (associationRepository.existsByName(associationDO.getName())) {
             throw new BusinessException("已经存在相同的社团");
         }
         if (!associationRepository.save(associationDO)) {
             throw new BusinessException("无法保存社团");
         }
-        setId(new AssociationId(associationDO.getId()));
+        setId(associationDO.getId());
         setName(associationDO.getName());
         setSummary(associationDO.getSummary());
     }
@@ -97,17 +82,17 @@ public class Association extends BaseEntity {
      * @param student 学生
      */
     public void request(Student student) {
-        StudentId studentId = student.getStudentId();
-        boolean exists = associationParticipateRepository.exists(studentId, id);
+        Long studentId = student.getId();
+        boolean exists = associationParticipateRepository.existsByStudentIdAndAssociationId(studentId, id);
         if (exists) {
             throw new BusinessException("你已经加入该社团了");
         }
         AssociationAuditDO associationAuditDO = new AssociationAuditDO();
-        associationAuditDO.setAssociationId(id.getId());
-        associationAuditDO.setStudentId(studentId.getId());
+        associationAuditDO.setAssociationId(id);
+        associationAuditDO.setStudentId(studentId);
         associationAuditDO.setTime(DateTime.now().toLocalDateTime());
         // 是否已经在审核了
-        if (associationAuditRepository.exists(studentId, id)) {
+        if (associationAuditRepository.existsByStudentIdAndAssociationId(studentId, id)) {
             throw new BusinessException("请等待审核");
         }
         if (!associationAuditRepository.save(associationAuditDO)) {
@@ -121,53 +106,11 @@ public class Association extends BaseEntity {
      * @param student 学生
      */
     public void accept(Student student) {
-        check(student);
         AssociationParticipantDO associationParticipantDO = new AssociationParticipantDO();
-        associationParticipantDO.setAssociationId(this.getId().getId());
-        associationParticipantDO.setStudentId(student.getStudentId().getId());
+        associationParticipantDO.setAssociationId(this.getId());
+        associationParticipantDO.setStudentId(student.getId());
         if (!associationParticipateRepository.save(associationParticipantDO)) {
             throw new BusinessException("加入社团失败");
-        }
-    }
-
-    /**
-     * 添加管理
-     *
-     * @param student 学生
-     */
-    public void addAdmin(Student student) {
-        check(student);
-        AssociationManagerDO managerDO = new AssociationManagerDO();
-        managerDO.setAssociationId(getId().getId());
-        managerDO.setUid(student.getUser().getUserId().getId());
-        // 变更权限
-        student.getUser().permissionTo(Permission.MANAGER);
-        managerDO.setType(Permission.MANAGER.getValue());
-        setAdmin(managerDO);
-    }
-
-    /**
-     * 添加管理
-     *
-     * @param teacher 老师
-     */
-    public void addAdmin(Teacher teacher) {
-        check(teacher);
-        AssociationManagerDO managerDO = new AssociationManagerDO();
-        managerDO.setAssociationId(getId().getId());
-        managerDO.setUid(teacher.getUser().getUserId().getId());
-        managerDO.setType(Permission.ADMIN.getValue());
-        setAdmin(managerDO);
-    }
-
-    /**
-     * 设置管理
-     *
-     * @param managerDO 管理 DO
-     */
-    private void setAdmin(AssociationManagerDO managerDO) {
-        if (!associationManagerRepository.save(managerDO)) {
-            throw new BusinessException("无法保存社团管理人员");
         }
     }
 
@@ -175,7 +118,7 @@ public class Association extends BaseEntity {
      * 删除
      */
     public void delete() {
-        if (!associationRepository.removeById(id.getId())) {
+        if (!associationRepository.removeById(id)) {
             throw new BusinessException("无法删除社团");
         }
     }

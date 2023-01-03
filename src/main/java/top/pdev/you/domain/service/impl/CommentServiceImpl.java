@@ -4,9 +4,6 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.types.CommentId;
-import top.pdev.you.domain.entity.types.PostId;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.CommentFactory;
 import top.pdev.you.domain.repository.CommentRepository;
 import top.pdev.you.domain.repository.PostRepository;
@@ -44,11 +41,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Result<?> postComments(IdVO idVO) {
-        List<Comment> list = commentRepository.findByPostId(new PostId(idVO.getId()));
+        List<Comment> list = commentRepository.findByPostId(idVO.getId());
         List<CommentInfoVO> result = list.stream().map(comment -> {
             CommentInfoVO infoVO = CommentAssembler.INSTANCE.convert(comment);
             Long userId = comment.getUserId();
-            User user = userRepository.find(new UserId(userId));
+            User user = userRepository.findById(userId);
             infoVO.setName(user.getRoleDomain().getName());
             return infoVO;
         }).collect(Collectors.toList());
@@ -58,7 +55,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Result<?> add(AddCommentVO addCommentVO) {
         Long id = addCommentVO.getId();
-        Post post = postRepository.findById(new PostId(id));
+        Post post = postRepository.findById(id);
         Comment comment = commentFactory.newComment();
         comment.setComment(addCommentVO.getComment());
         comment.save(post);
@@ -67,7 +64,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Result<?> delete(IdVO idVO) {
-        Comment comment = commentRepository.findById(new CommentId(idVO.getId()));
+        Comment comment = commentRepository.findById(idVO.getId());
         comment.delete();
         return Result.ok();
     }

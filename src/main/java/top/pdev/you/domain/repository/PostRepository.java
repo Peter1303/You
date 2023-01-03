@@ -3,8 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.data.PostDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.PostId;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public interface PostRepository extends IService<PostDO> {
      * @param id ID
      * @return {@link Post}
      */
-    Post findById(PostId id);
+    Post findById(Long id);
 
     /**
      * 帖子存在
@@ -29,7 +27,7 @@ public interface PostRepository extends IService<PostDO> {
      * @param id ID
      * @return {@link Boolean}
      */
-    Boolean exists(PostId id);
+    Boolean existsById(Long id);
 
     /**
      * 通过社团 ID 获取列表
@@ -37,5 +35,5 @@ public interface PostRepository extends IService<PostDO> {
      * @param associationId 社团 ID
      * @return {@link List}<{@link Post}>
      */
-    List<Post> findByAssociationId(AssociationId associationId);
+    List<Post> findByAssociationId(Long associationId);
 }

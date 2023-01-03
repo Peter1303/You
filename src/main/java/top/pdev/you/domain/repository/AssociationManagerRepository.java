@@ -1,11 +1,9 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.AssociationManagerDO;
-import top.pdev.you.domain.entity.types.AssociationId;
+import top.pdev.you.domain.entity.type.Id;
 
 import java.util.List;
 
@@ -15,29 +13,40 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface AssociationManagerRepository extends IService<AssociationManagerDO> {
+public interface AssociationManagerRepository extends IService<AssociationManager> {
     /**
-     * 获取
+     * 通过用户 ID 查找
      *
-     * @param student 学生
-     * @return {@link AssociationManagerDO}
+     * @param id ID
+     * @return {@link AssociationManager}
      */
-    AssociationManagerDO getOne(Student student);
+    AssociationManager findByUserId(Long id);
+
+    /**
+     * 通过社团ID 查找
+     *
+     * @param id ID
+     * @return {@link AssociationManager}
+     */
+    AssociationManager findByAssociationId(Long id);
 
     /**
      * 获取管理列表
      *
      * @param teacher 老师
-     * @return {@link List}<{@link AssociationManagerDO}>
+     * @return {@link List}<{@link AssociationManager}>
      */
-    List<AssociationManagerDO> getManagedList(Teacher teacher);
+    List<AssociationManager> getManagedList(Teacher teacher);
 
     /**
-     * 管理存在
+     * 通过协会 ID和用户 ID 是否存在
      *
-     * @param associationId 协会 ID
-     * @param user          用户
+     * @param associationId 社团 ID
+     * @param userId        用户 ID
+     * @param permission    权限
      * @return boolean
      */
-    boolean adminExists(AssociationId associationId, User user);
+    boolean existsByAssociationIdAndUserIdAndType(Long associationId,
+                                                  Long userId,
+                                                  Integer permission);
 }

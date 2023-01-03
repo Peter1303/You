@@ -2,17 +2,16 @@ package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
-import top.pdev.you.domain.entity.Student;
+import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.AssociationManagerDO;
-import top.pdev.you.domain.entity.types.AssociationId;
 import top.pdev.you.domain.mapper.AssociationManagerMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 社团管理仓库实现类
@@ -22,31 +21,47 @@ import java.util.List;
  */
 @Repository
 public class AssociationManagerRepositoryImpl
-        extends BaseRepository<AssociationManagerMapper, AssociationManagerDO>
+        extends BaseRepository<AssociationManagerMapper, AssociationManager>
         implements AssociationManagerRepository {
     @Resource
     private AssociationManagerMapper mapper;
 
     @Override
-    public AssociationManagerDO getOne(Student student) {
-        LambdaQueryWrapper<AssociationManagerDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManagerDO::getUid, student.getUser().getUserId().getId());
-        return mapper.selectOne(queryWrapper);
+    public AssociationManager findByUserId(Long id) {
+        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManager::getUserId, id);
+        AssociationManager one = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(one).isPresent()) {
+            throw new BusinessException("找不到用户所管理的社团");
+        }
+        return one;
     }
 
     @Override
-    public List<AssociationManagerDO> getManagedList(Teacher teacher) {
-        LambdaQueryWrapper<AssociationManagerDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManagerDO::getUid, teacher.getUser().getUserId().getId());
+    public AssociationManager findByAssociationId(Long id) {
+        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManager::getAssociationId, id);
+        AssociationManager one = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(one).isPresent()) {
+            throw new BusinessException("找不到用户所管理的社团");
+        }
+        return one;
+    }
+
+    @Override
+    public List<AssociationManager> getManagedList(Teacher teacher) {
+        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManager::getUserId, teacher.getUser().getId());
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public boolean adminExists(AssociationId associationId, User user) {
-        check(user);
-        LambdaQueryWrapper<AssociationManagerDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManagerDO::getUid, user.getUserId().getId())
-                .eq(AssociationManagerDO::getType, user.getPermission());
+    public boolean existsByAssociationIdAndUserIdAndType(Long associationId,
+                                                         Long userId,
+                                                         Integer permission) {
+        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManager::getUserId, userId)
+                .eq(AssociationManager::getType, permission);
         return mapper.exists(queryWrapper);
     }
 }

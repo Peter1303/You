@@ -44,10 +44,10 @@ public class TokenInterceptor implements HandlerInterceptor {
         if (StrUtil.isNotBlank(token)) {
             // 从缓存中读取 若令牌已过期那么阻止
             if (!redisService.hasKey(RedisKey.loginToken(token))) {
-                User user = userRepository.findByToken(token);
+                User user = userRepository.findByOpenId(token);
                 Optional.ofNullable(user).orElseThrow(TokenInvalidException::new);
                 TokenInfo info = new TokenInfo();
-                info.setUid(user.getUserId().getId());
+                info.setUid(user.getId());
                 // 缓存一个月
                 redisService.set(RedisKey.loginToken(token), info, 30, TimeUnit.DAYS);
             }

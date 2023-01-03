@@ -3,8 +3,9 @@ package top.pdev.you.domain.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.entity.Campus;
 import top.pdev.you.domain.entity.data.CampusDO;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.mapper.CampusMapper;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.interfaces.assembler.CampusAssembler;
@@ -29,14 +30,12 @@ public class CampusRepositoryImpl
     private CampusMapper mapper;
 
     @Override
-    public String getName(Id id) {
-        if (Optional.ofNullable(id).isPresent()) {
-            LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(CampusDO::getId, id.getId());
-            CampusDO campusDO = mapper.selectOne(queryWrapper);
-            return campusDO.getName();
+    public Campus findById(Long id) {
+        CampusDO campusDO = mapper.selectById(id);
+        if (!Optional.ofNullable(id).isPresent()) {
+            throw new BusinessException("找不到校区");
         }
-        return null;
+        return new Campus(campusDO);
     }
 
     @Override
@@ -50,14 +49,14 @@ public class CampusRepositoryImpl
     }
 
     @Override
-    public boolean exists(Long campusId) {
+    public boolean existsById(Long campusId) {
         LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CampusDO::getId, campusId);
         return mapper.exists(queryWrapper);
     }
 
     @Override
-    public boolean exists(String name) {
+    public boolean existsByName(String name) {
         LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(CampusDO::getName, name);
         return mapper.exists(queryWrapper);

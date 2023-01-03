@@ -1,4 +1,4 @@
-package top.pdev.you.domain.entity.types;
+package top.pdev.you.domain.entity.type;
 
 /**
  * 学生 ID

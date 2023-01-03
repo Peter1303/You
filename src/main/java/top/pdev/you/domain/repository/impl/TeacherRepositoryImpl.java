@@ -1,19 +1,15 @@
 package top.pdev.you.domain.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.TeacherDO;
-import top.pdev.you.domain.entity.types.TeacherId;
-import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.mapper.TeacherMapper;
-import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.TeacherRepository;
-import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
 
-import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * 老师仓库实现类
@@ -25,38 +21,23 @@ import javax.annotation.Resource;
 public class TeacherRepositoryImpl
         extends BaseRepository<TeacherMapper, TeacherDO>
         implements TeacherRepository {
-    @Resource
-    private TeacherMapper teacherMapper;
-
-    @Resource
-    private UserRepository userRepository;
-
-    @Resource
-    private UserFactory userFactory;
-
     @Override
-    public Teacher find(TeacherId id) {
-        User user = userRepository.find(id);
-        return userFactory.getTeacher(user);
+    public Teacher findById(Long id) {
+        TeacherDO teacherDO = getById(id);
+        if (!Optional.ofNullable(teacherDO).isPresent()) {
+            throw new BusinessException("找不到老师");
+        }
+        return new Teacher(teacherDO);
     }
 
     @Override
-    public TeacherDO getDO(TeacherId id) {
-        return teacherMapper.selectById(id.getId());
-    }
-
-    @Override
-    public boolean setContact(TeacherId id, String contact) {
-        checkId(id);
-        LambdaUpdateWrapper<TeacherDO> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.eq(TeacherDO::getId, id.getId())
-                .set(TeacherDO::getContact, contact);
-        return teacherMapper.update(null, updateWrapper) != 0;
-    }
-
-    @Override
-    public boolean delete(TeacherId id) {
-        checkId(id);
-        return teacherMapper.deleteById(id.getId()) != 0;
+    public Teacher findByUserId(Long id) {
+        LambdaQueryWrapper<TeacherDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(TeacherDO::getUserId, id);
+        TeacherDO teacherDO = getOne(queryWrapper);
+        if (!Optional.ofNullable(teacherDO).isPresent()) {
+            throw new BusinessException("找不到老师");
+        }
+        return new Teacher(teacherDO);
     }
 }

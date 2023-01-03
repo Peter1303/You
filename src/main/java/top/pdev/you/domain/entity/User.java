@@ -13,9 +13,6 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.UserDO;
-import top.pdev.you.domain.entity.types.StudentId;
-import top.pdev.you.domain.entity.types.TeacherId;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
@@ -31,9 +28,8 @@ import java.util.Optional;
  */
 @Data
 public class User extends BaseEntity {
-    private UserId userId;
+    private Long id;
     private String openId;
-    private Long targetId;
     private Integer permission;
 
     @Getter(AccessLevel.NONE)
@@ -52,11 +48,8 @@ public class User extends BaseEntity {
         if (!Optional.ofNullable(userDO).isPresent()) {
             return;
         }
-        this.userId = new UserId(userDO.getId());
+        this.id =userDO.getId();
         this.openId = userDO.getWechatId();
-        if (!Optional.ofNullable(targetId).isPresent()) {
-            this.targetId = userDO.getTargetId();
-        }
         this.permission = userDO.getPermission();
     }
 
@@ -74,28 +67,17 @@ public class User extends BaseEntity {
     /**
      * 保存
      *
-     * @param teacher 老师
+     * @param role 角色
      */
-    public void save(Teacher teacher) {
+    public void save(RoleEntity role) {
         UserDO userDO = new UserDO();
         userDO.setWechatId(openId);
         userDO.setTime(DateTime.now().toLocalDateTime());
-        userDO.setTargetId(teacher.getTeacherId().getId());
-        userDO.setPermission(Permission.ADMIN.getValue());
-        save(userDO);
-    }
-
-    /**
-     * 保存
-     *
-     * @param student 学生
-     */
-    public void save(Student student) {
-        UserDO userDO = new UserDO();
-        userDO.setWechatId(openId);
-        userDO.setTime(DateTime.now().toLocalDateTime());
-        userDO.setTargetId(student.getStudentId().getId());
-        userDO.setPermission(Permission.USER.getValue());
+        if (role instanceof Student) {
+            userDO.setPermission(Permission.USER.getValue());
+        } else if (role instanceof Teacher) {
+            userDO.setPermission(Permission.ADMIN.getValue());
+        }
         save(userDO);
     }
 
@@ -107,11 +89,11 @@ public class User extends BaseEntity {
             throw new BusinessException("核心管理员不可删除");
         }
         if (permission == Permission.ADMIN.getValue()) {
-            teacherRepository.delete(new TeacherId(targetId));
+            teacherRepository.removeById(id);
         } else {
-            studentRepository.delete(new StudentId(targetId));
+            studentRepository.removeById(id);
         }
-        userRepository.delete(userId);
+        userRepository.removeById(id);
     }
 
     /**
@@ -120,7 +102,10 @@ public class User extends BaseEntity {
      * @param permission 权限
      */
     public void permissionTo(Permission permission) {
-        if (!userRepository.setPermission(getUserId(), permission)) {
+        UserDO userDO = new UserDO();
+        userDO.setId(getId());
+        userDO.setPermission(permission.getValue());
+        if (!userRepository.updateById(userDO)) {
             throw new BusinessException("变更权限失败");
         }
         setPermission(permission.getValue());

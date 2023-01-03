@@ -5,21 +5,22 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
+import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
-import top.pdev.you.domain.entity.types.StudentId;
-import top.pdev.you.domain.entity.types.TeacherId;
-import top.pdev.you.domain.entity.types.UserId;
+import top.pdev.you.domain.entity.type.Id;
+import top.pdev.you.domain.entity.type.StudentId;
+import top.pdev.you.domain.entity.type.TeacherId;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
+import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
@@ -72,6 +73,9 @@ public class AssociationServiceImpl implements AssociationService {
     private TeacherRepository teacherRepository;
 
     @Resource
+    private AssociationManagerRepository associationManagerRepository;
+
+    @Resource
     private UserFactory userFactory;
 
     @Resource
@@ -89,7 +93,7 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public Result<?> delete(IdVO idVO) {
-        Association association = associationRepository.find(new AssociationId(idVO.getId()));
+        Association association = associationRepository.findById(idVO.getId());
         association.delete();
         return Result.ok();
     }
@@ -97,13 +101,13 @@ public class AssociationServiceImpl implements AssociationService {
     @Override
     public Result<?> list(SearchVO searchVO, TokenInfo tokenInfo) {
         Long uid = tokenInfo.getUid();
-        User user = userRepository.find(new UserId(uid));
+        User user = userRepository.findById(uid);
         // 出学生之外只能显示列表
         AtomicBoolean isStudent = new AtomicBoolean(false);
-        AtomicReference<StudentId> studentId = new AtomicReference<>(null);
+        AtomicReference<Long> studentId = new AtomicReference<>(null);
         try {
             Student student = userFactory.getStudent(user);
-            studentId.set(student.getStudentId());
+            studentId.set(student.getId());
             isStudent.set(true);
         } catch (Exception ignored) {
         }
@@ -116,13 +120,13 @@ public class AssociationServiceImpl implements AssociationService {
                             if (isStudent.get()) {
                                 int status = AssociationStatus.NOT;
                                 // 有该学生即已经加入
-                                StudentId id = studentId.get();
-                                if (Objects.equals(item.getStudentId(), id.getId())) {
+                                Long id = studentId.get();
+                                if (Objects.equals(item.getStudentId(), id)) {
                                     status = AssociationStatus.JOINED;
                                 } else {
                                     // 如果存在审核记录那么需要检查是否通过
-                                    AssociationAuditDO one = associationAuditRepository.getOne(id,
-                                            new AssociationId(item.getId()));
+                                    AssociationAuditDO one =
+                                            associationAuditRepository.findByStudentIdAndAssociationId(id, item.getId());
                                     if (Optional.ofNullable(one).isPresent()) {
                                         status = AssociationStatus.AUDIT;
                                     }
@@ -139,9 +143,9 @@ public class AssociationServiceImpl implements AssociationService {
     public Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO) {
         // 需要审核
         if (!directly) {
-            AssociationId associationId = new AssociationId(idVO.getId());
-            Association association = associationRepository.find(associationId);
-            User user = userRepository.find(new UserId(tokenInfo.getUid()));
+            Long associationId = idVO.getId();
+            Association association = associationRepository.findById(associationId);
+            User user = userRepository.findById(tokenInfo.getUid());
             Student student = userFactory.getStudent(user);
             association.request(student);
         }
@@ -154,7 +158,7 @@ public class AssociationServiceImpl implements AssociationService {
         List<AssociationAuditVO> list = auditList.stream()
                 .map(item -> {
                     AssociationAuditVO auditVO = AssociationAssembler.INSTANCE.convert2auditInfoVO(item);
-                    Student student = studentRepository.find(new StudentId(item.getStudentId()));
+                    Student student = studentRepository.findById(item.getStudentId());
                     StudentInfoDTO dto = new StudentInfoDTO();
                     dto.setName(student.getName());
                     dto.setClazz(student.getClazz());
@@ -193,52 +197,49 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public Result<?> addManager(AddAdminVO addAdminVO) {
-        addAdmin(new AssociationId(addAdminVO.getAssociationId()),
-                new StudentId(addAdminVO.getUid()));
+        addAdmin(addAdminVO.getAssociationId(), new StudentId(addAdminVO.getUid()));
         return Result.ok();
     }
 
     @Override
     public Result<?> addAdmin(AddAdminVO addAdminVO) {
-        addAdmin(new AssociationId(addAdminVO.getAssociationId()),
-                new TeacherId(addAdminVO.getUid()));
+        addAdmin(addAdminVO.getAssociationId(), new TeacherId(addAdminVO.getUid()));
         return Result.ok();
     }
 
     @Override
     public Result<?> setName(ChangeNameVO nameVO) {
-        Association association = associationRepository.find(new AssociationId(nameVO.getId()));
+        Association association = associationRepository.findById(nameVO.getId());
         association.changeName(nameVO.getName());
         return Result.ok();
     }
 
     @Override
     public Result<?> setSummary(ChangeNameVO nameVO) {
-        Association association = associationRepository.find(new AssociationId(nameVO.getId()));
+        Association association = associationRepository.findById(nameVO.getId());
         association.changeSummary(nameVO.getName());
         return Result.ok();
     }
 
-    private void addAdmin(AssociationId associationId, Id id) {
-        Association association =
-                associationRepository.getOne(associationId);
-        User user = userRepository.find(new UserId(id.getId()));
-        // 检查社团是否已经被相关的管理接管
-        if (association.adminExists(user)) {
-            throw new BusinessException("已经存在了管理者");
-        }
-        Optional.ofNullable(user)
-                .orElseThrow(() -> new BusinessException("没有找到用户"));
-        id.setId(user.getTargetId());
+    private void addAdmin(Long associationId, Id id) {
+        AssociationManager associationManager =
+                associationManagerRepository.findByAssociationId(associationId);
+        User user = null;
         // 负责人
         if (id instanceof StudentId) {
-            Student student = studentRepository.find((StudentId) id);
-            association.addAdmin(student);
+            Student student = studentRepository.findById(id.getId());
+            associationManager.addAdmin(student);
+            user = userRepository.findById(student.getUserId());
         }
         // 指导老师
         if (id instanceof TeacherId) {
-            Teacher teacher = teacherRepository.find((TeacherId) id);
-            association.addAdmin(teacher);
+            Teacher teacher = teacherRepository.findById(id.getId());
+            user = userRepository.findById(teacher.getUserId());
+            associationManager.addAdmin(teacher);
+        }
+        // 检查社团是否已经被相关的管理接管
+        if (associationManager.adminExists(user)) {
+            throw new BusinessException("已经存在了管理者");
         }
     }
 
@@ -249,17 +250,22 @@ public class AssociationServiceImpl implements AssociationService {
      * @param accept 接受
      */
     private void auditAssociationRequest(IdVO idVO, boolean accept) {
-        Id id = new Id(idVO.getId());
-        AssociationAuditDO auditDO = associationAuditRepository.getOne(id);
+        Long id = idVO.getId();
+        AssociationAuditDO auditDO = associationAuditRepository.findById(id);
         checkAudit(auditDO);
-        Student student = studentRepository.find(new StudentId(auditDO.getStudentId()));
+        Student student = studentRepository.findById(auditDO.getStudentId());
         Association association =
-                associationRepository.find(new AssociationId(auditDO.getAssociationId()));
+                associationRepository.findById(auditDO.getAssociationId());
         if (accept) {
             association.accept(student);
         }
         // 更改审核记录
-        associationAuditRepository.changeStatus(id, accept);
+        AssociationAuditDO audit = associationAuditRepository.findById(id);
+        audit.setStatus(accept);
+        boolean update = associationAuditRepository.updateById(audit);
+        if (!update) {
+            throw new BusinessException("无法更改入团审核状态");
+        }
         AssociationAuditEvent event = new AssociationAuditEvent(this);
         event.setAssociation(association);
         event.setStudent(student);

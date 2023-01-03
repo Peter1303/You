@@ -21,6 +21,11 @@ public class TeacherDO {
     private Long id;
 
     /**
+     * 用户 ID
+     */
+    private Long userId;
+
+    /**
      * 名字
      */
     private String name;

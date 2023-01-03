@@ -6,7 +6,6 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
 import top.pdev.you.infrastructure.redis.RedisService;
@@ -69,10 +68,10 @@ public class AdminServiceImpl implements AdminService {
         User user;
         Optional.ofNullable(uidOrToken).orElseThrow(() -> new BusinessException(ResultCode.PERMISSION_DENIED));
         if (uidOrToken instanceof Long) {
-            user = userRepository.find(new UserId((Long) uidOrToken));
+            user = userRepository.findById((Long) uidOrToken);
         } else if (uidOrToken instanceof String) {
             String token = (String) uidOrToken;
-            user = userRepository.findByToken(token);
+            user = userRepository.findByOpenId(token);
         } else {
             throw new InternalErrorException("传值错误");
         }

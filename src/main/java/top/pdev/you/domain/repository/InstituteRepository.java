@@ -1,8 +1,8 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.Institute;
 import top.pdev.you.domain.entity.data.InstituteDO;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.interfaces.model.dto.InstituteInfoDTO;
 
 import java.util.List;
@@ -15,12 +15,12 @@ import java.util.List;
  */
 public interface InstituteRepository extends IService<InstituteDO> {
     /**
-     * 获取名字
+     * 通过 ID 查找
      *
-     * @param id ID
-     * @return {@link String}
+     * @param instituteId 研究所 ID
+     * @return {@link Institute}
      */
-    String getName(Id id);
+    Institute findById(Long instituteId);
 
     /**
      * 获取学院信息
@@ -36,7 +36,7 @@ public interface InstituteRepository extends IService<InstituteDO> {
      * @param instituteId 学院 ID
      * @return boolean
      */
-    boolean exists(Long instituteId);
+    boolean existsById(Long instituteId);
 
     /**
      * 存在
@@ -44,5 +44,5 @@ public interface InstituteRepository extends IService<InstituteDO> {
      * @param name 名字
      * @return boolean
      */
-    boolean exists(String name);
+    boolean existsByName(String name);
 }

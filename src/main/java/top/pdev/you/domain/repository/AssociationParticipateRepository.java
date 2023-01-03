@@ -3,8 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.StudentId;
 
 import java.util.List;
 
@@ -31,5 +29,5 @@ public interface AssociationParticipateRepository
      * @param associationId 社团 ID
      * @return boolean
      */
-    boolean exists(StudentId studentId, AssociationId associationId);
+    boolean existsByStudentIdAndAssociationId(Long studentId, Long associationId);
 }

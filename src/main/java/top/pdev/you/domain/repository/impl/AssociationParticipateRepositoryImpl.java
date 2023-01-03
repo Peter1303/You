@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.mapper.AssociationParticipateMapper;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -29,17 +27,15 @@ public class AssociationParticipateRepositoryImpl
     @Override
     public List<AssociationParticipantDO> getParticipateList(Student student) {
         LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getStudentId, student.getStudentId().getId());
+        queryWrapper.eq(AssociationParticipantDO::getStudentId, student.getId());
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public boolean exists(StudentId studentId, AssociationId associationId) {
-        checkId(studentId);
-        checkId(associationId);
+    public boolean existsByStudentIdAndAssociationId(Long studentId, Long associationId) {
         LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getStudentId, studentId.getId())
-                .eq(AssociationParticipantDO::getAssociationId, associationId.getId());
+        queryWrapper.eq(AssociationParticipantDO::getStudentId, studentId)
+                .eq(AssociationParticipantDO::getAssociationId, associationId);
         return mapper.exists(queryWrapper);
     }
 }

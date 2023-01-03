@@ -8,7 +8,6 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.InstituteRepository;
@@ -50,8 +49,8 @@ public class Clazz extends BaseEntity {
      * @return {@link String}
      */
     public String getStudentClassName(Student student) {
-        super.check(student);
-        return classRepository.getName(new Id(student.getStudentDO().getClassId()));
+        ClassDO classDO = classRepository.getDO(student.getClassId());
+        return classDO.getName();
     }
 
     /**
@@ -64,14 +63,14 @@ public class Clazz extends BaseEntity {
                 .orElseThrow(() -> new InternalErrorException("没有持久化信息"));
         Long campusId = classDO.getCampusId();
         Long instituteId = classDO.getInstituteId();
-        if (!campusRepository.exists(campusId)) {
+        if (!campusRepository.existsById(campusId)) {
             throw new BusinessException("没有找到该校区");
         }
-        if (!instituteRepository.exists(instituteId)) {
+        if (!instituteRepository.existsById(instituteId)) {
             throw new BusinessException("没有找到该学院");
         }
         // 检查是否重复
-        if (classRepository.exists(classDO.getName(),
+        if (classRepository.existsByNameAndInstituteIdAndCampusId(classDO.getName(),
                 classDO.getInstituteId(),
                 classDO.getCampusId())) {
             throw new BusinessException("已经存在相同的班级");

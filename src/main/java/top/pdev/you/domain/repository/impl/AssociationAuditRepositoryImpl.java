@@ -1,13 +1,9 @@
 package top.pdev.you.domain.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
-import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.mapper.AssociationAuditMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -31,24 +27,21 @@ public class AssociationAuditRepositoryImpl
     private AssociationAuditMapper mapper;
 
     @Override
-    public AssociationAuditDO getOne(StudentId studentId, AssociationId associationId) {
-        checkId(studentId);
-        checkId(associationId);
+    public AssociationAuditDO findById(Long id) {
         LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId.getId())
-                .eq(AssociationAuditDO::getAssociationId, associationId.getId());
-        return mapper.selectOne(queryWrapper);
-    }
-
-    @Override
-    public AssociationAuditDO getOne(Id id) {
-        checkId(id);
-        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getId, id.getId());
+        queryWrapper.eq(AssociationAuditDO::getId, id);
         AssociationAuditDO auditDO = mapper.selectOne(queryWrapper);
         Optional.ofNullable(auditDO)
                 .orElseThrow(() -> new BusinessException("找不到审核项目"));
         return auditDO;
+    }
+
+    @Override
+    public AssociationAuditDO findByStudentIdAndAssociationId(Long studentId, Long associationId) {
+        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId)
+                .eq(AssociationAuditDO::getAssociationId, associationId);
+        return mapper.selectOne(queryWrapper);
     }
 
     @Override
@@ -57,24 +50,10 @@ public class AssociationAuditRepositoryImpl
     }
 
     @Override
-    public boolean exists(StudentId studentId, AssociationId id) {
-        checkId(studentId);
-        checkId(id);
+    public boolean existsByStudentIdAndAssociationId(Long studentId, Long id) {
         LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId.getId())
-                .eq(AssociationAuditDO::getAssociationId, id.getId());
+        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId)
+                .eq(AssociationAuditDO::getAssociationId, id);
         return mapper.exists(queryWrapper);
-    }
-
-    @Override
-    public void changeStatus(Id id, boolean status) {
-        checkId(id);
-        LambdaUpdateWrapper<AssociationAuditDO> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(AssociationAuditDO::getStatus, status)
-                .eq(AssociationAuditDO::getId, id.getId());
-        boolean update = update(null, updateWrapper);
-        if (!update) {
-            throw new BusinessException("无法更改入团审核状态");
-        }
     }
 }

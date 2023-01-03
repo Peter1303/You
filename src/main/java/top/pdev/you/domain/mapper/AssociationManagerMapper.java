@@ -2,7 +2,7 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.AssociationManagerDO;
+import top.pdev.you.domain.entity.AssociationManager;
 
 /**
  * 社团管理持久化
@@ -11,5 +11,5 @@ import top.pdev.you.domain.entity.data.AssociationManagerDO;
  * @author Peter1303
  */
 @Mapper
-public interface AssociationManagerMapper extends BaseMapper<AssociationManagerDO> {
+public interface AssociationManagerMapper extends BaseMapper<AssociationManager> {
 }

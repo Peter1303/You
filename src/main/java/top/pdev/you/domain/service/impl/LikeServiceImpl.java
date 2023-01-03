@@ -5,9 +5,6 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.types.LikeId;
-import top.pdev.you.domain.entity.types.PostId;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.LikeFactory;
 import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.PostRepository;
@@ -41,8 +38,8 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public Result<?> add(TokenInfo tokenInfo, IdVO idVO) {
         Long uid = tokenInfo.getUid();
-        User user = userRepository.find(new UserId(uid));
-        Post post = postRepository.findById(new PostId(idVO.getId()));
+        User user = userRepository.findById(uid);
+        Post post = postRepository.findById(idVO.getId());
         Like like = likeFactory.newLike();
         like.addLike(user, post);
         return Result.ok();
@@ -50,7 +47,7 @@ public class LikeServiceImpl implements LikeService {
 
     @Override
     public Result<?> delete(IdVO idVO) {
-        Like like = likeRepository.findById(new LikeId(idVO.getId()));
+        Like like = likeRepository.findById(idVO.getId());
         like.cancelLike();
         return Result.ok();
     }

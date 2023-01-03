@@ -21,6 +21,11 @@ public class StudentDO {
     private Long id;
 
     /**
+     * 用户 ID
+     */
+    private Long userId;
+
+    /**
      * 班级 ID
      */
     private Long classId;

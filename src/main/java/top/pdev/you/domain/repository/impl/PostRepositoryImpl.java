@@ -5,8 +5,6 @@ import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.data.PostDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.PostId;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.mapper.PostMapper;
 import top.pdev.you.domain.repository.PostRepository;
@@ -34,27 +32,25 @@ public class PostRepositoryImpl
     private PostFactory postFactory;
 
     @Override
-    public Post findById(PostId id) {
-        checkId(id);
-        PostDO postDO = getById(id.getId());
+    public Post findById(Long id) {
+        PostDO postDO = getById(id);
         Optional.ofNullable(postDO)
                 .orElseThrow(() -> new BusinessException("找不到帖子"));
         return postFactory.getPost(postDO);
     }
 
     @Override
-    public Boolean exists(PostId id) {
-        checkId(id);
+    public Boolean existsById(Long id) {
         LambdaQueryWrapper<PostDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostDO::getId, id.getId());
+        queryWrapper.eq(PostDO::getId, id);
         return mapper.exists(queryWrapper);
     }
 
     @Override
-    public List<Post> findByAssociationId(AssociationId associationId) {
+    public List<Post> findByAssociationId(Long associationId) {
         LambdaQueryWrapper<PostDO> queryWrapper = new LambdaQueryWrapper<>();
-        if (Optional.ofNullable(associationId.getId()).isPresent()) {
-            queryWrapper.eq(PostDO::getAssociationId, associationId.getId());
+        if (Optional.ofNullable(associationId).isPresent()) {
+            queryWrapper.eq(PostDO::getAssociationId, associationId);
         }
         List<PostDO> list = mapper.selectList(queryWrapper);
         return list.stream()

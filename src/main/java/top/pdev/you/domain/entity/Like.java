@@ -7,7 +7,6 @@ import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.LikeDO;
-import top.pdev.you.domain.entity.types.PostId;
 import top.pdev.you.domain.repository.LikeRepository;
 
 import java.util.Optional;
@@ -43,10 +42,10 @@ public class Like extends BaseEntity {
      * @param post 帖子
      */
     public void addLike(User user, Post post) {
-        this.userId = user.getUserId().getId();
+        this.userId = user.getId();
         this.postId = post.getId();
         // 检查是否已经点过赞了
-        if (likeRepository.liked(user.getUserId(), new PostId(postId))) {
+        if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
             throw new BusinessException("已经点过赞了");
         }
         LikeDO likeDO = new LikeDO();

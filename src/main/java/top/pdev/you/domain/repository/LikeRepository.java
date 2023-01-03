@@ -3,9 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.data.LikeDO;
-import top.pdev.you.domain.entity.types.LikeId;
-import top.pdev.you.domain.entity.types.PostId;
-import top.pdev.you.domain.entity.types.UserId;
 
 /**
  * 点赞仓库
@@ -20,7 +17,7 @@ public interface LikeRepository extends IService<LikeDO> {
      * @param likeId 就像 ID
      * @return {@link Like}
      */
-    Like findById(LikeId likeId);
+    Like findById(Long likeId);
 
     /**
      * 通过帖子 ID 统计点赞
@@ -28,7 +25,7 @@ public interface LikeRepository extends IService<LikeDO> {
      * @param id ID
      * @return {@link Long}
      */
-    Long countLikesByPostId(PostId id);
+    Long countLikesByPostId(Long id);
 
     /**
      * 用户是否已经点赞
@@ -37,5 +34,5 @@ public interface LikeRepository extends IService<LikeDO> {
      * @param postId 帖子 ID
      * @return {@link Boolean}
      */
-    Boolean liked(UserId userId, PostId postId);
+    Boolean existsByUserIdAndPostId(Long userId, Long postId);
 }

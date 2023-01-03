@@ -73,7 +73,7 @@ public class Post extends BaseEntity {
     public void delete(User user) {
         boolean hasPermission = false;
         // 是否为自己的帖子
-        if (Objects.equals(user.getUserId().getId(), this.userId)) {
+        if (Objects.equals(user.getId(), this.userId)) {
             hasPermission = true;
         } else {
             RoleEntity role = user.getRoleDomain();

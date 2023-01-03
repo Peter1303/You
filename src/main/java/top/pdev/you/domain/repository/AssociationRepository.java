@@ -5,8 +5,6 @@ import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -25,23 +23,7 @@ public interface AssociationRepository extends IService<AssociationDO> {
      * @param associationId 协会 ID
      * @return {@link Association}
      */
-    Association find(AssociationId associationId);
-
-    /**
-     * 获取
-     *
-     * @param student 学生
-     * @return {@link Association}
-     */
-    Association getOne(Student student);
-
-    /**
-     * 获取
-     *
-     * @param id ID
-     * @return {@link Association}
-     */
-    Association getOne(Id id);
+    Association findById(Long associationId);
 
     /**
      * 获取管理列表
@@ -73,5 +55,5 @@ public interface AssociationRepository extends IService<AssociationDO> {
      * @param name 名字
      * @return boolean
      */
-    boolean exists(String name);
+    boolean existsByName(String name);
 }

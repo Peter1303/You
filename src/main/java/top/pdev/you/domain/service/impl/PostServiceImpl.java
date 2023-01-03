@@ -5,9 +5,6 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.PostId;
-import top.pdev.you.domain.entity.types.UserId;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.CommentRepository;
@@ -62,7 +59,7 @@ public class PostServiceImpl implements PostService {
         Long associationId = postVO.getAssociationId();
         // 检查社团是否存在
         if (Optional.ofNullable(associationId).isPresent()) {
-            associationRepository.find(new AssociationId(associationId));
+            associationRepository.findById(associationId);
         }
 
         Post post = postFactory.newPost();
@@ -80,7 +77,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Result<?> details(IdVO idVO) {
-        Post post = postRepository.findById(new PostId(idVO.getId()));
+        Post post = postRepository.findById(idVO.getId());
         PostInfoVO infoVO = convert(post);
         infoVO.setContent(post.getContent());
         return Result.ok(infoVO);
@@ -89,7 +86,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> list(PostListVO postListVO) {
         Long id = postListVO.getId();
-        List<Post> posts = postRepository.findByAssociationId(new AssociationId(id));
+        List<Post> posts = postRepository.findByAssociationId(id);
         List<PostInfoVO> list = posts.stream().map(post -> {
             PostInfoVO infoVO = convert(post);
             infoVO.setSummary(post.getContent().substring(0, 40) + "...");
@@ -100,9 +97,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Result<?> delete(TokenInfo tokenInfo, IdVO idVO) {
-        Post post = postRepository.findById(new PostId(idVO.getId()));
+        Post post = postRepository.findById(idVO.getId());
         Long uid = tokenInfo.getUid();
-        User user = userRepository.find(new UserId(uid));
+        User user = userRepository.findById(uid);
         post.delete(user);
         return Result.ok();
     }
@@ -110,7 +107,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> changePost(ChangePostVO changePostVO) {
         Long id = changePostVO.getId();
-        Post post = postRepository.findById(new PostId(id));
+        Post post = postRepository.findById(id);
         // TODO changeTopicId
         post.changeContent(changePostVO.getContent());
         return Result.ok();
@@ -125,14 +122,14 @@ public class PostServiceImpl implements PostService {
     private PostInfoVO convert(Post post) {
         PostInfoVO infoVO = PostAssembler.INSTANCE.convert(post);
         Long userId = post.getUserId();
-        User user = userRepository.find(new UserId(userId));
+        User user = userRepository.findById(userId);
         RoleEntity role = user.getRoleDomain();
         String name = role.getName();
         infoVO.setName(name);
-        PostId postId = new PostId(post.getId());
+        Long postId = post.getId();
         infoVO.setLikes(likeRepository.countLikesByPostId(postId));
         infoVO.setComments(commentRepository.countCommentByPostId(postId));
-        infoVO.setLiked(likeRepository.liked(user.getUserId(), postId));
+        infoVO.setLiked(likeRepository.existsByUserIdAndPostId(user.getId(), postId));
         return infoVO;
     }
 }

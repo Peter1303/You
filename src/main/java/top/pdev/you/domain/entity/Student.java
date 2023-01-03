@@ -4,12 +4,11 @@ import cn.hutool.extra.spring.SpringUtil;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.entity.types.StudentId;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.CampusFactory;
 import top.pdev.you.domain.factory.ClassFactory;
@@ -31,18 +30,16 @@ import java.util.Optional;
  */
 @Data
 public class Student extends RoleEntity {
-    private User user;
-    private StudentId studentId;
+    private Long id;
+    private Long classId;
+    private Long userId;
     private String no;
     private String name;
     private String contact;
     private String clazz;
     private String campus;
 
-    /**
-     * 记录
-     */
-    private StudentDO studentDO;
+    private User user;
 
     @Getter(AccessLevel.NONE)
     private final StudentRepository studentRepository =
@@ -78,18 +75,36 @@ public class Student extends RoleEntity {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
-        this.user = user;
-        this.studentId = new StudentId(user.getTargetId());
-        this.studentDO = studentRepository.getDO(studentId);
-        Optional.ofNullable(studentDO)
+        Long userId = user.getId();
+        Student student = studentRepository.findByUserId(userId);
+        Optional.ofNullable(student)
                 .orElseThrow(() -> new BusinessException("没有找到学生"));
-        this.name = studentDO.getName();
-        this.no = studentDO.getNo();
-        this.contact = studentDO.getContact();
+        this.id = student.getId();
+        this.classId = student.getClassId();
+        this.name = student.getName();
+        this.no = student.getNo();
+        this.contact = student.getContact();
     }
 
     public Student(User user) {
         init(user);
+    }
+
+    public Student(StudentDO studentDO) {
+        this.id = studentDO.getId();
+        this.classId = studentDO.getClassId();
+        this.name = studentDO.getName();
+        this.no = studentDO.getNo();
+        this.contact = studentDO.getContact();
+        this.userId = studentDO.getUserId();
+    }
+
+    @Override
+    public User getUser() {
+        if (!Optional.ofNullable(user).isPresent()) {
+            user = userRepository.findById(userId);
+        }
+        return user;
     }
 
     public List<AssociationDO> getAssociations() {
@@ -102,7 +117,6 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getClazz() {
-        super.check(this);
         Clazz cls = classFactory.newClazz();
         this.clazz = cls.getStudentClassName(this);
         return this.clazz;
@@ -114,7 +128,6 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getCampus() {
-        super.check(this);
         Campus c = campusFactory.newCampus();
         return c.getStudentCampusName(this);
     }
@@ -125,7 +138,6 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getInstitute() {
-        super.check(this);
         Institute institute = instituteFactory.newInstitute();
         return institute.getStudentInstituteName(this);
     }
@@ -136,9 +148,8 @@ public class Student extends RoleEntity {
      * @return {@link Integer}
      */
     public Integer getGrade() {
-        super.check(this);
-        Long classId = getStudentDO().getClassId();
-        Clazz clz = classRepository.find(classId);
+        Long classId = getClassId();
+        Clazz clz = classRepository.findById(classId);
         if (Optional.ofNullable(clz).isPresent()) {
             return clz.getGrade();
         }
@@ -151,7 +162,11 @@ public class Student extends RoleEntity {
      * @param contact 联系
      */
     public void saveContact(String contact) {
-        if (!studentRepository.setContact(studentId, contact)) {
+        this.contact = contact;
+        StudentDO studentDO = new StudentDO();
+        studentDO.setId(this.id);
+        studentDO.setContact(contact);
+        if (!studentRepository.updateById(studentDO)) {
             throw new BusinessException("无法保存联系方式");
         }
     }
@@ -164,7 +179,7 @@ public class Student extends RoleEntity {
     public void save(StudentDO studentDO) {
         // 检测班级是否存在
         Long classId = studentDO.getClassId();
-        if (!Optional.ofNullable(classRepository.find(classId)).isPresent()) {
+        if (!Optional.ofNullable(classRepository.findById(classId)).isPresent()) {
             throw new BusinessException(ResultCode.FAILED, "班级不存在");
         }
         if (!Optional.ofNullable(classId).isPresent()) {
@@ -173,6 +188,6 @@ public class Student extends RoleEntity {
         if (!studentRepository.save(studentDO)) {
             throw new InternalErrorException("无法保存学生");
         }
-        this.studentId = new StudentId(studentDO.getId());
+        this.id = studentDO.getId();
     }
 }

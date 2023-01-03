@@ -3,16 +3,12 @@ package top.pdev.you.domain.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
-import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Association;
+import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.AssociationManagerDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.entity.types.AssociationId;
-import top.pdev.you.domain.entity.types.Id;
-import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
@@ -44,46 +40,26 @@ public class AssociationRepositoryImpl
     private AssociationParticipateRepository associationParticipateRepository;
 
     @Resource
-    private AssociationFactory associationFactory;
-
-    @Resource
     private AssociationManagerRepository associationManagerRepository;
 
     @Override
-    public Association find(AssociationId associationId) {
-        checkId(associationId);
-        return getOne(associationId);
-    }
-
-    @Override
-    public Association getOne(Student student) {
-        AssociationManagerDO managerDO = associationManagerRepository.getOne(student);
-        Optional.ofNullable(managerDO).orElseThrow(() -> new InternalErrorException("找不到管理信息"));
-        LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationDO::getId, managerDO.getId());
-        AssociationDO associationDO = mapper.selectOne(queryWrapper);
-        return associationFactory.getAssociation(associationDO);
-    }
-
-    @Override
-    public Association getOne(Id id) {
-        checkId(id);
-        AssociationDO associationDO = getById(id.getId());
+    public Association findById(Long associationId) {
+        AssociationDO associationDO = getById(associationId);
         Optional.ofNullable(associationDO)
                 .orElseThrow(() -> new BusinessException("没有这个社团"));
-        return associationFactory.getAssociation(associationDO);
+        return new Association(associationDO);
     }
 
     @Override
     public List<AssociationDO> getManagedList(Teacher teacher) {
         LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
-        List<AssociationManagerDO> managedList = associationManagerRepository.getManagedList(teacher);
+        List<AssociationManager> managedList = associationManagerRepository.getManagedList(teacher);
         if (managedList.isEmpty()) {
             return new ArrayList<>();
         }
         List<Long> list = managedList
                 .stream()
-                .map(AssociationManagerDO::getId)
+                .map(AssociationManager::getId)
                 .collect(Collectors.toList());
         queryWrapper.in(AssociationDO::getId, list);
         return mapper.selectList(queryWrapper);
@@ -110,7 +86,7 @@ public class AssociationRepositoryImpl
     }
 
     @Override
-    public boolean exists(String name) {
+    public boolean existsByName(String name) {
         LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(AssociationDO::getName, name);
         return mapper.exists(queryWrapper);

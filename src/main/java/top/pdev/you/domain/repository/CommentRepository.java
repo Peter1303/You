@@ -3,8 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.data.CommentDO;
-import top.pdev.you.domain.entity.types.CommentId;
-import top.pdev.you.domain.entity.types.PostId;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public interface CommentRepository extends IService<CommentDO> {
      * @param commentId 评论 ID
      * @return {@link Comment}
      */
-    Comment findById(CommentId commentId);
+    Comment findById(Long commentId);
 
     /**
      * 通过帖子 ID 查找
@@ -29,7 +27,7 @@ public interface CommentRepository extends IService<CommentDO> {
      * @param id ID
      * @return {@link List}<{@link Comment}>
      */
-    List<Comment> findByPostId(PostId id);
+    List<Comment> findByPostId(Long id);
 
     /**
      * 通过帖子 ID 统计评论
@@ -37,5 +35,5 @@ public interface CommentRepository extends IService<CommentDO> {
      * @param id ID
      * @return {@link Long}
      */
-    Long countCommentByPostId(PostId id);
+    Long countCommentByPostId(Long id);
 }

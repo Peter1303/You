@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.UserDO;
 
 /**
  * 用户工厂
@@ -20,17 +19,7 @@ public class UserFactory {
      * @return {@link User}
      */
     public User newUser() {
-        return getUser(null);
-    }
-
-    /**
-     * 获取用户
-     *
-     * @param userDO 用户 DO
-     * @return {@link User}
-     */
-    public User getUser(UserDO userDO) {
-        return new User(userDO);
+        return new User(null);
     }
 
     /**

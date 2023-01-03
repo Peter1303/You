@@ -3,7 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.entity.types.StudentId;
 
 /**
  * 学生仓库
@@ -18,30 +17,13 @@ public interface StudentRepository extends IService<StudentDO> {
      * @param id ID
      * @return {@link Student}
      */
-    Student find(StudentId id);
+    Student findById(Long id);
 
     /**
-     * 获取 DO
+     * 通过用户 ID 查找
      *
      * @param id ID
-     * @return {@link StudentDO}
+     * @return {@link Student}
      */
-    StudentDO getDO(StudentId id);
-
-    /**
-     * 设置联系方式
-     *
-     * @param id      ID
-     * @param contact 联系
-     * @return boolean
-     */
-    boolean setContact(StudentId id, String contact);
-
-    /**
-     * 删除
-     *
-     * @param id ID
-     * @return boolean
-     */
-    boolean delete(StudentId id);
+    Student findByUserId(Long id);
 }

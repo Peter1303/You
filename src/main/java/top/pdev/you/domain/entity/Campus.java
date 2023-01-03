@@ -1,13 +1,14 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.entity.data.ClassDO;
-import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.entity.types.Id;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 
@@ -23,14 +24,25 @@ import java.util.Optional;
 public class Campus extends BaseEntity {
     private Long id;
 
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private final CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
+
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
+
+    /**
+     * 名字
+     */
+    private String name;
 
     public Campus(CampusDO campusDO) {
         if (!Optional.ofNullable(campusDO).isPresent()) {
             return;
         }
         this.id = campusDO.getId();
+        this.name = campusDO.getName();
     }
 
     /**
@@ -40,12 +52,11 @@ public class Campus extends BaseEntity {
      * @return {@link String}
      */
     public String getStudentCampusName(Student student) {
-        super.check(student);
-        StudentDO studentDO = student.getStudentDO();
-        Long classId = studentDO.getClassId();
+        Long classId = student.getClassId();
         ClassDO classDO = classRepository.getDO(classId);
         if (Optional.ofNullable(classDO).isPresent()) {
-            return campusRepository.getName(new Id(classDO.getCampusId()));
+            Campus campus = campusRepository.findById(classDO.getCampusId());
+            return campus.getName();
         }
         return null;
     }
@@ -57,7 +68,7 @@ public class Campus extends BaseEntity {
      */
     public void save(CampusDO campusDO) {
         // 是否存在相同的
-        if (campusRepository.exists(campusDO.getName())) {
+        if (campusRepository.existsByName(campusDO.getName())) {
             throw new BusinessException("已经存在相同的校区");
         }
         if (!campusRepository.save(campusDO)) {
