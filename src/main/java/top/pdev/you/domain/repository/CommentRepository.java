@@ -1,8 +1,12 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.data.CommentDO;
+import top.pdev.you.domain.entity.types.CommentId;
 import top.pdev.you.domain.entity.types.PostId;
+
+import java.util.List;
 
 /**
  * 评论仓库
@@ -11,6 +15,22 @@ import top.pdev.you.domain.entity.types.PostId;
  * @author Peter1303
  */
 public interface CommentRepository extends IService<CommentDO> {
+    /**
+     * 通过 ID 查找
+     *
+     * @param commentId 评论 ID
+     * @return {@link Comment}
+     */
+    Comment findById(CommentId commentId);
+
+    /**
+     * 通过帖子 ID 查找
+     *
+     * @param id ID
+     * @return {@link List}<{@link Comment}>
+     */
+    List<Comment> findByPostId(PostId id);
+
     /**
      * 通过帖子 ID 统计评论
      *
