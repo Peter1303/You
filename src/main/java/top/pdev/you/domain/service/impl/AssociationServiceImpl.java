@@ -195,6 +195,7 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public Result<?> addManager(AddAdminVO addAdminVO) {
+        // TODO 老师添加负责人的时候只允许老师的社团
         addAdmin(addAdminVO.getAssociationId(), new StudentId(addAdminVO.getUid()));
         return Result.ok();
     }
@@ -228,6 +229,9 @@ public class AssociationServiceImpl implements AssociationService {
             Student student = studentRepository.findById(id.getId());
             associationManager.addAdmin(student);
             user = userRepository.findById(student.getUserId());
+            // 同时让负责人直接进入社团
+            Association association = associationRepository.findById(associationId);
+            association.accept(student);
         }
         // 指导老师
         if (id instanceof TeacherId) {
