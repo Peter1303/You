@@ -5,7 +5,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.base.BaseEntity;
@@ -74,8 +76,9 @@ public class Post extends BaseEntity {
         if (Objects.equals(user.getUserId().getId(), this.userId)) {
             hasPermission = true;
         } else {
-            // 如果是超级管理员那么也有权限
-            if (user.getPermission() == Permission.SUPER.getValue()) {
+            RoleEntity role = user.getRoleDomain();
+            // 如果是超级管理员、负责人也有权限
+            if (role instanceof ManagerEntity || role instanceof SuperEntity) {
                 hasPermission = true;
             }
         }

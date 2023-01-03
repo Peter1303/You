@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.Getter;
 import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
@@ -138,11 +139,6 @@ public class User extends BaseEntity {
         } else if (permission == Permission.ADMIN.getValue()) {
             return userFactory.getTeacher(this);
         }
-        return new RoleEntity() {
-            @Override
-            public String getName() {
-                return "超级管理员";
-            }
-        };
+        return new SuperEntity();
     }
 }
