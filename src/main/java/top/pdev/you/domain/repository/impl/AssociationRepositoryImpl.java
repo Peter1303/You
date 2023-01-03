@@ -72,10 +72,11 @@ public class AssociationRepositoryImpl
             return new ArrayList<>();
         }
         LambdaQueryWrapper<Association> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(Association::getId,
-                participantDOs
-                        .stream()
-                        .mapToLong(AssociationParticipantDO::getAssociationId));
+        List<Long> list = participantDOs
+                .stream()
+                .map(AssociationParticipantDO::getAssociationId)
+                .collect(Collectors.toList());
+        lambdaQueryWrapper.in(Association::getId, list);
         return mapper.selectList(lambdaQueryWrapper);
     }
 
