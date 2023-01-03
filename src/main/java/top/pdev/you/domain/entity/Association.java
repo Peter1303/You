@@ -2,19 +2,13 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationAuditDO;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
-import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 
@@ -36,18 +30,6 @@ public class Association extends BaseEntity {
 
     private AssociationDO associationDO;
 
-    @Getter(AccessLevel.NONE)
-    private final AssociationRepository associationRepository =
-            SpringUtil.getBean(AssociationRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final AssociationAuditRepository associationAuditRepository =
-            SpringUtil.getBean(AssociationAuditRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final AssociationParticipateRepository associationParticipateRepository =
-            SpringUtil.getBean(AssociationParticipateRepository.class);
-
     public Association(AssociationDO associationDO) {
         if (!Optional.ofNullable(associationDO).isPresent()) {
             return;
@@ -64,6 +46,7 @@ public class Association extends BaseEntity {
      * @param associationDO 协会 DO
      */
     public void save(AssociationDO associationDO) {
+        AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
         // 查找是否已经存在社团
         if (associationRepository.existsByName(associationDO.getName())) {
             throw new BusinessException("已经存在相同的社团");
@@ -83,18 +66,22 @@ public class Association extends BaseEntity {
      */
     public void request(Student student) {
         Long studentId = student.getId();
+        AssociationParticipateRepository associationParticipateRepository =
+                SpringUtil.getBean(AssociationParticipateRepository.class);
+        AssociationAuditRepository associationAuditRepository =
+                SpringUtil.getBean(AssociationAuditRepository.class);
         boolean exists = associationParticipateRepository.existsByStudentIdAndAssociationId(studentId, id);
         if (exists) {
             throw new BusinessException("你已经加入该社团了");
+        }
+        // 是否已经在审核了
+        if (associationAuditRepository.existsByStudentIdAndAssociationId(studentId, id)) {
+            throw new BusinessException("请等待审核");
         }
         AssociationAuditDO associationAuditDO = new AssociationAuditDO();
         associationAuditDO.setAssociationId(id);
         associationAuditDO.setStudentId(studentId);
         associationAuditDO.setTime(DateTime.now().toLocalDateTime());
-        // 是否已经在审核了
-        if (associationAuditRepository.existsByStudentIdAndAssociationId(studentId, id)) {
-            throw new BusinessException("请等待审核");
-        }
         if (!associationAuditRepository.save(associationAuditDO)) {
             throw new BusinessException("无法保存加入社团审核");
         }
@@ -109,6 +96,8 @@ public class Association extends BaseEntity {
         AssociationParticipantDO associationParticipantDO = new AssociationParticipantDO();
         associationParticipantDO.setAssociationId(this.getId());
         associationParticipantDO.setStudentId(student.getId());
+        AssociationParticipateRepository associationParticipateRepository =
+                SpringUtil.getBean(AssociationParticipateRepository.class);
         if (!associationParticipateRepository.save(associationParticipantDO)) {
             throw new BusinessException("加入社团失败");
         }
@@ -118,6 +107,8 @@ public class Association extends BaseEntity {
      * 删除
      */
     public void delete() {
+        AssociationRepository associationRepository =
+                SpringUtil.getBean(AssociationRepository.class);
         if (!associationRepository.removeById(id)) {
             throw new BusinessException("无法删除社团");
         }
@@ -151,6 +142,8 @@ public class Association extends BaseEntity {
      * @param errorMsg 错误味精
      */
     private void update(String errorMsg) {
+        AssociationRepository associationRepository =
+                SpringUtil.getBean(AssociationRepository.class);
         if (!associationRepository.saveOrUpdate(associationDO)) {
             throw new BusinessException(errorMsg);
         }

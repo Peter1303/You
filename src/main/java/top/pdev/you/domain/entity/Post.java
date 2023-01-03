@@ -36,9 +36,6 @@ public class Post extends BaseEntity {
     @Setter(AccessLevel.NONE)
     private PostDO postDO;
 
-    @Getter(AccessLevel.NONE)
-    private final PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
-
     public Post(PostDO postDO) {
         if (!Optional.ofNullable(postDO).isPresent()) {
             return;
@@ -60,6 +57,7 @@ public class Post extends BaseEntity {
         postDO.setContent(content);
         postDO.setUserId(userId);
         postDO.setTime(LocalDateTime.now());
+        PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
         if (!postRepository.save(postDO)) {
             throw new BusinessException("无法发布帖子");
         }
@@ -85,6 +83,7 @@ public class Post extends BaseEntity {
         if (!hasPermission) {
             throw new PermissionDeniedException();
         }
+        PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
         if (!postRepository.removeById(this.id)) {
             throw new BusinessException("无法删除帖子");
         }
@@ -97,6 +96,7 @@ public class Post extends BaseEntity {
      */
     public void changeContent(String content) {
         this.content = content;
+        PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
         if (!postRepository.saveOrUpdate(postDO)) {
             throw new BusinessException("无法更改内容");
         }

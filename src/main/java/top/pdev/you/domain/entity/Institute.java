@@ -1,10 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.ClassDO;
@@ -25,14 +22,6 @@ public class Institute extends BaseEntity {
     private Long id;
     private String name;
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private final InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-
     public Institute(InstituteDO instituteDO) {
         if (!Optional.ofNullable(instituteDO).isPresent()) {
             return;
@@ -48,8 +37,10 @@ public class Institute extends BaseEntity {
      */
     public String getStudentInstituteName(Student student) {
         Long classId = student.getClassId();
+        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         ClassDO classDO = classRepository.getDO(classId);
         if (Optional.ofNullable(classDO).isPresent()) {
+            InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
             Institute institute = instituteRepository.findById(classDO.getInstituteId());
             return institute.getName();
         }
@@ -62,6 +53,7 @@ public class Institute extends BaseEntity {
      * @param instituteDO 学院 DO
      */
     public void save(InstituteDO instituteDO) {
+        InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
         // 检查存在
         if (instituteRepository.existsByName(instituteDO.getName())) {
             throw new BusinessException("该学院已经存在");

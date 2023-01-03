@@ -30,15 +30,13 @@ public class Teacher extends RoleEntity {
 
     private User user;
 
-    private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
-    private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
-    private final AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
-
     private void init(User user) {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
         this.userId = user.getId();
+        TeacherRepository teacherRepository =
+                SpringUtil.getBean(TeacherRepository.class);
         Teacher teacher = teacherRepository.findByUserId(userId);
         this.id = teacher.getId();
         this.name = teacher.getName();
@@ -60,6 +58,8 @@ public class Teacher extends RoleEntity {
     @Override
     public User getUser() {
         if (!Optional.ofNullable(user).isPresent()) {
+            UserRepository userRepository =
+                    SpringUtil.getBean(UserRepository.class);
             user = userRepository.findById(userId);
         }
         return user;
@@ -71,6 +71,8 @@ public class Teacher extends RoleEntity {
      * @return {@link List}<{@link AssociationDO}>
      */
     public List<AssociationDO> getManagedAssociationList() {
+        AssociationRepository associationRepository =
+                SpringUtil.getBean(AssociationRepository.class);
         return associationRepository.getManagedList(this);
     }
 
@@ -84,6 +86,8 @@ public class Teacher extends RoleEntity {
         TeacherDO teacherDO = new TeacherDO();
         teacherDO.setId(this.id);
         teacherDO.setContact(contact);
+        TeacherRepository teacherRepository =
+                SpringUtil.getBean(TeacherRepository.class);
         if (!teacherRepository.updateById(teacherDO)) {
             throw new BusinessException("无法保存联系方式");
         }
@@ -95,6 +99,8 @@ public class Teacher extends RoleEntity {
      * @param teacherDO 老师 DO
      */
     public void save(TeacherDO teacherDO) {
+        TeacherRepository teacherRepository =
+                SpringUtil.getBean(TeacherRepository.class);
         if (!teacherRepository.save(teacherDO)) {
             throw new InternalErrorException("无法保存老师");
         }

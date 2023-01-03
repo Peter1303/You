@@ -2,9 +2,7 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
@@ -32,18 +30,6 @@ public class User extends BaseEntity {
     private String openId;
     private Integer permission;
 
-    @Getter(AccessLevel.NONE)
-    private final UserRepository userRepository = SpringUtil.getBean(UserRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final UserFactory userFactory = SpringUtil.getBean(UserFactory.class);
-
     public User(UserDO userDO) {
         if (!Optional.ofNullable(userDO).isPresent()) {
             return;
@@ -59,6 +45,8 @@ public class User extends BaseEntity {
      * @param userDO 用户 DO
      */
     public void save(UserDO userDO) {
+        UserRepository userRepository =
+                SpringUtil.getBean(UserRepository.class);
         if (!userRepository.save(userDO)) {
             throw new InternalErrorException("无法保存用户");
         }
@@ -89,10 +77,15 @@ public class User extends BaseEntity {
             throw new BusinessException("核心管理员不可删除");
         }
         if (permission == Permission.ADMIN.getValue()) {
+            TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
             teacherRepository.removeById(id);
         } else {
+            StudentRepository studentRepository =
+                    SpringUtil.getBean(StudentRepository.class);
             studentRepository.removeById(id);
         }
+        UserRepository userRepository =
+                SpringUtil.getBean(UserRepository.class);
         userRepository.removeById(id);
     }
 
@@ -105,6 +98,8 @@ public class User extends BaseEntity {
         UserDO userDO = new UserDO();
         userDO.setId(getId());
         userDO.setPermission(permission.getValue());
+        UserRepository userRepository =
+                SpringUtil.getBean(UserRepository.class);
         if (!userRepository.updateById(userDO)) {
             throw new BusinessException("变更权限失败");
         }
@@ -117,6 +112,8 @@ public class User extends BaseEntity {
      * @return {@link RoleEntity}
      */
     public RoleEntity getRoleDomain() {
+        UserFactory userFactory =
+                SpringUtil.getBean(UserFactory.class);
         if (permission == Permission.USER.getValue()) {
             return userFactory.getStudent(this);
         } else if (permission == Permission.MANAGER.getValue()) {

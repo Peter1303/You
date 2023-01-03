@@ -1,10 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.CampusDO;
@@ -23,14 +20,6 @@ import java.util.Optional;
 @Data
 public class Campus extends BaseEntity {
     private Long id;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private final CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
 
     /**
      * 名字
@@ -53,8 +42,10 @@ public class Campus extends BaseEntity {
      */
     public String getStudentCampusName(Student student) {
         Long classId = student.getClassId();
+        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         ClassDO classDO = classRepository.getDO(classId);
         if (Optional.ofNullable(classDO).isPresent()) {
+            CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
             Campus campus = campusRepository.findById(classDO.getCampusId());
             return campus.getName();
         }
@@ -67,6 +58,7 @@ public class Campus extends BaseEntity {
      * @param campusDO 校园 DO
      */
     public void save(CampusDO campusDO) {
+        CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
         // 是否存在相同的
         if (campusRepository.existsByName(campusDO.getName())) {
             throw new BusinessException("已经存在相同的校区");

@@ -1,15 +1,12 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.CampusFactory;
 import top.pdev.you.domain.factory.ClassFactory;
 import top.pdev.you.domain.factory.InstituteFactory;
@@ -41,31 +38,6 @@ public class Student extends RoleEntity {
 
     private User user;
 
-    @Getter(AccessLevel.NONE)
-    private final StudentRepository studentRepository =
-            SpringUtil.getBean(StudentRepository.class);
-    @Getter(AccessLevel.NONE)
-    private final UserRepository userRepository =
-            SpringUtil.getBean(UserRepository.class);
-    @Getter(AccessLevel.NONE)
-    private final ClassRepository classRepository =
-            SpringUtil.getBean(ClassRepository.class);
-    @Getter(AccessLevel.NONE)
-    private final AssociationRepository associationRepository =
-            SpringUtil.getBean(AssociationRepository.class);
-    @Getter(AccessLevel.NONE)
-    private final ClassFactory classFactory =
-            SpringUtil.getBean(ClassFactory.class);
-    @Getter(AccessLevel.NONE)
-    private final AssociationFactory associationFactory =
-            SpringUtil.getBean(AssociationFactory.class);
-    @Getter(AccessLevel.NONE)
-    private final CampusFactory campusFactory =
-            SpringUtil.getBean(CampusFactory.class);
-    @Getter(AccessLevel.NONE)
-    private final InstituteFactory instituteFactory =
-            SpringUtil.getBean(InstituteFactory.class);
-
     /**
      * 初始化
      *
@@ -76,6 +48,8 @@ public class Student extends RoleEntity {
             return;
         }
         Long userId = user.getId();
+        StudentRepository studentRepository =
+                SpringUtil.getBean(StudentRepository.class);
         Student student = studentRepository.findByUserId(userId);
         Optional.ofNullable(student)
                 .orElseThrow(() -> new BusinessException("没有找到学生"));
@@ -102,12 +76,16 @@ public class Student extends RoleEntity {
     @Override
     public User getUser() {
         if (!Optional.ofNullable(user).isPresent()) {
+            UserRepository userRepository =
+                    SpringUtil.getBean(UserRepository.class);
             user = userRepository.findById(userId);
         }
         return user;
     }
 
     public List<AssociationDO> getAssociations() {
+        AssociationRepository associationRepository =
+                SpringUtil.getBean(AssociationRepository.class);
         return associationRepository.ofStudentList(this);
     }
 
@@ -117,6 +95,8 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getClazz() {
+        ClassFactory classFactory =
+                SpringUtil.getBean(ClassFactory.class);
         Clazz cls = classFactory.newClazz();
         this.clazz = cls.getStudentClassName(this);
         return this.clazz;
@@ -128,6 +108,8 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getCampus() {
+        CampusFactory campusFactory =
+                SpringUtil.getBean(CampusFactory.class);
         Campus c = campusFactory.newCampus();
         return c.getStudentCampusName(this);
     }
@@ -138,6 +120,8 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getInstitute() {
+        InstituteFactory instituteFactory =
+                SpringUtil.getBean(InstituteFactory.class);
         Institute institute = instituteFactory.newInstitute();
         return institute.getStudentInstituteName(this);
     }
@@ -149,6 +133,8 @@ public class Student extends RoleEntity {
      */
     public Integer getGrade() {
         Long classId = getClassId();
+        ClassRepository classRepository =
+                SpringUtil.getBean(ClassRepository.class);
         Clazz clz = classRepository.findById(classId);
         if (Optional.ofNullable(clz).isPresent()) {
             return clz.getGrade();
@@ -166,6 +152,8 @@ public class Student extends RoleEntity {
         StudentDO studentDO = new StudentDO();
         studentDO.setId(this.id);
         studentDO.setContact(contact);
+        StudentRepository studentRepository =
+                SpringUtil.getBean(StudentRepository.class);
         if (!studentRepository.updateById(studentDO)) {
             throw new BusinessException("无法保存联系方式");
         }
@@ -179,12 +167,16 @@ public class Student extends RoleEntity {
     public void save(StudentDO studentDO) {
         // 检测班级是否存在
         Long classId = studentDO.getClassId();
+        ClassRepository classRepository =
+                SpringUtil.getBean(ClassRepository.class);
         if (!Optional.ofNullable(classRepository.findById(classId)).isPresent()) {
             throw new BusinessException(ResultCode.FAILED, "班级不存在");
         }
         if (!Optional.ofNullable(classId).isPresent()) {
             throw new InternalErrorException("班级 ID 空错误");
         }
+        StudentRepository studentRepository =
+                SpringUtil.getBean(StudentRepository.class);
         if (!studentRepository.save(studentDO)) {
             throw new InternalErrorException("无法保存学生");
         }

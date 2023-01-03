@@ -1,9 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.LikeDO;
@@ -23,9 +21,6 @@ public class Like extends BaseEntity {
     private Long postId;
     private Long userId;
 
-    @Getter(AccessLevel.NONE)
-    private final LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
-
     public Like(LikeDO likeDO) {
         if (!Optional.ofNullable(likeDO).isPresent()) {
             return;
@@ -44,6 +39,7 @@ public class Like extends BaseEntity {
     public void addLike(User user, Post post) {
         this.userId = user.getId();
         this.postId = post.getId();
+        LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
         // 检查是否已经点过赞了
         if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
             throw new BusinessException("已经点过赞了");
@@ -60,6 +56,7 @@ public class Like extends BaseEntity {
      * 取消点赞
      */
     public void cancelLike() {
+        LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
         if (!likeRepository.removeById(id)) {
             throw new BusinessException("取消点赞失败");
         }

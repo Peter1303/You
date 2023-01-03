@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
@@ -48,21 +45,13 @@ public class AssociationManager extends BaseEntity {
      */
     private Integer type;
 
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private final AssociationManagerRepository associationManagerRepository =
-            SpringUtil.getBean(AssociationManagerRepository.class);
-
-    @Setter(AccessLevel.NONE)
-    @Getter(AccessLevel.NONE)
-    private final AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
-
     /**
      * 添加管理
      *
      * @param student 学生
      */
     public void addAdmin(Student student) {
+        AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
         AssociationManager associationManger = associationFactory.newAssociationManger();
         associationManger.setAssociationId(getId());
         associationManger.setUserId(student.getUserId());
@@ -78,6 +67,7 @@ public class AssociationManager extends BaseEntity {
      * @param teacher 老师
      */
     public void addAdmin(Teacher teacher) {
+        AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
         AssociationManager associationManger = associationFactory.newAssociationManger();
         associationManger.setAssociationId(getId());
         associationManger.setUserId(teacher.getUserId());
@@ -91,6 +81,8 @@ public class AssociationManager extends BaseEntity {
      * @param associationManger 管理
      */
     private void setAdmin(AssociationManager associationManger) {
+        AssociationManagerRepository associationManagerRepository =
+                SpringUtil.getBean(AssociationManagerRepository.class);
         if (!associationManagerRepository.save(associationManger)) {
             throw new BusinessException("无法保存社团管理人员");
         }
@@ -105,6 +97,8 @@ public class AssociationManager extends BaseEntity {
     public boolean adminExists(User user) {
         Optional.ofNullable(user)
                 .orElseThrow(() -> new BusinessException("找不到用户"));
+        AssociationManagerRepository associationManagerRepository =
+                SpringUtil.getBean(AssociationManagerRepository.class);
         return associationManagerRepository.existsByAssociationIdAndUserIdAndType(getId(),
                 user.getId(),
                 user.getPermission());

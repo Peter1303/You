@@ -29,9 +29,6 @@ public class Comment extends BaseEntity {
     @Getter(AccessLevel.NONE)
     private CommentDO commentDO;
 
-    @Getter(AccessLevel.NONE)
-    private final CommentRepository commentRepository = SpringUtil.getBean(CommentRepository.class);
-
     public Comment(CommentDO commentDO) {
         if (!Optional.ofNullable(commentDO).isPresent()) {
             return;
@@ -57,6 +54,7 @@ public class Comment extends BaseEntity {
         commentDO.setUid(userId);
         commentDO.setPostId(postId);
         commentDO.setTime(LocalDateTime.now());
+        CommentRepository commentRepository = SpringUtil.getBean(CommentRepository.class);
         if (!commentRepository.save(commentDO)) {
             throw new BusinessException("无法评论");
         }
@@ -66,6 +64,7 @@ public class Comment extends BaseEntity {
      * 删除
      */
     public void delete() {
+        CommentRepository commentRepository = SpringUtil.getBean(CommentRepository.class);
         if (!commentRepository.removeById(this.id)) {
             throw new BusinessException("删除评论失败");
         }

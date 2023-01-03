@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.TokenInfo;
-import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationManager;

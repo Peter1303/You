@@ -1,9 +1,7 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
@@ -25,15 +23,6 @@ public class Clazz extends BaseEntity {
     private Long id;
     private Integer grade;
 
-    @Getter(AccessLevel.NONE)
-    private final ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
-
-    @Getter(AccessLevel.NONE)
-    private final InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
-
     public Clazz(ClassDO classDO) {
         if (!Optional.ofNullable(classDO).isPresent()) {
             return;
@@ -49,6 +38,7 @@ public class Clazz extends BaseEntity {
      * @return {@link String}
      */
     public String getStudentClassName(Student student) {
+        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         ClassDO classDO = classRepository.getDO(student.getClassId());
         return classDO.getName();
     }
@@ -63,12 +53,15 @@ public class Clazz extends BaseEntity {
                 .orElseThrow(() -> new InternalErrorException("没有持久化信息"));
         Long campusId = classDO.getCampusId();
         Long instituteId = classDO.getInstituteId();
+        CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
         if (!campusRepository.existsById(campusId)) {
             throw new BusinessException("没有找到该校区");
         }
+        InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
         if (!instituteRepository.existsById(instituteId)) {
             throw new BusinessException("没有找到该学院");
         }
+        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         // 检查是否重复
         if (classRepository.existsByNameAndInstituteIdAndCampusId(classDO.getName(),
                 classDO.getInstituteId(),

@@ -3,7 +3,6 @@ package top.pdev.you.domain.repository;
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.type.Id;
 
 import java.util.List;
 
