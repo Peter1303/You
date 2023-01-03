@@ -253,20 +253,18 @@ public class AssociationServiceImpl implements AssociationService {
      */
     private void auditAssociationRequest(IdVO idVO, boolean accept) {
         Long id = idVO.getId();
-        AssociationAudit auditDO = associationAuditRepository.findById(id);
-        checkAudit(auditDO);
-        Student student = studentRepository.findById(auditDO.getStudentId());
+        AssociationAudit audit = associationAuditRepository.findById(id);
+        checkAudit(audit);
+        Student student = studentRepository.findById(audit.getStudentId());
         Association association =
-                associationRepository.findById(auditDO.getAssociationId());
+                associationRepository.findById(audit.getAssociationId());
         if (accept) {
             association.accept(student);
-        }
-        // 更改审核记录
-        AssociationAudit audit = associationAuditRepository.findById(id);
-        audit.setStatus(accept);
-        boolean update = associationAuditRepository.updateById(audit);
-        if (!update) {
-            throw new BusinessException("无法更改入团审核状态");
+            // 通过审核
+            audit.pass();
+        } else {
+            // 审核拒绝
+            audit.reject();
         }
         AssociationAuditEvent event = new AssociationAuditEvent(this);
         event.setAssociation(association);
