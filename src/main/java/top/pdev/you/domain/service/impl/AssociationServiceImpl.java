@@ -121,9 +121,10 @@ public class AssociationServiceImpl implements AssociationService {
                                 if (Objects.equals(item.getStudentId(), id)) {
                                     status = AssociationStatus.JOINED;
                                 } else {
-                                    // 如果存在审核记录那么需要检查是否通过
                                     AssociationAudit one =
-                                            associationAuditRepository.findByStudentIdAndAssociationId(id, item.getId());
+                                            associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(
+                                                    id, item.getId());
+                                    // 如果存在审核记录
                                     if (Optional.ofNullable(one).isPresent()) {
                                         status = AssociationStatus.AUDIT;
                                     }

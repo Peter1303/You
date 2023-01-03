@@ -37,23 +37,16 @@ public class AssociationAuditRepositoryImpl
     }
 
     @Override
-    public AssociationAudit findByStudentIdAndAssociationId(Long studentId, Long associationId) {
+    public AssociationAudit findByStudentIdAndAssociationIdAndStatusNull(Long studentId, Long associationId) {
         LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationAudit::getStudentId, studentId)
-                .eq(AssociationAudit::getAssociationId, associationId);
+                .eq(AssociationAudit::getAssociationId, associationId)
+                .isNull(AssociationAudit::getStatus);
         return mapper.selectOne(queryWrapper);
     }
 
     @Override
     public List<AssociationAuditDTO> getAuditList() {
         return mapper.getAuditList();
-    }
-
-    @Override
-    public boolean existsByStudentIdAndAssociationId(Long studentId, Long id) {
-        LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAudit::getStudentId, studentId)
-                .eq(AssociationAudit::getAssociationId, id);
-        return mapper.exists(queryWrapper);
     }
 }

@@ -22,13 +22,14 @@ public interface AssociationAuditRepository extends IService<AssociationAudit> {
     AssociationAudit findById(Long id);
 
     /**
-     * 获取一个
+     * 通过学生 ID和社团 ID和状态不为空查找
+     * 通过
      *
      * @param studentId     学生 ID
      * @param associationId 社团 ID
      * @return boolean
      */
-    AssociationAudit findByStudentIdAndAssociationId(Long studentId, Long associationId);
+    AssociationAudit findByStudentIdAndAssociationIdAndStatusNull(Long studentId, Long associationId);
 
     /**
      * 获取审核列表
@@ -36,13 +37,4 @@ public interface AssociationAuditRepository extends IService<AssociationAudit> {
      * @return {@link List}<{@link AssociationAuditDTO}>
      */
     List<AssociationAuditDTO> getAuditList();
-
-    /**
-     * 存在
-     *
-     * @param studentId 学生 ID
-     * @param id        ID
-     * @return boolean
-     */
-    boolean existsByStudentIdAndAssociationId(Long studentId, Long id);
 }

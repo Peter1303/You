@@ -13,6 +13,8 @@ import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 
+import java.util.Optional;
+
 /**
  * 社团
  * Created in 2022/10/24 14:04
@@ -72,7 +74,8 @@ public class Association extends BaseEntity {
             throw new BusinessException("你已经加入该社团了");
         }
         // 是否已经在审核了
-        if (associationAuditRepository.existsByStudentIdAndAssociationId(studentId, id)) {
+        AssociationAudit audit = associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(studentId, id);
+        if (Optional.ofNullable(audit).isPresent()) {
             throw new BusinessException("请等待审核");
         }
         AssociationAudit associationAudit = new AssociationAudit();
