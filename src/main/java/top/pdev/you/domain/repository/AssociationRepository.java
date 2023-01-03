@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -16,7 +15,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface AssociationRepository extends IService<AssociationDO> {
+public interface AssociationRepository extends IService<Association> {
     /**
      * 查找
      *
@@ -29,17 +28,17 @@ public interface AssociationRepository extends IService<AssociationDO> {
      * 获取管理列表
      *
      * @param teacher 老师
-     * @return {@link List}<{@link AssociationDO}>
+     * @return {@link List}<{@link Association}>
      */
-    List<AssociationDO> getManagedList(Teacher teacher);
+    List<Association> getManagedList(Teacher teacher);
 
     /**
      * 学生参加名单
      *
      * @param student 学生
-     * @return {@link List}<{@link AssociationDO}>
+     * @return {@link List}<{@link Association}>
      */
-    List<AssociationDO> ofStudentList(Student student);
+    List<Association> ofStudentList(Student student);
 
     /**
      * 获取信息列表

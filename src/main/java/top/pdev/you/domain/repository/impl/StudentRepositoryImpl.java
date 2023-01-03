@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.mapper.StudentMapper;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -20,28 +19,28 @@ import java.util.Optional;
  */
 @Repository
 public class StudentRepositoryImpl
-        extends BaseRepository<StudentMapper, StudentDO>
+        extends BaseRepository<StudentMapper, Student>
         implements StudentRepository {
     @Resource
     private StudentMapper mapper;
 
     @Override
     public Student findById(Long id) {
-        StudentDO studentDO = getById(id);
-        if (!Optional.ofNullable(studentDO).isPresent()) {
+        Student student = getById(id);
+        if (!Optional.ofNullable(student).isPresent()) {
             throw new BusinessException("找不到学生");
         }
-        return new Student(studentDO);
+        return student;
     }
 
     @Override
     public Student findByUserId(Long id) {
-        LambdaQueryWrapper<StudentDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(StudentDO::getUserId, id);
-        StudentDO studentDO = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(studentDO).isPresent()) {
+        LambdaQueryWrapper<Student> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Student::getUserId, id);
+        Student student = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(student).isPresent()) {
             throw new BusinessException("找不到学生");
         }
-        return new Student(studentDO);
+        return student;
     }
 }

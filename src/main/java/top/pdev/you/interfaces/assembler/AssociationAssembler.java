@@ -3,7 +3,7 @@ package top.pdev.you.interfaces.assembler;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.Association;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
@@ -23,7 +23,7 @@ public interface AssociationAssembler {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "summary", target = "summary")
-    AssociationBaseInfoDTO convert(AssociationDO associationDO);
+    AssociationBaseInfoDTO convert(Association associationDO);
 
     @Mapping(target = "status", ignore = true)
     @Mapping(source = "id", target = "id")

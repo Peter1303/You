@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -14,7 +13,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface ClassRepository extends IService<ClassDO> {
+public interface ClassRepository extends IService<Clazz> {
     /**
      * 查找
      *
@@ -22,14 +21,6 @@ public interface ClassRepository extends IService<ClassDO> {
      * @return {@link Clazz}
      */
     Clazz findById(Long id);
-
-    /**
-     * 获取 DO
-     *
-     * @param id ID
-     * @return {@link ClassDO}
-     */
-    ClassDO getDO(Long id);
 
     /**
      * 获取班级信息

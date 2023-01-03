@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.mapper.ClassMapper;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
@@ -22,26 +21,21 @@ import java.util.Optional;
  */
 @Repository
 public class ClassRepositoryImpl
-        extends ServiceImpl<ClassMapper, ClassDO>
+        extends ServiceImpl<ClassMapper, Clazz>
         implements ClassRepository {
     @Resource
     private ClassMapper mapper;
 
     @Override
     public Clazz findById(Long id) {
-        LambdaQueryWrapper<ClassDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ClassDO::getId, id);
-        ClassDO classDO = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(classDO).isPresent()) {
+        LambdaQueryWrapper<Clazz> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Clazz::getId, id);
+        Clazz clazz = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(clazz).isPresent()) {
             return null;
         }
         // TODO cache
-        return new Clazz(classDO);
-    }
-
-    @Override
-    public ClassDO getDO(Long id) {
-        return mapper.selectById(id);
+        return clazz;
     }
 
     @Override
@@ -51,10 +45,10 @@ public class ClassRepositoryImpl
 
     @Override
     public boolean existsByNameAndInstituteIdAndCampusId(String name, Long instituteId, Long campusId) {
-        LambdaQueryWrapper<ClassDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ClassDO::getName, name)
-                .eq(ClassDO::getInstituteId, instituteId)
-                .eq(ClassDO::getCampusId, campusId);
+        LambdaQueryWrapper<Clazz> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Clazz::getName, name)
+                .eq(Clazz::getInstituteId, instituteId)
+                .eq(Clazz::getCampusId, campusId);
         return mapper.exists(queryWrapper);
     }
 }

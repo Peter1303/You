@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.domain.entity.data.InstituteDO;
 import top.pdev.you.interfaces.model.dto.InstituteInfoDTO;
 
 import java.util.List;
@@ -13,7 +12,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface InstituteRepository extends IService<InstituteDO> {
+public interface InstituteRepository extends IService<Institute> {
     /**
      * 通过 ID 查找
      *

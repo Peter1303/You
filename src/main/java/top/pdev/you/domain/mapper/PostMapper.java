@@ -2,7 +2,7 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.PostDO;
+import top.pdev.you.domain.entity.Post;
 
 /**
  * 帖子持久化
@@ -11,5 +11,5 @@ import top.pdev.you.domain.entity.data.PostDO;
  * @author Peter1303
  */
 @Mapper
-public interface PostMapper extends BaseMapper<PostDO> {
+public interface PostMapper extends BaseMapper<Post> {
 }

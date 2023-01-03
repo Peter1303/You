@@ -1,7 +1,7 @@
 package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import top.pdev.you.domain.entity.data.AssociationAuditDO;
+import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface AssociationAuditRepository extends IService<AssociationAuditDO> {
+public interface AssociationAuditRepository extends IService<AssociationAudit> {
     /**
      * 获取一个
      *
      * @param id ID
-     * @return {@link AssociationAuditDO}
+     * @return {@link AssociationAudit}
      */
-    AssociationAuditDO findById(Long id);
+    AssociationAudit findById(Long id);
 
     /**
      * 获取一个
@@ -28,7 +28,7 @@ public interface AssociationAuditRepository extends IService<AssociationAuditDO>
      * @param associationId 社团 ID
      * @return boolean
      */
-    AssociationAuditDO findByStudentIdAndAssociationId(Long studentId, Long associationId);
+    AssociationAudit findByStudentIdAndAssociationId(Long studentId, Long associationId);
 
     /**
      * 获取审核列表

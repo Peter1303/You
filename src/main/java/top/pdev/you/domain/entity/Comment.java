@@ -1,16 +1,15 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.Getter;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.CommentDO;
 import top.pdev.you.domain.repository.CommentRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 /**
  * 评论领域
@@ -18,28 +17,34 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("comment")
 @Data
 public class Comment extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 帖子 ID
+     */
     private Long postId;
+
+    /**
+     * 用户 ID
+     */
     private Long userId;
+
+    /**
+     * 评论
+     */
     private String comment;
+
+    /**
+     * 时间
+     */
     private LocalDateTime time;
-
-    @Getter(AccessLevel.NONE)
-    private CommentDO commentDO;
-
-    public Comment(CommentDO commentDO) {
-        if (!Optional.ofNullable(commentDO).isPresent()) {
-            return;
-        }
-        this.commentDO = commentDO;
-        this.id = commentDO.getId();
-        this.userId = commentDO.getUid();
-        this.postId = commentDO.getPostId();
-        this.comment = commentDO.getComment();
-        this.time = commentDO.getTime();
-    }
 
     /**
      * 保存
@@ -49,13 +54,12 @@ public class Comment extends BaseEntity {
     public void save(Post post) {
         this.postId = post.getId();
         this.userId = post.getUserId();
-        this.commentDO = new CommentDO();
-        commentDO.setComment(comment);
-        commentDO.setUid(userId);
-        commentDO.setPostId(postId);
-        commentDO.setTime(LocalDateTime.now());
+        setComment(comment);
+        setUserId(userId);
+        setPostId(postId);
+        setTime(LocalDateTime.now());
         CommentRepository commentRepository = SpringUtil.getBean(CommentRepository.class);
-        if (!commentRepository.save(commentDO)) {
+        if (!commentRepository.save(this)) {
             throw new BusinessException("无法评论");
         }
     }

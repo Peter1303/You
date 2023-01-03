@@ -3,7 +3,7 @@ package top.pdev.you.domain.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import top.pdev.you.domain.entity.data.AssociationDO;
+import top.pdev.you.domain.entity.Association;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
@@ -17,7 +17,7 @@ import java.util.List;
  * @author Peter1303
  */
 @Mapper
-public interface AssociationMapper extends BaseMapper<AssociationDO> {
+public interface AssociationMapper extends BaseMapper<Association> {
     /**
      * 获取信息列表
      *

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.domain.entity.data.InstituteDO;
 import top.pdev.you.domain.mapper.InstituteMapper;
 import top.pdev.you.domain.repository.InstituteRepository;
 import top.pdev.you.interfaces.assembler.InstituteAssembler;
@@ -24,25 +23,25 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class InstituteRepositoryImpl
-        extends ServiceImpl<InstituteMapper, InstituteDO>
+        extends ServiceImpl<InstituteMapper, Institute>
         implements InstituteRepository {
     @Resource
     private InstituteMapper mapper;
 
     @Override
     public Institute findById(Long instituteId) {
-        InstituteDO instituteDO = mapper.selectById(instituteId);
-        if (!Optional.ofNullable(instituteDO).isPresent()) {
+        Institute institute = mapper.selectById(instituteId);
+        if (!Optional.ofNullable(institute).isPresent()) {
             throw new BusinessException("找不到学院");
         }
-        return new Institute(instituteDO);
+        return institute;
     }
 
     @Override
     public List<InstituteInfoDTO> getInstituteInfo(String name) {
-        LambdaQueryWrapper<InstituteDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(InstituteDO::getName, name);
-        List<InstituteDO> list = mapper.selectList(queryWrapper);
+        LambdaQueryWrapper<Institute> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Institute::getName, name);
+        List<Institute> list = mapper.selectList(queryWrapper);
         return list.stream()
                 .map(InstituteAssembler.INSTANCE::convert)
                 .collect(Collectors.toList());
@@ -50,15 +49,15 @@ public class InstituteRepositoryImpl
 
     @Override
     public boolean existsById(Long instituteId) {
-        LambdaQueryWrapper<InstituteDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(InstituteDO::getId, instituteId);
+        LambdaQueryWrapper<Institute> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Institute::getId, instituteId);
         return mapper.exists(queryWrapper);
     }
 
     @Override
     public boolean existsByName(String name) {
-        LambdaQueryWrapper<InstituteDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(InstituteDO::getName, name);
+        LambdaQueryWrapper<Institute> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Institute::getName, name);
         return mapper.exists(queryWrapper);
     }
 }

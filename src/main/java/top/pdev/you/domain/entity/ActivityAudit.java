@@ -1,9 +1,10 @@
-package top.pdev.you.domain.entity.data;
+package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
 
 import java.time.LocalDateTime;
 
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @TableName("activity_audit")
 @Data
-public class ActivityAuditDO {
+public class ActivityAudit extends BaseEntity {
     /**
      * ID
      */
@@ -28,9 +29,9 @@ public class ActivityAuditDO {
     private Long activityId;
 
     /**
-     * uid
+     * 用户 ID
      */
-    private Long uid;
+    private Long userId;
 
     /**
      * 状态

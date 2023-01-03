@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.UserDO;
 
 /**
  * 用户仓库
@@ -10,7 +9,7 @@ import top.pdev.you.domain.entity.data.UserDO;
  *
  * @author Peter1303
  */
-public interface UserRepository extends IService<UserDO> {
+public interface UserRepository extends IService<User> {
     /**
      * 查找
      *
@@ -20,12 +19,12 @@ public interface UserRepository extends IService<UserDO> {
     User findById(Long userId);
 
     /**
-     * 通过令牌查找
+     * 通过 微信 ID 查找
      *
-     * @param openId 开放 ID
+     * @param  wechatId 微信 ID
      * @return {@link User}
      */
-    User findByOpenId(String openId);
+    User findByWechatId(String wechatId);
 
     /**
      * 超级管理存在

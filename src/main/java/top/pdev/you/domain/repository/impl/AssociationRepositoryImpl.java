@@ -7,7 +7,6 @@ import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class AssociationRepositoryImpl
-        extends BaseRepository<AssociationMapper, AssociationDO>
+        extends BaseRepository<AssociationMapper, Association>
         implements AssociationRepository {
     @Resource
     private AssociationMapper mapper;
@@ -44,15 +43,15 @@ public class AssociationRepositoryImpl
 
     @Override
     public Association findById(Long associationId) {
-        AssociationDO associationDO = getById(associationId);
-        Optional.ofNullable(associationDO)
+        Association association = getById(associationId);
+        Optional.ofNullable(association)
                 .orElseThrow(() -> new BusinessException("没有这个社团"));
-        return new Association(associationDO);
+        return association;
     }
 
     @Override
-    public List<AssociationDO> getManagedList(Teacher teacher) {
-        LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
+    public List<Association> getManagedList(Teacher teacher) {
+        LambdaQueryWrapper<Association> queryWrapper = new LambdaQueryWrapper<>();
         List<AssociationManager> managedList = associationManagerRepository.getManagedList(teacher);
         if (managedList.isEmpty()) {
             return new ArrayList<>();
@@ -61,19 +60,19 @@ public class AssociationRepositoryImpl
                 .stream()
                 .map(AssociationManager::getId)
                 .collect(Collectors.toList());
-        queryWrapper.in(AssociationDO::getId, list);
+        queryWrapper.in(Association::getId, list);
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public List<AssociationDO> ofStudentList(Student student) {
+    public List<Association> ofStudentList(Student student) {
         List<AssociationParticipantDO> participantDOs =
                 associationParticipateRepository.getParticipateList(student);
         if (participantDOs.isEmpty()) {
             return new ArrayList<>();
         }
-        LambdaQueryWrapper<AssociationDO> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.in(AssociationDO::getId,
+        LambdaQueryWrapper<Association> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(Association::getId,
                 participantDOs
                         .stream()
                         .mapToLong(AssociationParticipantDO::getAssociationId));
@@ -87,8 +86,8 @@ public class AssociationRepositoryImpl
 
     @Override
     public boolean existsByName(String name) {
-        LambdaQueryWrapper<AssociationDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(AssociationDO::getName, name);
+        LambdaQueryWrapper<Association> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Association::getName, name);
         return mapper.exists(queryWrapper);
     }
 }

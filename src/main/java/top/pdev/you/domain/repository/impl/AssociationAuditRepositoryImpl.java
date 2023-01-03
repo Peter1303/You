@@ -3,7 +3,7 @@ package top.pdev.you.domain.repository.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
-import top.pdev.you.domain.entity.data.AssociationAuditDO;
+import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.mapper.AssociationAuditMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -21,26 +21,26 @@ import java.util.Optional;
  */
 @Repository
 public class AssociationAuditRepositoryImpl
-        extends BaseRepository<AssociationAuditMapper, AssociationAuditDO>
+        extends BaseRepository<AssociationAuditMapper, AssociationAudit>
         implements AssociationAuditRepository {
     @Resource
     private AssociationAuditMapper mapper;
 
     @Override
-    public AssociationAuditDO findById(Long id) {
-        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getId, id);
-        AssociationAuditDO auditDO = mapper.selectOne(queryWrapper);
+    public AssociationAudit findById(Long id) {
+        LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAudit::getId, id);
+        AssociationAudit auditDO = mapper.selectOne(queryWrapper);
         Optional.ofNullable(auditDO)
                 .orElseThrow(() -> new BusinessException("找不到审核项目"));
         return auditDO;
     }
 
     @Override
-    public AssociationAuditDO findByStudentIdAndAssociationId(Long studentId, Long associationId) {
-        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId)
-                .eq(AssociationAuditDO::getAssociationId, associationId);
+    public AssociationAudit findByStudentIdAndAssociationId(Long studentId, Long associationId) {
+        LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAudit::getStudentId, studentId)
+                .eq(AssociationAudit::getAssociationId, associationId);
         return mapper.selectOne(queryWrapper);
     }
 
@@ -51,9 +51,9 @@ public class AssociationAuditRepositoryImpl
 
     @Override
     public boolean existsByStudentIdAndAssociationId(Long studentId, Long id) {
-        LambdaQueryWrapper<AssociationAuditDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationAuditDO::getStudentId, studentId)
-                .eq(AssociationAuditDO::getAssociationId, id);
+        LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAudit::getStudentId, studentId)
+                .eq(AssociationAudit::getAssociationId, id);
         return mapper.exists(queryWrapper);
     }
 }

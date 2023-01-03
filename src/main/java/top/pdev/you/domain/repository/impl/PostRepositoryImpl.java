@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Post;
-import top.pdev.you.domain.entity.data.PostDO;
-import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.mapper.PostMapper;
 import top.pdev.you.domain.repository.PostRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -13,7 +11,6 @@ import top.pdev.you.domain.repository.base.BaseRepository;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 帖子仓库实现类
@@ -23,38 +20,32 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class PostRepositoryImpl
-        extends BaseRepository<PostMapper, PostDO>
+        extends BaseRepository<PostMapper, Post>
         implements PostRepository {
     @Resource
     private PostMapper mapper;
 
-    @Resource
-    private PostFactory postFactory;
-
     @Override
     public Post findById(Long id) {
-        PostDO postDO = getById(id);
-        Optional.ofNullable(postDO)
+        Post post = getById(id);
+        Optional.ofNullable(post)
                 .orElseThrow(() -> new BusinessException("找不到帖子"));
-        return postFactory.getPost(postDO);
+        return post;
     }
 
     @Override
     public Boolean existsById(Long id) {
-        LambdaQueryWrapper<PostDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PostDO::getId, id);
+        LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Post::getId, id);
         return mapper.exists(queryWrapper);
     }
 
     @Override
     public List<Post> findByAssociationId(Long associationId) {
-        LambdaQueryWrapper<PostDO> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
         if (Optional.ofNullable(associationId).isPresent()) {
-            queryWrapper.eq(PostDO::getAssociationId, associationId);
+            queryWrapper.eq(Post::getAssociationId, associationId);
         }
-        List<PostDO> list = mapper.selectList(queryWrapper);
-        return list.stream()
-                .map(postDO -> postFactory.getPost(postDO))
-                .collect(Collectors.toList());
+        return mapper.selectList(queryWrapper);
     }
 }

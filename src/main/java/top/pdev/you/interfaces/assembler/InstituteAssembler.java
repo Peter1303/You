@@ -3,7 +3,7 @@ package top.pdev.you.interfaces.assembler;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import top.pdev.you.domain.entity.data.InstituteDO;
+import top.pdev.you.domain.entity.Institute;
 import top.pdev.you.interfaces.model.dto.InstituteInfoDTO;
 
 /**
@@ -18,5 +18,5 @@ public interface InstituteAssembler {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")
-    InstituteInfoDTO convert(InstituteDO instituteDO);
+    InstituteInfoDTO convert(Institute instituteDO);
 }

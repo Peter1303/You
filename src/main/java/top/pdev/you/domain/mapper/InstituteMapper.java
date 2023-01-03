@@ -2,7 +2,7 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.InstituteDO;
+import top.pdev.you.domain.entity.Institute;
 
 /**
  * 学院持久化
@@ -11,5 +11,5 @@ import top.pdev.you.domain.entity.data.InstituteDO;
  * @author Peter1303
  */
 @Mapper
-public interface InstituteMapper extends BaseMapper<InstituteDO> {
+public interface InstituteMapper extends BaseMapper<Institute> {
 }

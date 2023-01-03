@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.mapper.CampusMapper;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.interfaces.assembler.CampusAssembler;
@@ -24,25 +23,25 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class CampusRepositoryImpl
-        extends ServiceImpl<CampusMapper, CampusDO>
+        extends ServiceImpl<CampusMapper, Campus>
         implements CampusRepository {
     @Resource
     private CampusMapper mapper;
 
     @Override
     public Campus findById(Long id) {
-        CampusDO campusDO = mapper.selectById(id);
+        Campus campus = mapper.selectById(id);
         if (!Optional.ofNullable(id).isPresent()) {
             throw new BusinessException("找不到校区");
         }
-        return new Campus(campusDO);
+        return campus;
     }
 
     @Override
     public List<CampusInfoDTO> getCampusInfo(String name) {
-        LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(CampusDO::getName, name);
-        List<CampusDO> list = mapper.selectList(queryWrapper);
+        LambdaQueryWrapper<Campus> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Campus::getName, name);
+        List<Campus> list = mapper.selectList(queryWrapper);
         return list.stream()
                 .map(CampusAssembler.INSTANCE::convert)
                 .collect(Collectors.toList());
@@ -50,15 +49,15 @@ public class CampusRepositoryImpl
 
     @Override
     public boolean existsById(Long campusId) {
-        LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(CampusDO::getId, campusId);
+        LambdaQueryWrapper<Campus> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Campus::getId, campusId);
         return mapper.exists(queryWrapper);
     }
 
     @Override
     public boolean existsByName(String name) {
-        LambdaQueryWrapper<CampusDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(CampusDO::getName, name);
+        LambdaQueryWrapper<Campus> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Campus::getName, name);
         return mapper.exists(queryWrapper);
     }
 }

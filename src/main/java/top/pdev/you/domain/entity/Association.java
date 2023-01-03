@@ -2,17 +2,16 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.AssociationAuditDO;
-import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
-
-import java.util.Optional;
 
 /**
  * 社团
@@ -20,43 +19,41 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("association")
 @Data
 public class Association extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 名称
+     */
     private String name;
+
+    /**
+     * 描述
+     */
 
     private String summary;
 
-    private AssociationDO associationDO;
-
-    public Association(AssociationDO associationDO) {
-        if (!Optional.ofNullable(associationDO).isPresent()) {
-            return;
-        }
-        this.associationDO = associationDO;
-        this.id = associationDO.getId();
-        this.name = associationDO.getName();
-        this.summary = associationDO.getSummary();
-    }
-
     /**
      * 保存
-     *
-     * @param associationDO 协会 DO
      */
-    public void save(AssociationDO associationDO) {
+    public void save() {
         AssociationRepository associationRepository = SpringUtil.getBean(AssociationRepository.class);
         // 查找是否已经存在社团
-        if (associationRepository.existsByName(associationDO.getName())) {
+        if (associationRepository.existsByName(getName())) {
             throw new BusinessException("已经存在相同的社团");
         }
-        if (!associationRepository.save(associationDO)) {
+        if (!associationRepository.save(this)) {
             throw new BusinessException("无法保存社团");
         }
-        setId(associationDO.getId());
-        setName(associationDO.getName());
-        setSummary(associationDO.getSummary());
+        setId(getId());
+        setName(getName());
+        setSummary(getSummary());
     }
 
     /**
@@ -78,11 +75,11 @@ public class Association extends BaseEntity {
         if (associationAuditRepository.existsByStudentIdAndAssociationId(studentId, id)) {
             throw new BusinessException("请等待审核");
         }
-        AssociationAuditDO associationAuditDO = new AssociationAuditDO();
-        associationAuditDO.setAssociationId(id);
-        associationAuditDO.setStudentId(studentId);
-        associationAuditDO.setTime(DateTime.now().toLocalDateTime());
-        if (!associationAuditRepository.save(associationAuditDO)) {
+        AssociationAudit associationAudit = new AssociationAudit();
+        associationAudit.setAssociationId(id);
+        associationAudit.setStudentId(studentId);
+        associationAudit.setTime(DateTime.now().toLocalDateTime());
+        if (!associationAuditRepository.save(associationAudit)) {
             throw new BusinessException("无法保存加入社团审核");
         }
     }
@@ -121,7 +118,6 @@ public class Association extends BaseEntity {
      */
     public void changeName(String name) {
         setName(name);
-        associationDO.setName(name);
         update("无法更改社团名字");
     }
 
@@ -132,7 +128,6 @@ public class Association extends BaseEntity {
      */
     public void changeSummary(String summary) {
         setSummary(summary);
-        associationDO.setSummary(summary);
         update("无法更改社团描述");
     }
 
@@ -144,7 +139,7 @@ public class Association extends BaseEntity {
     private void update(String errorMsg) {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);
-        if (!associationRepository.saveOrUpdate(associationDO)) {
+        if (!associationRepository.saveOrUpdate(this)) {
             throw new BusinessException(errorMsg);
         }
     }

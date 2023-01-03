@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.data.StudentDO;
 
 /**
  * 学生仓库
@@ -10,7 +9,7 @@ import top.pdev.you.domain.entity.data.StudentDO;
  *
  * @author Peter1303
  */
-public interface StudentRepository extends IService<StudentDO> {
+public interface StudentRepository extends IService<Student> {
     /**
      * 查找
      *

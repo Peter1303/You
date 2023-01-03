@@ -2,7 +2,6 @@ package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.domain.entity.data.CampusDO;
 
 /**
  * 校区工厂
@@ -18,16 +17,6 @@ public class CampusFactory {
      * @return {@link Campus}
      */
     public Campus newCampus() {
-        return getCampus(null);
-    }
-
-    /**
-     * 获取校区领域对象
-     *
-     * @param campusDO 校园 DO
-     * @return {@link Campus}
-     */
-    public Campus getCampus(CampusDO campusDO) {
-        return new Campus(campusDO);
+        return new Campus();
     }
 }

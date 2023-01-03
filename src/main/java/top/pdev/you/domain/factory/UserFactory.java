@@ -19,7 +19,7 @@ public class UserFactory {
      * @return {@link User}
      */
     public User newUser() {
-        return new User(null);
+        return new User();
     }
 
     /**

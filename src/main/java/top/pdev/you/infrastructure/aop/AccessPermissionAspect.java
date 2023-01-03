@@ -41,7 +41,7 @@ public class AccessPermissionAspect {
         boolean lower = accessPermission.lower();
         HttpServletRequest request = RequestUtil.getRequest();
         String token = TokenUtil.getTokenByHeader(request);
-        User user = userRepository.findByOpenId(token);
+        User user = userRepository.findByWechatId(token);
         Integer currPermission = user.getPermission();
         boolean manager = adminService.isManager(token);
         boolean admin = adminService.isAdmin(token);

@@ -2,7 +2,7 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.CommentDO;
+import top.pdev.you.domain.entity.Comment;
 
 /**
  * 评论持久化
@@ -11,5 +11,5 @@ import top.pdev.you.domain.entity.data.CommentDO;
  * @author Peter1303
  */
 @Mapper
-public interface CommentMapper extends BaseMapper<CommentDO> {
+public interface CommentMapper extends BaseMapper<Comment> {
 }

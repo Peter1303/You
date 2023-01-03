@@ -1,19 +1,20 @@
-package top.pdev.you.domain.entity.data;
+package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
 
 /**
- * 活动规则
- * Created in 2022/10/1 15:30
+ * 话题
+ * Created in 2022/10/1 14:27
  *
  * @author Peter1303
  */
-@TableName("activity_rule")
+@TableName("topic")
 @Data
-public class ActivityRuleDO {
+public class Topic extends BaseEntity {
     /**
      * ID
      */
@@ -21,17 +22,12 @@ public class ActivityRuleDO {
     private Long id;
 
     /**
-     * 活动 ID
+     * 话题
      */
-    private Long activityId;
+    private String name;
 
     /**
-     * 规则
+     * uid
      */
-    private Integer rule;
-
-    /**
-     * 值
-     */
-    private String value;
+    private Long uid;
 }

@@ -3,7 +3,6 @@ package top.pdev.you.domain.service.impl;
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.factory.ClassFactory;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.service.ClassService;
@@ -42,12 +41,11 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Result<?> add(AddClassVO addClassVO) {
         Clazz clazz = classFactory.newClazz();
-        ClassDO classDO = new ClassDO();
-        classDO.setInstituteId(addClassVO.getInstituteId());
-        classDO.setCampusId(addClassVO.getCampusId());
-        classDO.setName(addClassVO.getName());
-        classDO.setYear(addClassVO.getGrade());
-        clazz.save(classDO);
+        clazz.setInstituteId(addClassVO.getInstituteId());
+        clazz.setCampusId(addClassVO.getCampusId());
+        clazz.setName(addClassVO.getName());
+        clazz.setYear(addClassVO.getGrade());
+        clazz.save();
         return Result.ok();
     }
 

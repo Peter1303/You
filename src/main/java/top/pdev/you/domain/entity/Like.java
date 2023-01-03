@@ -1,13 +1,13 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.LikeDO;
 import top.pdev.you.domain.repository.LikeRepository;
-
-import java.util.Optional;
 
 /**
  * 点赞领域
@@ -15,20 +15,24 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("`like`")
 @Data
 public class Like extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private Long postId;
-    private Long userId;
 
-    public Like(LikeDO likeDO) {
-        if (!Optional.ofNullable(likeDO).isPresent()) {
-            return;
-        }
-        this.id = likeDO.getId();
-        this.postId = likeDO.getPostId();
-        this.userId = likeDO.getUid();
-    }
+    /**
+     * 帖子 ID
+     */
+    private Long postId;
+
+    /**
+     * 用户 ID
+     */
+    private Long userId;
 
     /**
      * 添加点赞
@@ -44,10 +48,9 @@ public class Like extends BaseEntity {
         if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
             throw new BusinessException("已经点过赞了");
         }
-        LikeDO likeDO = new LikeDO();
-        likeDO.setPostId(postId);
-        likeDO.setUid(userId);
-        if (!likeRepository.save(likeDO)) {
+        setPostId(postId);
+        setUserId(userId);
+        if (!likeRepository.save(this)) {
             throw new BusinessException("点赞失败");
         }
     }

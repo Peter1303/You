@@ -17,6 +17,6 @@ public class CommentFactory {
      * @return {@link Comment}
      */
     public Comment newComment() {
-        return new Comment(null);
+        return new Comment();
     }
 }

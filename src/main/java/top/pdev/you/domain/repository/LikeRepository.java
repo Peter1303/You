@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Like;
-import top.pdev.you.domain.entity.data.LikeDO;
 
 /**
  * 点赞仓库
@@ -10,7 +9,7 @@ import top.pdev.you.domain.entity.data.LikeDO;
  *
  * @author Peter1303
  */
-public interface LikeRepository extends IService<LikeDO> {
+public interface LikeRepository extends IService<Like> {
     /**
      * 通过 ID 查找
      *

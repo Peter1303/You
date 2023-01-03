@@ -7,12 +7,11 @@ import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
+import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.AssociationAuditDO;
-import top.pdev.you.domain.entity.data.AssociationDO;
 import top.pdev.you.domain.entity.type.Id;
 import top.pdev.you.domain.entity.type.StudentId;
 import top.pdev.you.domain.entity.type.TeacherId;
@@ -83,10 +82,9 @@ public class AssociationServiceImpl implements AssociationService {
     @Override
     public Result<?> add(AddAssociationVO addAssociationVO) {
         Association association = associationFactory.newAssociation();
-        AssociationDO associationDO = new AssociationDO();
-        associationDO.setName(addAssociationVO.getName());
-        associationDO.setSummary(addAssociationVO.getSummary());
-        association.save(associationDO);
+        association.setName(addAssociationVO.getName());
+        association.setSummary(addAssociationVO.getSummary());
+        association.save();
         return Result.ok();
     }
 
@@ -124,7 +122,7 @@ public class AssociationServiceImpl implements AssociationService {
                                     status = AssociationStatus.JOINED;
                                 } else {
                                     // 如果存在审核记录那么需要检查是否通过
-                                    AssociationAuditDO one =
+                                    AssociationAudit one =
                                             associationAuditRepository.findByStudentIdAndAssociationId(id, item.getId());
                                     if (Optional.ofNullable(one).isPresent()) {
                                         status = AssociationStatus.AUDIT;
@@ -176,7 +174,7 @@ public class AssociationServiceImpl implements AssociationService {
      *
      * @param auditDO 审核 DO
      */
-    private void checkAudit(AssociationAuditDO auditDO) {
+    private void checkAudit(AssociationAudit auditDO) {
         if (Optional.ofNullable(auditDO.getStatus()).isPresent()) {
             throw new BusinessException("已经审核了");
         }
@@ -250,7 +248,7 @@ public class AssociationServiceImpl implements AssociationService {
      */
     private void auditAssociationRequest(IdVO idVO, boolean accept) {
         Long id = idVO.getId();
-        AssociationAuditDO auditDO = associationAuditRepository.findById(id);
+        AssociationAudit auditDO = associationAuditRepository.findById(id);
         checkAudit(auditDO);
         Student student = studentRepository.findById(auditDO.getStudentId());
         Association association =
@@ -259,7 +257,7 @@ public class AssociationServiceImpl implements AssociationService {
             association.accept(student);
         }
         // 更改审核记录
-        AssociationAuditDO audit = associationAuditRepository.findById(id);
+        AssociationAudit audit = associationAuditRepository.findById(id);
         audit.setStatus(accept);
         boolean update = associationAuditRepository.updateById(audit);
         if (!update) {

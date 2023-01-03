@@ -33,7 +33,7 @@ public class AuditEventListener {
             AssociationAuditEvent auditEvent = (AssociationAuditEvent) event;
             Association association = auditEvent.getAssociation();
             Student student = auditEvent.getStudent();
-            String openId = student.getUser().getOpenId();
+            String openId = student.getUser().getWechatId();
             AuditTemplate auditTemplate = new AuditTemplate();
             auditTemplate.setTitle("社团加入审核");
             auditTemplate.setName(association.getName());

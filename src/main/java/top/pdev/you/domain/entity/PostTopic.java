@@ -1,7 +1,8 @@
-package top.pdev.you.domain.entity.data;
+package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
 
 /**
  * 帖子话题
@@ -11,7 +12,7 @@ import lombok.Data;
  */
 @TableName("post_topic")
 @Data
-public class PostTopicDO {
+public class PostTopic extends BaseEntity {
     /**
      * 帖子 ID
      */

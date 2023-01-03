@@ -1,21 +1,20 @@
-package top.pdev.you.domain.entity.data;
+package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-
-import java.time.LocalDateTime;
+import top.pdev.you.domain.entity.base.BaseEntity;
 
 /**
- * 评论
- * Created in 2022/10/1 14:25
+ * 活动规则
+ * Created in 2022/10/1 15:30
  *
  * @author Peter1303
  */
-@TableName("comment")
+@TableName("activity_rule")
 @Data
-public class CommentDO {
+public class ActivityRule extends BaseEntity {
     /**
      * ID
      */
@@ -23,22 +22,17 @@ public class CommentDO {
     private Long id;
 
     /**
-     * 帖子 ID
+     * 活动 ID
      */
-    private Long postId;
+    private Long activityId;
 
     /**
-     * uid
+     * 规则
      */
-    private Long uid;
+    private Integer rule;
 
     /**
-     * 评论
+     * 值
      */
-    private String comment;
-
-    /**
-     * 时间
-     */
-    private LocalDateTime time;
+    private String value;
 }

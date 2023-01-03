@@ -2,7 +2,6 @@ package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.domain.entity.data.InstituteDO;
 
 /**
  * 学院工厂
@@ -18,16 +17,6 @@ public class InstituteFactory {
      * @return {@link Institute}
      */
     public Institute newInstitute() {
-        return getInstitute(null);
-    }
-
-    /**
-     * 获取学院
-     *
-     * @param instituteDO 研究所 DO
-     * @return {@link Institute}
-     */
-    public Institute getInstitute(InstituteDO instituteDO) {
-        return new Institute(instituteDO);
+        return new Institute();
     }
 }

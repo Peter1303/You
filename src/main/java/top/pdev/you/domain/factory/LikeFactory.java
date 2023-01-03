@@ -17,6 +17,6 @@ public class LikeFactory {
      * @return {@link Like}
      */
     public Like newLike() {
-        return new Like(null);
+        return new Like();
     }
 }

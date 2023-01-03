@@ -17,10 +17,6 @@ import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.StudentDO;
-import top.pdev.you.domain.entity.data.TeacherDO;
-import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.mapper.UserMapper;
@@ -94,18 +90,17 @@ public class UserServiceImpl implements UserService {
                     } else {
                         // 保存超管
                         User user = userFactory.newUser();
-                        UserDO userDO = new UserDO();
-                        userDO.setTime(DateTime.now().toLocalDateTime());
-                        userDO.setPermission(Permission.SUPER.getValue());
-                        userDO.setWechatId(openId);
-                        user.save(userDO);
+                        user.setTime(DateTime.now().toLocalDateTime());
+                        user.setPermission(Permission.SUPER.getValue());
+                        user.setWechatId(openId);
+                        user.save();
                         redisService.set(RedisKey.init(), true);
                         return Result.ok()
                                 .setData(loginResultVO)
                                 .setMessage("超级管理员");
                     }
                 }
-                User user = userRepository.findByOpenId(openId);
+                User user = userRepository.findByWechatId(openId);
                 if (Optional.ofNullable(user).isPresent()) {
                     return Result.ok().setData(loginResultVO);
                 }
@@ -119,32 +114,30 @@ public class UserServiceImpl implements UserService {
     public Result<?> register(Role role, RegisterVO vo) {
         WechatLoginDTO loginDTO = wechatService.login(vo.getCode());
         String openId = loginDTO.getOpenId();
-        if (Optional.ofNullable(userRepository.findByOpenId(openId)).isPresent()) {
+        if (Optional.ofNullable(userRepository.findByWechatId(openId)).isPresent()) {
             throw new BusinessException(ResultCode.FAILED, "用户已注册");
         }
         User user = userFactory.newUser();
-        user.setOpenId(openId);
+        user.setWechatId(openId);
         switch (role) {
             case STUDENT:
                 Student student = userFactory.newStudent();
-                StudentDO studentDO = new StudentDO();
-                studentDO.setNo(vo.getNo());
-                studentDO.setName(vo.getName());
-                studentDO.setContact(vo.getContact());
-                studentDO.setClassId(vo.getClassId());
+                student.setNo(vo.getNo());
+                student.setName(vo.getName());
+                student.setContact(vo.getContact());
+                student.setClassId(vo.getClassId());
                 user.save(student);
-                studentDO.setUserId(user.getId());
-                student.save(studentDO);
+                student.setUserId(user.getId());
+                student.save();
                 break;
             case TEACHER:
                 Teacher teacher = userFactory.newTeacher();
-                TeacherDO teacherDO = new TeacherDO();
-                teacherDO.setNo(vo.getNo());
-                teacherDO.setName(vo.getName());
-                teacherDO.setContact(vo.getContact());
+                teacher.setNo(vo.getNo());
+                teacher.setName(vo.getName());
+                teacher.setContact(vo.getContact());
                 user.save(teacher);
-                teacherDO.setUserId(user.getId());
-                teacher.save(teacherDO);
+                teacher.setUserId(user.getId());
+                teacher.save();
                 break;
             default:
                 break;
@@ -174,7 +167,7 @@ public class UserServiceImpl implements UserService {
                 Association one = associationRepository.findById(associationManager.getAssociationId());
                 association = one.getName();
             }
-            List<AssociationDO> list = student.getAssociations();
+            List<Association> list = student.getAssociations();
             associations = list
                     .stream()
                     .map(AssociationAssembler.INSTANCE::convert)
@@ -184,7 +177,7 @@ public class UserServiceImpl implements UserService {
         if (role instanceof Teacher) {
             Teacher teacher = (Teacher) role;
             no = teacher.getNo();
-            List<AssociationDO> managedList = teacher.getManagedAssociationList();
+            List<Association> managedList = teacher.getManagedAssociationList();
             associations = managedList
                     .stream()
                     .map(AssociationAssembler.INSTANCE::convert)
@@ -273,14 +266,13 @@ public class UserServiceImpl implements UserService {
         // 时间不足 暂时用 MVC 后续可改为注入
         AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
         UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
-        List<UserDO> list = userMapper.selectList(new LambdaQueryWrapper<>());
+        List<User> list = userMapper.selectList(new LambdaQueryWrapper<>());
         List<UserInfoVO> userInfoList = new ArrayList<>();
-        list.forEach(userDO -> {
+        list.forEach(user -> {
             // 如果是超级管理那么跳过
-            if (Permission.SUPER.getValue() == userDO.getPermission()) {
+            if (Permission.SUPER.getValue() == user.getPermission()) {
                 return;
             }
-            User user = new User(userDO);
             RoleEntity role = user.getRoleDomain();
             Integer permission = user.getPermission();
             String contact;
@@ -291,20 +283,20 @@ public class UserServiceImpl implements UserService {
             if (role instanceof Teacher) {
                 Teacher teacher = (Teacher) role;
                 contact = teacher.getContact();
-                associations = associationMapper.getListByAdmin(userDO.getId());
+                associations = associationMapper.getListByAdmin(user.getId());
             } else {
                 Student student = (Student) role;
                 contact = student.getContact();
                 clazz = student.getClazz();
                 // 如果是负责人那么只需要其管理的社团
                 if (permission == Permission.MANAGER.getValue()) {
-                    associations = associationMapper.getListByAdmin(userDO.getId());
+                    associations = associationMapper.getListByAdmin(user.getId());
                 } else {
                     associations = associationMapper.getListByParticipant(student.getId());
                 }
             }
             UserInfoVO infoVO = new UserInfoVO();
-            infoVO.setId(userDO.getId());
+            infoVO.setId(user.getId());
             infoVO.setNo(no);
             infoVO.setPermission(permission);
             infoVO.setName(name);

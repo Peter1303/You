@@ -3,7 +3,7 @@ package top.pdev.you.domain.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import top.pdev.you.domain.entity.data.ClassDO;
+import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @author Peter1303
  */
 @Mapper
-public interface ClassMapper extends BaseMapper<ClassDO> {
+public interface ClassMapper extends BaseMapper<Clazz> {
     /**
      * 获取班级信息列表
      *

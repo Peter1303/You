@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Like;
-import top.pdev.you.domain.entity.data.LikeDO;
 import top.pdev.you.domain.mapper.LikeMapper;
 import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -20,32 +19,32 @@ import java.util.Optional;
  */
 @Repository
 public class LikeRepositoryImpl
-        extends BaseRepository<LikeMapper, LikeDO>
+        extends BaseRepository<LikeMapper, Like>
         implements LikeRepository {
     @Resource
     private LikeMapper mapper;
 
     @Override
     public Like findById(Long likeId) {
-        LikeDO likeDO = getById(likeId);
-        if (!Optional.ofNullable(likeDO).isPresent()) {
+        Like like = getById(likeId);
+        if (!Optional.ofNullable(like).isPresent()) {
             throw new BusinessException("找不到点赞");
         }
-        return new Like(likeDO);
+        return like;
     }
 
     @Override
     public Long countLikesByPostId(Long id) {
-        LambdaQueryWrapper<LikeDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(LikeDO::getPostId, id);
+        LambdaQueryWrapper<Like> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Like::getPostId, id);
         return mapper.selectCount(queryWrapper);
     }
 
     @Override
     public Boolean existsByUserIdAndPostId(Long userId, Long postId) {
-        LambdaQueryWrapper<LikeDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(LikeDO::getPostId, postId)
-                .eq(LikeDO::getUid, userId);
+        LambdaQueryWrapper<Like> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Like::getPostId, postId)
+                .eq(Like::getUserId, userId);
         return mapper.exists(queryWrapper);
     }
 }

@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Comment;
-import top.pdev.you.domain.entity.data.CommentDO;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface CommentRepository extends IService<CommentDO> {
+public interface CommentRepository extends IService<Comment> {
     /**
      * 通过 ID 查找
      *

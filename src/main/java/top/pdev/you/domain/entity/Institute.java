@@ -1,11 +1,12 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.ClassDO;
-import top.pdev.you.domain.entity.data.InstituteDO;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.InstituteRepository;
 
@@ -17,18 +18,19 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("institute")
 @Data
 public class Institute extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private String name;
 
-    public Institute(InstituteDO instituteDO) {
-        if (!Optional.ofNullable(instituteDO).isPresent()) {
-            return;
-        }
-        this.id = instituteDO.getId();
-        this.name = instituteDO.getName();
-    }
+    /**
+     * 名称
+     */
+    private String name;
 
     /**
      * 获取学生学院名字
@@ -38,10 +40,10 @@ public class Institute extends BaseEntity {
     public String getStudentInstituteName(Student student) {
         Long classId = student.getClassId();
         ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-        ClassDO classDO = classRepository.getDO(classId);
-        if (Optional.ofNullable(classDO).isPresent()) {
+        Clazz clazz = classRepository.findById(classId);
+        if (Optional.ofNullable(clazz).isPresent()) {
             InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
-            Institute institute = instituteRepository.findById(classDO.getInstituteId());
+            Institute institute = instituteRepository.findById(clazz.getInstituteId());
             return institute.getName();
         }
         return null;
@@ -50,15 +52,14 @@ public class Institute extends BaseEntity {
     /**
      * 保存
      *
-     * @param instituteDO 学院 DO
      */
-    public void save(InstituteDO instituteDO) {
+    public void save() {
         InstituteRepository instituteRepository = SpringUtil.getBean(InstituteRepository.class);
         // 检查存在
-        if (instituteRepository.existsByName(instituteDO.getName())) {
+        if (instituteRepository.existsByName(getName())) {
             throw new BusinessException("该学院已经存在");
         }
-        if (!instituteRepository.save(instituteDO)) {
+        if (!instituteRepository.save(this)) {
             throw new BusinessException("保存学院失败");
         }
     }

@@ -1,14 +1,15 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.StudentDO;
 import top.pdev.you.domain.factory.CampusFactory;
-import top.pdev.you.domain.factory.ClassFactory;
 import top.pdev.you.domain.factory.InstituteFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.ClassRepository;
@@ -25,17 +26,47 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("student")
 @Data
 public class Student extends RoleEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private Long classId;
+
+    /**
+     * 用户 ID
+     */
     private Long userId;
+
+    /**
+     * 班级 ID
+     */
+    private Long classId;
+
+    /**
+     * 学号
+     */
     private String no;
+
+    /**
+     * 名字
+     */
     private String name;
+
+    /**
+     * 联系
+     */
     private String contact;
+
+    @TableField(exist = false)
     private String clazz;
+
+    @TableField(exist = false)
     private String campus;
 
+    @TableField(exist = false)
     private User user;
 
     /**
@@ -60,17 +91,11 @@ public class Student extends RoleEntity {
         this.contact = student.getContact();
     }
 
-    public Student(User user) {
-        init(user);
+    private Student() {
     }
 
-    public Student(StudentDO studentDO) {
-        this.id = studentDO.getId();
-        this.classId = studentDO.getClassId();
-        this.name = studentDO.getName();
-        this.no = studentDO.getNo();
-        this.contact = studentDO.getContact();
-        this.userId = studentDO.getUserId();
+    public Student(User user) {
+        init(user);
     }
 
     @Override
@@ -83,7 +108,7 @@ public class Student extends RoleEntity {
         return user;
     }
 
-    public List<AssociationDO> getAssociations() {
+    public List<Association> getAssociations() {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);
         return associationRepository.ofStudentList(this);
@@ -95,11 +120,9 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getClazz() {
-        ClassFactory classFactory =
-                SpringUtil.getBean(ClassFactory.class);
-        Clazz cls = classFactory.newClazz();
-        this.clazz = cls.getStudentClassName(this);
-        return this.clazz;
+        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
+        Clazz cls = classRepository.findById(getClassId());
+        return cls.getName();
     }
 
     /**
@@ -136,10 +159,7 @@ public class Student extends RoleEntity {
         ClassRepository classRepository =
                 SpringUtil.getBean(ClassRepository.class);
         Clazz clz = classRepository.findById(classId);
-        if (Optional.ofNullable(clz).isPresent()) {
-            return clz.getGrade();
-        }
-        return null;
+        return clz.getYear();
     }
 
     /**
@@ -149,7 +169,7 @@ public class Student extends RoleEntity {
      */
     public void saveContact(String contact) {
         this.contact = contact;
-        StudentDO studentDO = new StudentDO();
+        Student studentDO = new Student();
         studentDO.setId(this.id);
         studentDO.setContact(contact);
         StudentRepository studentRepository =
@@ -161,12 +181,9 @@ public class Student extends RoleEntity {
 
     /**
      * 保存
-     *
-     * @param studentDO 学生 DO
      */
-    public void save(StudentDO studentDO) {
+    public void save() {
         // 检测班级是否存在
-        Long classId = studentDO.getClassId();
         ClassRepository classRepository =
                 SpringUtil.getBean(ClassRepository.class);
         if (!Optional.ofNullable(classRepository.findById(classId)).isPresent()) {
@@ -177,9 +194,8 @@ public class Student extends RoleEntity {
         }
         StudentRepository studentRepository =
                 SpringUtil.getBean(StudentRepository.class);
-        if (!studentRepository.save(studentDO)) {
+        if (!studentRepository.save(this)) {
             throw new InternalErrorException("无法保存学生");
         }
-        this.id = studentDO.getId();
     }
 }

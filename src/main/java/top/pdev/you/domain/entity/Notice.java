@@ -1,19 +1,22 @@
-package top.pdev.you.domain.entity.data;
+package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.domain.entity.base.BaseEntity;
+
+import java.time.LocalDateTime;
 
 /**
- * 学生
- * Created in 2022/9/30 22:36
+ * 公告
+ * Created in 2022/10/1 15:23
  *
  * @author Peter1303
  */
-@TableName("student")
+@TableName("notice")
 @Data
-public class StudentDO {
+public class Notice extends BaseEntity {
     /**
      * ID
      */
@@ -26,22 +29,22 @@ public class StudentDO {
     private Long userId;
 
     /**
-     * 班级 ID
+     * 社团 ID
      */
-    private Long classId;
+    private Long associationId;
 
     /**
-     * 学号
+     * 标题
      */
-    private String no;
+    private String title;
 
     /**
-     * 名字
+     * 内容
      */
-    private String name;
+    private String content;
 
     /**
-     * 联系
+     * 时间
      */
-    private String contact;
+    private LocalDateTime time;
 }

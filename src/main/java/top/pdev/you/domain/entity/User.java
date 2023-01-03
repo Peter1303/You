@@ -1,7 +1,9 @@
 package top.pdev.you.domain.entity;
 
-import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
@@ -10,13 +12,12 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
 
-import java.util.Optional;
+import java.time.LocalDateTime;
 
 /**
  * 用户领域
@@ -24,30 +25,37 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("user")
 @Data
 public class User extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private String openId;
+
+    /**
+     * 微信 ID
+     */
+    private String wechatId;
+
+    /**
+     * 权限
+     */
     private Integer permission;
 
-    public User(UserDO userDO) {
-        if (!Optional.ofNullable(userDO).isPresent()) {
-            return;
-        }
-        this.id =userDO.getId();
-        this.openId = userDO.getWechatId();
-        this.permission = userDO.getPermission();
-    }
+    /**
+     * 时间
+     */
+    private LocalDateTime time;
 
     /**
      * 保存
-     *
-     * @param userDO 用户 DO
      */
-    public void save(UserDO userDO) {
+    public void save() {
         UserRepository userRepository =
                 SpringUtil.getBean(UserRepository.class);
-        if (!userRepository.save(userDO)) {
+        if (!userRepository.save(this)) {
             throw new InternalErrorException("无法保存用户");
         }
     }
@@ -58,15 +66,12 @@ public class User extends BaseEntity {
      * @param role 角色
      */
     public void save(RoleEntity role) {
-        UserDO userDO = new UserDO();
-        userDO.setWechatId(openId);
-        userDO.setTime(DateTime.now().toLocalDateTime());
         if (role instanceof Student) {
-            userDO.setPermission(Permission.USER.getValue());
+            setPermission(Permission.USER.getValue());
         } else if (role instanceof Teacher) {
-            userDO.setPermission(Permission.ADMIN.getValue());
+            setPermission(Permission.ADMIN.getValue());
         }
-        save(userDO);
+        save();
     }
 
     /**
@@ -95,12 +100,12 @@ public class User extends BaseEntity {
      * @param permission 权限
      */
     public void permissionTo(Permission permission) {
-        UserDO userDO = new UserDO();
-        userDO.setId(getId());
-        userDO.setPermission(permission.getValue());
+        User user = new User();
+        user.setId(getId());
+        user.setPermission(permission.getValue());
         UserRepository userRepository =
                 SpringUtil.getBean(UserRepository.class);
-        if (!userRepository.updateById(userDO)) {
+        if (!userRepository.updateById(user)) {
             throw new BusinessException("变更权限失败");
         }
         setPermission(permission.getValue());

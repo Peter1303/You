@@ -3,7 +3,6 @@ package top.pdev.you.domain.service.impl;
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.domain.entity.data.InstituteDO;
 import top.pdev.you.domain.factory.InstituteFactory;
 import top.pdev.you.domain.repository.InstituteRepository;
 import top.pdev.you.domain.service.InstituteService;
@@ -40,9 +39,8 @@ public class InstituteServiceImpl implements InstituteService {
     @Override
     public Result<?> add(AddInstituteVO addInstituteVO) {
         Institute institute = instituteFactory.newInstitute();
-        InstituteDO instituteDO = new InstituteDO();
-        instituteDO.setName(addInstituteVO.getName());
-        institute.save(instituteDO);
+        institute.setName(addInstituteVO.getName());
+        institute.save();
         return Result.ok();
     }
 

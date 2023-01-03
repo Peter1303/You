@@ -1,12 +1,14 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.entity.data.AssociationDO;
-import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
@@ -20,14 +22,37 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("teacher")
 @Data
 public class Teacher extends RoleEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 用户 ID
+     */
     private Long userId;
+
+    /**
+     * 名字
+     */
     private String name;
+
+    /**
+     * 工号
+     */
     private String no;
+
+    /**
+     * 联系
+     */
     private String contact;
 
+
+    @TableField(exist = false)
     private User user;
 
     private void init(User user) {
@@ -44,15 +69,11 @@ public class Teacher extends RoleEntity {
         this.contact = teacher.getContact();
     }
 
-    public Teacher(User user) {
-        init(user);
+    private Teacher() {
     }
 
-    public Teacher(TeacherDO teacherDO) {
-        this.id = teacherDO.getId();
-        this.name = teacherDO.getName();
-        this.no = teacherDO.getNo();
-        this.contact = teacherDO.getContact();
+    public Teacher(User user) {
+        init(user);
     }
 
     @Override
@@ -68,9 +89,9 @@ public class Teacher extends RoleEntity {
     /**
      * 获取管理社团列表
      *
-     * @return {@link List}<{@link AssociationDO}>
+     * @return {@link List}<{@link Association}>
      */
-    public List<AssociationDO> getManagedAssociationList() {
+    public List<Association> getManagedAssociationList() {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);
         return associationRepository.getManagedList(this);
@@ -83,27 +104,24 @@ public class Teacher extends RoleEntity {
      */
     public void saveContact(String contact) {
         this.contact = contact;
-        TeacherDO teacherDO = new TeacherDO();
-        teacherDO.setId(this.id);
-        teacherDO.setContact(contact);
+        Teacher teacher = new Teacher();
+        teacher.setId(this.id);
+        teacher.setContact(contact);
         TeacherRepository teacherRepository =
                 SpringUtil.getBean(TeacherRepository.class);
-        if (!teacherRepository.updateById(teacherDO)) {
+        if (!teacherRepository.updateById(teacher)) {
             throw new BusinessException("无法保存联系方式");
         }
     }
 
     /**
      * 保存
-     *
-     * @param teacherDO 老师 DO
      */
-    public void save(TeacherDO teacherDO) {
+    public void save() {
         TeacherRepository teacherRepository =
                 SpringUtil.getBean(TeacherRepository.class);
-        if (!teacherRepository.save(teacherDO)) {
+        if (!teacherRepository.save(this)) {
             throw new InternalErrorException("无法保存老师");
         }
-        this.id = teacherDO.getId();
     }
 }

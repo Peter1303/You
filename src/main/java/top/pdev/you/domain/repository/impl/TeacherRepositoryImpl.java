@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.data.TeacherDO;
 import top.pdev.you.domain.mapper.TeacherMapper;
 import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -19,25 +18,25 @@ import java.util.Optional;
  */
 @Repository
 public class TeacherRepositoryImpl
-        extends BaseRepository<TeacherMapper, TeacherDO>
+        extends BaseRepository<TeacherMapper, Teacher>
         implements TeacherRepository {
     @Override
     public Teacher findById(Long id) {
-        TeacherDO teacherDO = getById(id);
-        if (!Optional.ofNullable(teacherDO).isPresent()) {
+        Teacher teacher = getById(id);
+        if (!Optional.ofNullable(teacher).isPresent()) {
             throw new BusinessException("找不到老师");
         }
-        return new Teacher(teacherDO);
+        return teacher;
     }
 
     @Override
     public Teacher findByUserId(Long id) {
-        LambdaQueryWrapper<TeacherDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(TeacherDO::getUserId, id);
-        TeacherDO teacherDO = getOne(queryWrapper);
-        if (!Optional.ofNullable(teacherDO).isPresent()) {
+        LambdaQueryWrapper<Teacher> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Teacher::getUserId, id);
+        Teacher teacher = getOne(queryWrapper);
+        if (!Optional.ofNullable(teacher).isPresent()) {
             throw new BusinessException("找不到老师");
         }
-        return new Teacher(teacherDO);
+        return teacher;
     }
 }

@@ -2,7 +2,7 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.AssociationAuditDO;
+import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author Peter1303
  */
 @Mapper
-public interface AssociationAuditMapper extends BaseMapper<AssociationAuditDO> {
+public interface AssociationAuditMapper extends BaseMapper<AssociationAudit> {
     /**
      * 获取审核列表
      *

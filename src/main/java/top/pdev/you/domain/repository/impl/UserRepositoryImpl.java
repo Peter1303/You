@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.data.UserDO;
 import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
@@ -20,39 +19,39 @@ import java.util.Optional;
  */
 @Repository
 public class UserRepositoryImpl
-        extends BaseRepository<UserMapper, UserDO>
+        extends BaseRepository<UserMapper, User>
         implements UserRepository {
     @Resource
     private UserMapper mapper;
 
     @Override
     public User findById(Long userId) {
-        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDO::getId, userId);
-        UserDO userDO = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(userDO).isPresent()) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getId, userId);
+        User user = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(user).isPresent()) {
             return null;
         }
         // TODO cache
-        return new User(userDO);
+        return user;
     }
 
     @Override
-    public User findByOpenId(String openId) {
-        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDO::getWechatId, openId);
-        UserDO userDO = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(userDO).isPresent()) {
+    public User findByWechatId(String wechatId) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getWechatId, wechatId);
+        User user = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(user).isPresent()) {
             return null;
         }
         // TODO cache
-        return new User(userDO);
+        return user;
     }
 
     @Override
     public Boolean superAdminExists() {
-        LambdaQueryWrapper<UserDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDO::getPermission, Permission.SUPER.getValue());
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(User::getPermission, Permission.SUPER.getValue());
         return mapper.exists(queryWrapper);
     }
 }

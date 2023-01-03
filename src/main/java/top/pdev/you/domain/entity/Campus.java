@@ -1,11 +1,12 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.CampusDO;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 
@@ -17,22 +18,19 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("campus")
 @Data
 public class Campus extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**
      * 名字
      */
     private String name;
-
-    public Campus(CampusDO campusDO) {
-        if (!Optional.ofNullable(campusDO).isPresent()) {
-            return;
-        }
-        this.id = campusDO.getId();
-        this.name = campusDO.getName();
-    }
 
     /**
      * 获取学生校区名字
@@ -43,10 +41,10 @@ public class Campus extends BaseEntity {
     public String getStudentCampusName(Student student) {
         Long classId = student.getClassId();
         ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-        ClassDO classDO = classRepository.getDO(classId);
-        if (Optional.ofNullable(classDO).isPresent()) {
+        Clazz clazz = classRepository.findById(classId);
+        if (Optional.ofNullable(clazz).isPresent()) {
             CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
-            Campus campus = campusRepository.findById(classDO.getCampusId());
+            Campus campus = campusRepository.findById(clazz.getCampusId());
             return campus.getName();
         }
         return null;
@@ -54,16 +52,14 @@ public class Campus extends BaseEntity {
 
     /**
      * 保存
-     *
-     * @param campusDO 校园 DO
      */
-    public void save(CampusDO campusDO) {
+    public void save() {
         CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
         // 是否存在相同的
-        if (campusRepository.existsByName(campusDO.getName())) {
+        if (campusRepository.existsByName(getName())) {
             throw new BusinessException("已经存在相同的校区");
         }
-        if (!campusRepository.save(campusDO)) {
+        if (!campusRepository.save(this)) {
             throw new BusinessException("保存校区失败");
         }
     }

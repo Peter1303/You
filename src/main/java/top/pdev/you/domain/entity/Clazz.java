@@ -1,16 +1,15 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
-import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.ClassDO;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.domain.repository.InstituteRepository;
-
-import java.util.Optional;
 
 /**
  * 班级领域
@@ -18,41 +17,41 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("class")
 @Data
 public class Clazz extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private Integer grade;
-
-    public Clazz(ClassDO classDO) {
-        if (!Optional.ofNullable(classDO).isPresent()) {
-            return;
-        }
-        this.id = classDO.getId();
-        this.grade = classDO.getYear();
-    }
 
     /**
-     * 获取学生班级名字
-     *
-     * @param student 学生
-     * @return {@link String}
+     * 学院 ID
      */
-    public String getStudentClassName(Student student) {
-        ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
-        ClassDO classDO = classRepository.getDO(student.getClassId());
-        return classDO.getName();
-    }
+    private Long instituteId;
+
+    /**
+     * 校区 ID
+     */
+    private Long campusId;
+
+    /**
+     * 名称
+     */
+    private String name;
+
+    /**
+     * 年级
+     */
+    private Integer year;
 
     /**
      * 保存
-     *
-     * @param classDO 班级 DO
      */
-    public void save(ClassDO classDO) {
-        Optional.ofNullable(classDO)
-                .orElseThrow(() -> new InternalErrorException("没有持久化信息"));
-        Long campusId = classDO.getCampusId();
-        Long instituteId = classDO.getInstituteId();
+    public void save() {
+        Long campusId = getCampusId();
+        Long instituteId = getInstituteId();
         CampusRepository campusRepository = SpringUtil.getBean(CampusRepository.class);
         if (!campusRepository.existsById(campusId)) {
             throw new BusinessException("没有找到该校区");
@@ -63,11 +62,12 @@ public class Clazz extends BaseEntity {
         }
         ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         // 检查是否重复
-        if (classRepository.existsByNameAndInstituteIdAndCampusId(classDO.getName(),
-                classDO.getInstituteId(),
-                classDO.getCampusId())) {
+        if (classRepository.existsByNameAndInstituteIdAndCampusId(
+                getName(),
+                getInstituteId(),
+                getCampusId())) {
             throw new BusinessException("已经存在相同的班级");
         }
-        classRepository.save(classDO);
+        classRepository.save(this);
     }
 }

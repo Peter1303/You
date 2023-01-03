@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Post;
-import top.pdev.you.domain.entity.data.PostDO;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface PostRepository extends IService<PostDO> {
+public interface PostRepository extends IService<Post> {
     /**
      * 通过 ID 查找
      *

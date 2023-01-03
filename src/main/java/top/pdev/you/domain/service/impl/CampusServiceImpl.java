@@ -3,7 +3,6 @@ package top.pdev.you.domain.service.impl;
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.domain.entity.data.CampusDO;
 import top.pdev.you.domain.factory.CampusFactory;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.domain.service.CampusService;
@@ -34,9 +33,8 @@ public class CampusServiceImpl implements CampusService {
     @Override
     public Result<?> add(AddCampusVO addCampusVO) {
         Campus campus = campusFactory.newCampus();
-        CampusDO campusDO = new CampusDO();
-        campusDO.setName(addCampusVO.getName());
-        campus.save(campusDO);
+        campus.setName(addCampusVO.getName());
+        campus.save();
         return Result.ok();
     }
 

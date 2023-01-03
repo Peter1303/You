@@ -1,22 +1,21 @@
 package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
-import lombok.AccessLevel;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.entity.data.PostDO;
 import top.pdev.you.domain.repository.PostRepository;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * 帖子领域
@@ -24,41 +23,42 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@TableName("post")
 @Data
 public class Post extends BaseEntity {
+    /**
+     * ID
+     */
+    @TableId(type = IdType.AUTO)
     private Long id;
-    private Long userId;
+
+    /**
+     * 社团 ID
+     */
     private Long associationId;
+
+    /**
+     * 用户 ID
+     */
+    @TableField("user_id")
+    private Long userId;
+
+    /**
+     * 内容
+     */
     private String content;
+
+    /**
+     * 时间
+     */
     private LocalDateTime time;
-
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    private PostDO postDO;
-
-    public Post(PostDO postDO) {
-        if (!Optional.ofNullable(postDO).isPresent()) {
-            return;
-        }
-        this.postDO = postDO;
-        this.id = postDO.getId();
-        this.associationId = postDO.getAssociationId();
-        this.userId = postDO.getUserId();
-        this.content = postDO.getContent();
-        this.time = postDO.getTime();
-    }
 
     /**
      * 保存
      */
     public void save() {
-        postDO = new PostDO();
-        postDO.setAssociationId(associationId);
-        postDO.setContent(content);
-        postDO.setUserId(userId);
-        postDO.setTime(LocalDateTime.now());
         PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
-        if (!postRepository.save(postDO)) {
+        if (!postRepository.save(this)) {
             throw new BusinessException("无法发布帖子");
         }
     }
@@ -96,8 +96,11 @@ public class Post extends BaseEntity {
      */
     public void changeContent(String content) {
         this.content = content;
+        Post post = new Post();
+        post.setId(id);
+        post.setContent(content);
         PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
-        if (!postRepository.saveOrUpdate(postDO)) {
+        if (!postRepository.saveOrUpdate(post)) {
             throw new BusinessException("无法更改内容");
         }
     }

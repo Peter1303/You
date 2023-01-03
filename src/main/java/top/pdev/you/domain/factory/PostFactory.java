@@ -2,7 +2,6 @@ package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
 import top.pdev.you.domain.entity.Post;
-import top.pdev.you.domain.entity.data.PostDO;
 
 /**
  * 帖子工厂
@@ -18,16 +17,6 @@ public class PostFactory {
      * @return {@link Post}
      */
     public Post newPost() {
-        return getPost(null);
-    }
-
-    /**
-     * 获取帖子领域
-     *
-     * @param postDO 帖子 DO
-     * @return {@link Post}
-     */
-    public Post getPost(PostDO postDO) {
-        return new Post(postDO);
+        return new Post();
     }
 }
