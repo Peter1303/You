@@ -1,5 +1,7 @@
 package top.pdev.you.domain.entity.type;
 
+import lombok.Getter;
+
 /**
  * ID
  * Created in 2022/10/1 16:07
@@ -7,6 +9,7 @@ package top.pdev.you.domain.entity.type;
  * @author Peter1303
  */
 public class Id {
+    @Getter
     private final Long id;
 
     public Id(Long id) {
