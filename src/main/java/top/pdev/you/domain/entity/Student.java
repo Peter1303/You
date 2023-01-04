@@ -78,7 +78,7 @@ public class Student extends RoleEntity {
         if (!Optional.ofNullable(user).isPresent()) {
             return;
         }
-        Long userId = user.getId();
+        this.userId = user.getId();
         StudentRepository studentRepository =
                 SpringUtil.getBean(StudentRepository.class);
         Student student = studentRepository.findByUserId(userId);
