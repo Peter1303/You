@@ -12,8 +12,11 @@ import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
+import top.pdev.you.domain.repository.StudentRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 社团
@@ -145,5 +148,21 @@ public class Association extends BaseEntity {
         if (!associationRepository.saveOrUpdate(this)) {
             throw new BusinessException(errorMsg);
         }
+    }
+
+    /**
+     * 参与者
+     *
+     * @return {@link List}<{@link Student}>
+     */
+    public List<Student> participants() {
+        notNull(Association::getId);
+        AssociationParticipateRepository associationParticipateRepository =
+                SpringUtil.getBean(AssociationParticipateRepository.class);
+        StudentRepository studentRepository = SpringUtil.getBean(StudentRepository.class);
+        List<AssociationParticipantDO> all = associationParticipateRepository.findByAssociationId(getId());
+        return all.stream().map(participant ->
+                studentRepository.findById(participant.getStudentId())
+        ).collect(Collectors.toList());
     }
 }
