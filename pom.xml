@@ -18,6 +18,7 @@
         <druid.version>1.2.13</druid.version>
         <mybatis.plus.version>3.5.2</mybatis.plus.version>
         <hutool.version>5.8.8</hutool.version>
+        <reflectasm.version>1.11.9</reflectasm.version>
     </properties>
     <dependencies>
         <dependency>
@@ -101,6 +102,13 @@
             <version>${hutool.version}</version>
         </dependency>
 
+        <!-- ReflectASM -->
+        <!-- https://mvnrepository.com/artifact/com.esotericsoftware/reflectasm -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>reflectasm</artifactId>
+            <version>${reflectasm.version}</version>
+        </dependency>
 
         <!-- lombok -->
         <dependency>
