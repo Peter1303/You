@@ -50,12 +50,14 @@ public class PostController {
     /**
      * 细节
      *
+     * @param user 用户
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
     @GetMapping("")
-    public Result<?> details(@Validated IdVO idVO) {
-        return postService.details(idVO);
+    public Result<?> details(@CurrentUser User user,
+                             @Validated IdVO idVO) {
+        return postService.details(user, idVO);
     }
 
 

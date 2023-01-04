@@ -1,15 +1,11 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
-import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
-import top.pdev.you.domain.repository.CommentRepository;
-import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.PostRepository;
-import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.PostService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.PostAssembler;
@@ -39,16 +35,10 @@ public class PostServiceImpl implements PostService {
     private AssociationRepository associationRepository;
 
     @Resource
-    private UserRepository userRepository;
-
-    @Resource
-    private LikeRepository likeRepository;
-
-    @Resource
-    private CommentRepository commentRepository;
-
-    @Resource
     private PostFactory postFactory;
+
+    @Resource
+    private PostAssembler postAssembler;
 
     @Override
     public Result<?> post(User user, PostVO postVO) {
@@ -75,9 +65,9 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<?> details(IdVO idVO) {
+    public Result<?> details(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
-        PostInfoVO infoVO = convert(post);
+        PostInfoVO infoVO = postAssembler.convert(user, post);
         infoVO.setContent(post.getContent());
         return Result.ok(infoVO);
     }
@@ -87,7 +77,7 @@ public class PostServiceImpl implements PostService {
         Long id = postListVO.getId();
         List<Post> posts = postRepository.findByAssociationId(id);
         List<PostInfoVO> list = posts.stream().map(post -> {
-            PostInfoVO infoVO = convert(post);
+            PostInfoVO infoVO = postAssembler.convert(user, post);
             String content = post.getContent();
             infoVO.setContent(null);
             if (content.length() > 40) {
@@ -114,25 +104,5 @@ public class PostServiceImpl implements PostService {
         // TODO changeTopicId
         post.changeContent(changePostVO.getContent());
         return Result.ok();
-    }
-
-    /**
-     * 转换
-     *
-     * @param post 帖子
-     * @return {@link PostInfoVO}
-     */
-    private PostInfoVO convert(Post post) {
-        PostInfoVO infoVO = PostAssembler.INSTANCE.convert(post);
-        Long userId = post.getUserId();
-        User user = userRepository.findById(userId);
-        RoleEntity role = user.getRoleDomain();
-        String name = role.getName();
-        infoVO.setName(name);
-        Long postId = post.getId();
-        infoVO.setLikes(likeRepository.countLikesByPostId(postId));
-        infoVO.setComments(commentRepository.countCommentByPostId(postId));
-        infoVO.setLiked(likeRepository.existsByUserIdAndPostId(user.getId(), postId));
-        return infoVO;
     }
 }

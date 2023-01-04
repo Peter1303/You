@@ -2,9 +2,13 @@ package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AdminService;
@@ -12,6 +16,7 @@ import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -62,6 +67,26 @@ public class AdminServiceImpl implements AdminService {
             return permission >= Permission.SUPER.getValue();
         }
         return false;
+    }
+
+    @Override
+    public boolean isSelf(User user, Long userId) {
+        return Objects.equals(user.getId(), userId);
+    }
+
+    @Override
+    public boolean editable(User currentUser, Long targetUserId) {
+        if (isSelf(currentUser, targetUserId)) {
+            return true;
+        }
+        RoleEntity role = currentUser.getRoleDomain();
+        if (role instanceof ManagerEntity) {
+            return true;
+        }
+        if (role instanceof Teacher) {
+            return true;
+        }
+        return role instanceof SuperEntity;
     }
 
     private void check(Object uidOrToken) {

@@ -1,5 +1,7 @@
 package top.pdev.you.domain.service;
 
+import top.pdev.you.domain.entity.User;
+
 /**
  * 管理员服务
  * Created in 2022/8/19 21:53
@@ -37,4 +39,22 @@ public interface AdminService {
      * @return boolean
      */
     boolean isSuperAdmin(Object uidOrToken);
+
+    /**
+     * 是自己
+     *
+     * @param user   用户
+     * @param userId 用户 ID
+     * @return boolean
+     */
+    boolean isSelf(User user, Long userId);
+
+    /**
+     * 可编辑
+     *
+     * @param currentUser  当前用户
+     * @param targetUserId 目标用户 ID
+     * @return boolean
+     */
+    boolean editable(User currentUser, Long targetUserId);
 }

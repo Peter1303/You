@@ -62,4 +62,11 @@ public class AssociationManagerRepositoryImpl
                 .eq(AssociationManager::getUserId, userId);
         return remove(queryWrapper);
     }
+
+    @Override
+    public boolean existsByUserId(Long id) {
+        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationManager::getUserId, id);
+        return mapper.exists(queryWrapper);
+    }
 }

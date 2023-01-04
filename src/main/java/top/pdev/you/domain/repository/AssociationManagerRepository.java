@@ -49,4 +49,12 @@ public interface AssociationManagerRepository extends IService<AssociationManage
      * @return boolean
      */
     boolean deleteByAssociationAndUserId(Long associationId, Long id);
+
+    /**
+     * 通过用户 ID 查询是否存在
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean existsByUserId(Long id);
 }

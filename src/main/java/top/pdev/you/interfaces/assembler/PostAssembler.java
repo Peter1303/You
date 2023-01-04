@@ -1,9 +1,7 @@
 package top.pdev.you.interfaces.assembler;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Post;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.interfaces.model.vo.PostInfoVO;
 
 /**
@@ -12,11 +10,21 @@ import top.pdev.you.interfaces.model.vo.PostInfoVO;
  *
  * @author Peter1303
  */
-@Mapper
 public interface PostAssembler {
-    PostAssembler INSTANCE = Mappers.getMapper(PostAssembler.class);
-
-    @Mapping(target = "id", source = "id")
-    @Mapping(target = "time", source = "time")
+    /**
+     * 转换
+     *
+     * @param post 帖子
+     * @return {@link PostInfoVO}
+     */
     PostInfoVO convert(Post post);
+
+    /**
+     * 转换
+     *
+     * @param currentUser 当前用户
+     * @param post        帖子
+     * @return {@link PostInfoVO}
+     */
+    PostInfoVO convert(User currentUser, Post post);
 }

@@ -28,6 +28,7 @@ public class PostInfoVO {
     private Long likes;
     private Long comments;
     private Boolean liked = false;
+    private Boolean deletable = false;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;

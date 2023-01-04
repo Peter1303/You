@@ -35,10 +35,11 @@ public interface PostService {
     /**
      * 细节
      *
+     * @param user 用户
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> details(IdVO idVO);
+    Result<?> details(User user, IdVO idVO);
 
     /**
      * 列表
