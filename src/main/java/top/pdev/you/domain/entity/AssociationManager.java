@@ -10,6 +10,9 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
+import top.pdev.you.domain.repository.AssociationRepository;
+
+import java.util.List;
 
 /**
  * 社团管理领域
@@ -40,6 +43,18 @@ public class AssociationManager extends BaseEntity {
      * 类型
      */
     private Integer type;
+
+    /**
+     * 获取社团
+     *
+     * @return {@link Association}
+     */
+    public Association getAssociation() {
+        notNull(AssociationManager::getId);
+        AssociationRepository associationRepository =
+                SpringUtil.getBean(AssociationRepository.class);
+        return associationRepository.findById(getAssociationId());
+    }
 
     /**
      * 添加管理
@@ -99,9 +114,12 @@ public class AssociationManager extends BaseEntity {
                 SpringUtil.getBean(AssociationManagerRepository.class);
         if (role instanceof Manager) {
             // 找出负责人的管理社团
-            AssociationManager associationManager =
-                    associationManagerRepository.findByUserId(role.getUser().getId());
-            setAssociationId(associationManager.getAssociationId());
+            List<AssociationManager> associationManagers =
+                    associationManagerRepository.findByUserIdAndType(
+                            role.getUser().getId(),
+                            Permission.MANAGER.getValue());
+            AssociationManager manager = associationManagers.get(0);
+            setAssociationId(manager.getAssociationId());
         }
         notNull(AssociationManager::getAssociationId);
         if (!associationManagerRepository.deleteByAssociationAndUserId(
