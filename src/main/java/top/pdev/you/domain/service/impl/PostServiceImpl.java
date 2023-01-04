@@ -89,7 +89,13 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postRepository.findByAssociationId(id);
         List<PostInfoVO> list = posts.stream().map(post -> {
             PostInfoVO infoVO = convert(post);
-            infoVO.setSummary(post.getContent().substring(0, 40) + "...");
+            String content = post.getContent();
+            infoVO.setContent(null);
+            if (content.length() > 40) {
+                infoVO.setSummary(content.substring(0, 40) + "...");
+            } else {
+                infoVO.setSummary(content);
+            }
             return infoVO;
         }).collect(Collectors.toList());
         return Result.ok(list);
