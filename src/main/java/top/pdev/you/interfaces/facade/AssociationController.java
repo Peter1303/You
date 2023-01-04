@@ -20,6 +20,7 @@ import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.RemoveAdminVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
@@ -166,6 +167,19 @@ public class AssociationController {
     }
 
     /**
+     * 删除负责人
+     *
+     * @param removeAdminVO 删除管理 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.ADMIN)
+    @DeleteMapping("manager")
+    public Result<?> removeManager(@RequestBody @Validated RemoveAdminVO removeAdminVO) {
+        return associationService.removeManager(removeAdminVO);
+    }
+
+    /**
      * 添加指导老师
      *
      * @param addAdminVO 添加指导老师 VO
@@ -176,5 +190,18 @@ public class AssociationController {
     @PostMapping("admin")
     public Result<?> addAdmin(@RequestBody @Validated AddAdminVO addAdminVO) {
         return associationService.addAdmin(addAdminVO);
+    }
+
+    /**
+     * 删除指导老师
+     *
+     * @param removeAdminVO 删除管理 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @AccessPermission(permission = Permission.ADMIN)
+    @DeleteMapping("admin")
+    public Result<?> removeAdmin(@RequestBody @Validated RemoveAdminVO removeAdminVO) {
+        return associationService.removeAdmin(removeAdminVO);
     }
 }

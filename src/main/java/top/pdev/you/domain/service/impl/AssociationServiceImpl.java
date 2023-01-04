@@ -29,6 +29,7 @@ import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.RemoveAdminVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
@@ -209,6 +210,18 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
+    @Override
+    public Result<?> removeManager(RemoveAdminVO removeAdminVO) {
+        removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
+        return Result.ok();
+    }
+
+    @Override
+    public Result<?> removeAdmin(RemoveAdminVO removeAdminVO) {
+        removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
+        return Result.ok();
+    }
+
     private void addAdmin(Long associationId, Long userId) {
         AssociationManager associationManager = associationFactory.newAssociationManger();
         associationManager.setAssociationId(associationId);
@@ -224,6 +237,18 @@ public class AssociationServiceImpl implements AssociationService {
             Association association = associationRepository.findById(associationId);
             association.accept((Student) role);
         }
+    }
+
+    private void removeAdmin(Long associationId, Long userId) {
+        AssociationManager associationManager = associationFactory.newAssociationManger();
+        associationManager.setAssociationId(associationId);
+        User user = userRepository.findById(userId);
+        RoleEntity role = user.getRoleDomain();
+        // 检查社团是否已经被相关的管理接管
+        if (!associationManager.exists(role)) {
+            throw new BusinessException("没有该管理者");
+        }
+        associationManager.remove(role);
     }
 
     /**

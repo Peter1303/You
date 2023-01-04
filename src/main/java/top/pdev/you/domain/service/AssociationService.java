@@ -6,6 +6,7 @@ import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
 import top.pdev.you.interfaces.model.vo.req.ChangeNameVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
+import top.pdev.you.interfaces.model.vo.req.RemoveAdminVO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 /**
@@ -104,4 +105,20 @@ public interface AssociationService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> setSummary(ChangeNameVO nameVO);
+
+    /**
+     * 删除负责人
+     *
+     * @param removeAdminVO 删除管理 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> removeManager(RemoveAdminVO removeAdminVO);
+
+    /**
+     * 删除指导老师
+     *
+     * @param removeAdminVO 删除管理 VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> removeAdmin(RemoveAdminVO removeAdminVO);
 }

@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -67,6 +70,7 @@ public class AssociationManager extends BaseEntity {
      * 设置管理
      */
     private void setAdmin() {
+        notNull(AssociationManager::getAssociationId);
         AssociationManagerRepository associationManagerRepository =
                 SpringUtil.getBean(AssociationManagerRepository.class);
         if (!associationManagerRepository.save(this)) {
@@ -81,13 +85,34 @@ public class AssociationManager extends BaseEntity {
      * @return boolean
      */
     public boolean exists(RoleEntity role) {
-        Optional.ofNullable(role)
-                .orElseThrow(() -> new BusinessException("找不到用户角色"));
         AssociationManagerRepository associationManagerRepository =
                 SpringUtil.getBean(AssociationManagerRepository.class);
+        notNull(AssociationManager::getAssociationId);
         return associationManagerRepository.existsByAssociationIdAndUserIdAndType(
                 getAssociationId(),
                 role.getUser().getId(),
                 role.getUser().getPermission());
+    }
+
+    /**
+     * 删除
+     *
+     * @param role 角色
+     */
+    public void remove(RoleEntity role) {
+        AssociationManagerRepository associationManagerRepository =
+                SpringUtil.getBean(AssociationManagerRepository.class);
+        if (role instanceof ManagerEntity) {
+            // 找出负责人的管理社团
+            AssociationManager associationManager =
+                    associationManagerRepository.findByUserId(role.getUser().getId());
+            setAssociationId(associationManager.getAssociationId());
+        }
+        notNull(AssociationManager::getAssociationId);
+        if (!associationManagerRepository.deleteByAssociationAndUserId(
+                getAssociationId(),
+                role.getUser().getId())) {
+            throw new BusinessException("无法销权");
+        }
     }
 }
