@@ -9,6 +9,11 @@
                aa.time       AS time
         FROM association_audit aa
                  JOIN association a ON a.id = aa.association_id
-        WHERE aa.status IS NULL
+        <where>
+            aa.status IS NULL
+            <if test="aid != null">
+                AND aa.id = #{aid}
+            </if>
+        </where>
     </select>
 </mapper>

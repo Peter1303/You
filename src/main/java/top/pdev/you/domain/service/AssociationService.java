@@ -54,9 +54,10 @@ public interface AssociationService {
     /**
      * 审核列表
      *
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> auditList();
+    Result<?> auditList(User user);
 
     /**
      * 通过

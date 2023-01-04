@@ -121,12 +121,13 @@ public class AssociationController {
     /**
      * 审核列表
      *
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
     @AccessPermission(permission = Permission.MANAGER)
     @GetMapping("audit")
-    public Result<?> auditList() {
-        return associationService.auditList();
+    public Result<?> auditList(@CurrentUser User user) {
+        return associationService.auditList(user);
     }
 
     /**

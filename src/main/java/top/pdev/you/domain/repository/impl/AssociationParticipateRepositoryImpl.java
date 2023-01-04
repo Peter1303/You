@@ -32,6 +32,13 @@ public class AssociationParticipateRepositoryImpl
     }
 
     @Override
+    public List<AssociationParticipantDO> findByAssociationId(Long associationId) {
+        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipantDO::getAssociationId, associationId);
+        return mapper.selectList(queryWrapper);
+    }
+
+    @Override
     public boolean existsByStudentIdAndAssociationId(Long studentId, Long associationId) {
         LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationParticipantDO::getStudentId, studentId)

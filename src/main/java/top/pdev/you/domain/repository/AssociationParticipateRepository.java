@@ -23,6 +23,14 @@ public interface AssociationParticipateRepository
     List<AssociationParticipantDO> getParticipateList(Student student);
 
     /**
+     * 通过社团 ID 查找
+     *
+     * @param associationId 社团 ID
+     * @return {@link List}<{@link AssociationParticipantDO}>
+     */
+    List<AssociationParticipantDO> findByAssociationId(Long associationId);
+
+    /**
      * 存在
      *
      * @param studentId     学生 ID

@@ -9,6 +9,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.entity.AssociationManager;
+import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.AssociationFactory;
@@ -137,8 +138,16 @@ public class AssociationServiceImpl implements AssociationService {
     }
 
     @Override
-    public Result<?> auditList() {
-        List<AssociationAuditDTO> auditList = associationAuditRepository.getAuditList();
+    public Result<?> auditList(User user) {
+        RoleEntity role = user.getRoleDomain();
+        Long associationId = null;
+        if (role instanceof Manager) {
+            Manager manager = (Manager) role;
+            Association association = manager.belongAssociation();
+            associationId = association.getId();
+        }
+        // 没有过滤社团负责人的
+        List<AssociationAuditDTO> auditList = associationAuditRepository.getAuditList(associationId);
         List<AssociationAuditVO> list = auditList.stream()
                 .map(item -> {
                     AssociationAuditVO auditVO = AssociationAssembler.INSTANCE.convert2auditInfoVO(item);

@@ -34,7 +34,8 @@ public interface AssociationAuditRepository extends IService<AssociationAudit> {
     /**
      * 获取审核列表
      *
+     * @param associationId 社团 ID
      * @return {@link List}<{@link AssociationAuditDTO}>
      */
-    List<AssociationAuditDTO> getAuditList();
+    List<AssociationAuditDTO> getAuditList(Long associationId);
 }

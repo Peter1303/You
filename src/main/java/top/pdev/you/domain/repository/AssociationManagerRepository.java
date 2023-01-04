@@ -14,12 +14,13 @@ import java.util.List;
  */
 public interface AssociationManagerRepository extends IService<AssociationManager> {
     /**
-     * 通过用户 ID 查找
+     * 通过用户 ID 和类型查找
      *
-     * @param id ID
+     * @param id   ID
+     * @param type 类型
      * @return {@link AssociationManager}
      */
-    AssociationManager findByUserId(Long id);
+    List<AssociationManager> findByUserIdAndType(Long id, Integer type);
 
     /**
      * 获取管理列表

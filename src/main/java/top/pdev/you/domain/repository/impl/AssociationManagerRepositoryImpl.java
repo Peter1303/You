@@ -11,7 +11,6 @@ import top.pdev.you.domain.repository.base.BaseRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * 社团管理仓库实现类
@@ -27,14 +26,15 @@ public class AssociationManagerRepositoryImpl
     private AssociationManagerMapper mapper;
 
     @Override
-    public AssociationManager findByUserId(Long id) {
+    public List<AssociationManager> findByUserIdAndType(Long id, Integer type) {
         LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManager::getUserId, id);
-        AssociationManager one = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(one).isPresent()) {
+        queryWrapper.eq(AssociationManager::getUserId, id)
+                .eq(AssociationManager::getType, type);
+        List<AssociationManager> list = mapper.selectList(queryWrapper);
+        if (list.isEmpty()) {
             throw new BusinessException("找不到用户所管理的社团");
         }
-        return one;
+        return list;
     }
 
     @Override

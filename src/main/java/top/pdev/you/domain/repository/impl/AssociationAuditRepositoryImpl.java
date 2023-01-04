@@ -46,7 +46,7 @@ public class AssociationAuditRepositoryImpl
     }
 
     @Override
-    public List<AssociationAuditDTO> getAuditList() {
-        return mapper.getAuditList();
+    public List<AssociationAuditDTO> getAuditList(Long associationId) {
+        return mapper.getAuditList(associationId);
     }
 }
