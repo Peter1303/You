@@ -11,13 +11,18 @@ import top.pdev.you.infrastructure.result.ResultCode;
  */
 public class PermissionDeniedException extends BusinessException {
     @Getter
-    private final String message = "权限不足";
+    private String message = "权限不足";
 
     @Getter
     private final ResultCode code = ResultCode.PERMISSION_DENIED;
 
     public PermissionDeniedException() {
         super(ResultCode.PERMISSION_DENIED);
+    }
+
+    public PermissionDeniedException(String message) {
+        super(ResultCode.PERMISSION_DENIED, message);
+        this.message = message;
     }
 
     public PermissionDeniedException(String message, Throwable cause) {

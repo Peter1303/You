@@ -26,4 +26,11 @@ public @interface AccessPermission {
      * @return boolean
      */
     boolean lower() default false;
+
+    /**
+     * 指定权限
+     *
+     * @return boolean
+     */
+    boolean specified() default false;
 }
