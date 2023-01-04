@@ -2,7 +2,7 @@ package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.constant.RedisKey;
-import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
@@ -80,7 +80,7 @@ public class AdminServiceImpl implements AdminService {
             return true;
         }
         RoleEntity role = currentUser.getRoleDomain();
-        if (role instanceof ManagerEntity) {
+        if (role instanceof Manager) {
             return true;
         }
         if (role instanceof Teacher) {

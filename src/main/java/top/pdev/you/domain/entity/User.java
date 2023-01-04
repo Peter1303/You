@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
@@ -122,7 +121,7 @@ public class User extends BaseEntity {
         if (permission == Permission.USER.getValue()) {
             return userFactory.getStudent(this);
         } else if (permission == Permission.MANAGER.getValue()) {
-            return new ManagerEntity(this);
+            return new Manager(this);
         } else if (permission == Permission.ADMIN.getValue()) {
             return userFactory.getTeacher(this);
         }

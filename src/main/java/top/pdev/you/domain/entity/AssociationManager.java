@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
@@ -98,7 +97,7 @@ public class AssociationManager extends BaseEntity {
     public void remove(RoleEntity role) {
         AssociationManagerRepository associationManagerRepository =
                 SpringUtil.getBean(AssociationManagerRepository.class);
-        if (role instanceof ManagerEntity) {
+        if (role instanceof Manager) {
             // 找出负责人的管理社团
             AssociationManager associationManager =
                     associationManagerRepository.findByUserId(role.getUser().getId());

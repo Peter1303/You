@@ -1,6 +1,7 @@
 package top.pdev.you.domain.factory;
 
 import org.springframework.stereotype.Component;
+import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
@@ -39,6 +40,16 @@ public class UserFactory {
      */
     public Student getStudent(User user) {
         return new Student(user);
+    }
+
+    /**
+     * 获取负责人
+     *
+     * @param user 用户
+     * @return {@link Manager}
+     */
+    public Manager getManager(User user) {
+        return new Manager(user);
     }
 
     /**

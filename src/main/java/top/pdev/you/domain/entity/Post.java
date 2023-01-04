@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.exception.BusinessException;
@@ -76,7 +75,7 @@ public class Post extends BaseEntity {
         } else {
             RoleEntity role = user.getRoleDomain();
             // 如果是超级管理员、负责人也有权限
-            if (role instanceof ManagerEntity || role instanceof SuperEntity) {
+            if (role instanceof Manager || role instanceof SuperEntity) {
                 hasPermission = true;
             }
         }
