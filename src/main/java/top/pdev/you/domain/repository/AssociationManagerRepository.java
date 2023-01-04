@@ -22,14 +22,6 @@ public interface AssociationManagerRepository extends IService<AssociationManage
     AssociationManager findByUserId(Long id);
 
     /**
-     * 通过社团ID 查找
-     *
-     * @param id ID
-     * @return {@link AssociationManager}
-     */
-    AssociationManager findByAssociationId(Long id);
-
-    /**
      * 获取管理列表
      *
      * @param teacher 老师

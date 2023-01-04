@@ -38,17 +38,6 @@ public class AssociationManagerRepositoryImpl
     }
 
     @Override
-    public AssociationManager findByAssociationId(Long id) {
-        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManager::getAssociationId, id);
-        AssociationManager one = mapper.selectOne(queryWrapper);
-        if (!Optional.ofNullable(one).isPresent()) {
-            throw new BusinessException("找不到用户所管理的社团");
-        }
-        return one;
-    }
-
-    @Override
     public List<AssociationManager> getManagedList(Teacher teacher) {
         LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationManager::getUserId, teacher.getUser().getId());
@@ -60,7 +49,8 @@ public class AssociationManagerRepositoryImpl
                                                          Long userId,
                                                          Integer permission) {
         LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManager::getUserId, userId)
+        queryWrapper.eq(AssociationManager::getAssociationId, associationId)
+                .eq(AssociationManager::getUserId, userId)
                 .eq(AssociationManager::getType, permission);
         return mapper.exists(queryWrapper);
     }

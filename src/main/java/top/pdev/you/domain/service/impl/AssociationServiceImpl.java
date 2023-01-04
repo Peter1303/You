@@ -12,16 +12,11 @@ import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.entity.type.Id;
-import top.pdev.you.domain.entity.type.StudentId;
-import top.pdev.you.domain.entity.type.TeacherId;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
-import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.StudentRepository;
-import top.pdev.you.domain.repository.TeacherRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
@@ -66,12 +61,6 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Resource
     private StudentRepository studentRepository;
-
-    @Resource
-    private TeacherRepository teacherRepository;
-
-    @Resource
-    private AssociationManagerRepository associationManagerRepository;
 
     @Resource
     private UserFactory userFactory;
@@ -196,13 +185,13 @@ public class AssociationServiceImpl implements AssociationService {
     @Override
     public Result<?> addManager(AddAdminVO addAdminVO) {
         // TODO 老师添加负责人的时候只允许老师的社团
-        addAdmin(addAdminVO.getAssociationId(), new StudentId(addAdminVO.getUid()));
+        addAdmin(addAdminVO.getAssociationId(), addAdminVO.getUid());
         return Result.ok();
     }
 
     @Override
     public Result<?> addAdmin(AddAdminVO addAdminVO) {
-        addAdmin(addAdminVO.getAssociationId(), new TeacherId(addAdminVO.getUid()));
+        addAdmin(addAdminVO.getAssociationId(), addAdminVO.getUid());
         return Result.ok();
     }
 
@@ -220,28 +209,27 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
-    private void addAdmin(Long associationId, Id id) {
-        AssociationManager associationManager =
-                associationManagerRepository.findByAssociationId(associationId);
-        User user = null;
+    private void addAdmin(Long associationId, Long userId) {
+        AssociationManager associationManager = associationFactory.newAssociationManger();
+        associationManager.setAssociationId(associationId);
+        User user = userRepository.findById(userId);
+        RoleEntity role = user.getRoleDomain();
+        // 检查社团是否已经被相关的管理接管
+        if (associationManager.exists(role)) {
+            throw new BusinessException("已经存在了管理者");
+        }
         // 负责人
-        if (id instanceof StudentId) {
-            Student student = studentRepository.findById(id.getId());
-            associationManager.addAdmin(student);
-            user = userRepository.findById(student.getUserId());
+        if (role instanceof Student) {
+            Student student = userFactory.getStudent(user);
+            associationManager.add(student);
             // 同时让负责人直接进入社团
             Association association = associationRepository.findById(associationId);
             association.accept(student);
         }
         // 指导老师
-        if (id instanceof TeacherId) {
-            Teacher teacher = teacherRepository.findById(id.getId());
-            user = userRepository.findById(teacher.getUserId());
-            associationManager.addAdmin(teacher);
-        }
-        // 检查社团是否已经被相关的管理接管
-        if (associationManager.adminExists(user)) {
-            throw new BusinessException("已经存在了管理者");
+        if (role instanceof Teacher) {
+            Teacher teacher = userFactory.getTeacher(user);
+            associationManager.add(teacher);
         }
     }
 

@@ -2,14 +2,13 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 
 import java.util.Optional;
@@ -37,7 +36,6 @@ public class AssociationManager extends BaseEntity {
     /**
      * 用户 ID
      */
-    @TableField("uid")
     private Long userId;
 
     /**
@@ -50,15 +48,12 @@ public class AssociationManager extends BaseEntity {
      *
      * @param student 学生
      */
-    public void addAdmin(Student student) {
-        AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
-        AssociationManager associationManger = associationFactory.newAssociationManger();
-        associationManger.setAssociationId(getId());
-        associationManger.setUserId(student.getUserId());
+    public void add(Student student) {
+        setUserId(student.getUserId());
         // 变更权限
         student.getUser().permissionTo(Permission.MANAGER);
-        associationManger.setType(Permission.MANAGER.getValue());
-        setAdmin(associationManger);
+        setType(Permission.MANAGER.getValue());
+        setAdmin();
     }
 
     /**
@@ -66,24 +61,19 @@ public class AssociationManager extends BaseEntity {
      *
      * @param teacher 老师
      */
-    public void addAdmin(Teacher teacher) {
-        AssociationFactory associationFactory = SpringUtil.getBean(AssociationFactory.class);
-        AssociationManager associationManger = associationFactory.newAssociationManger();
-        associationManger.setAssociationId(getId());
-        associationManger.setUserId(teacher.getUserId());
-        associationManger.setType(Permission.ADMIN.getValue());
-        setAdmin(associationManger);
+    public void add(Teacher teacher) {
+        setUserId(teacher.getUserId());
+        setType(Permission.ADMIN.getValue());
+        setAdmin();
     }
 
     /**
      * 设置管理
-     *
-     * @param associationManger 管理
      */
-    private void setAdmin(AssociationManager associationManger) {
+    private void setAdmin() {
         AssociationManagerRepository associationManagerRepository =
                 SpringUtil.getBean(AssociationManagerRepository.class);
-        if (!associationManagerRepository.save(associationManger)) {
+        if (!associationManagerRepository.save(this)) {
             throw new BusinessException("无法保存社团管理人员");
         }
     }
@@ -91,16 +81,17 @@ public class AssociationManager extends BaseEntity {
     /**
      * 管理存在
      *
-     * @param user 用户
+     * @param role 用户
      * @return boolean
      */
-    public boolean adminExists(User user) {
-        Optional.ofNullable(user)
-                .orElseThrow(() -> new BusinessException("找不到用户"));
+    public boolean exists(RoleEntity role) {
+        Optional.ofNullable(role)
+                .orElseThrow(() -> new BusinessException("找不到用户角色"));
         AssociationManagerRepository associationManagerRepository =
                 SpringUtil.getBean(AssociationManagerRepository.class);
-        return associationManagerRepository.existsByAssociationIdAndUserIdAndType(getId(),
-                user.getId(),
-                user.getPermission());
+        return associationManagerRepository.existsByAssociationIdAndUserIdAndType(
+                getAssociationId(),
+                role.getUser().getId(),
+                role.getUser().getPermission());
     }
 }

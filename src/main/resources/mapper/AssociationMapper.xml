@@ -37,6 +37,6 @@
         FROM association a
                  JOIN association_manager am
                       ON am.association_id = a.id
-        WHERE am.uid = #{uid}
+        WHERE am.user_id = #{uid}
     </select>
 </mapper>
