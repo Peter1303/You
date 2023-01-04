@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.pdev.you.common.interceptor.TokenInterceptor;
 import top.pdev.you.infrastructure.resover.CurrentUserMethodArgumentResolver;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,6 +21,8 @@ import java.util.List;
 @EnableWebMvc
 @Configuration
 public class ApiConfig implements WebMvcConfigurer {
+    @Resource
+    private CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver;
 
     /**
      * @return 令牌检查拦截器
@@ -52,6 +55,6 @@ public class ApiConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         // 当前用户参数解析器
-        resolvers.add(new CurrentUserMethodArgumentResolver());
+        resolvers.add(currentUserMethodArgumentResolver);
     }
 }

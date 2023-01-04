@@ -1,8 +1,10 @@
 package top.pdev.you.infrastructure.resover;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -14,6 +16,7 @@ import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.TokenInvalidException;
 import top.pdev.you.infrastructure.redis.RedisService;
 
+import javax.annotation.Resource;
 import java.util.Optional;
 
 /**
@@ -22,8 +25,10 @@ import java.util.Optional;
  *
  * @author Peter1303
  */
+@Component
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    private final RedisService redisService = SpringUtil.getBean(RedisService.class);
+    @Resource
+    private RedisService redisService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
