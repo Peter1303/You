@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pdev.you.common.annotation.CurrentUser;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.validator.intefaces.Association;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.PostService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.ChangePostVO;
@@ -36,15 +36,15 @@ public class PostController {
     /**
      * 帖子
      *
-     * @param tokenInfo 令牌信息
-     * @param postVO    帖子 VO
+     * @param user   用户
+     * @param postVO 帖子 VO
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("post")
-    public Result<?> post(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> post(@CurrentUser User user,
                           @RequestBody @Validated PostVO postVO) {
-        return postService.post(tokenInfo, postVO);
+        return postService.post(user, postVO);
     }
 
     /**
@@ -62,40 +62,42 @@ public class PostController {
     /**
      * 发布社团帖子
      *
-     * @param tokenInfo 令牌信息
-     * @param postVO    帖子 VO
+     * @param user   用户
+     * @param postVO 帖子 VO
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("post/association")
-    public Result<?> associationPost(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> associationPost(@CurrentUser User user,
                                      @RequestBody @Validated(Association.class) PostVO postVO) {
-        return postService.associationPost(tokenInfo, postVO);
+        return postService.associationPost(user, postVO);
     }
 
     /**
      * 列表
      *
+     * @param user       用户
      * @param postListVO 帖子列表 VO
      * @return {@link Result}<{@link ?}>
      */
     @GetMapping("list")
-    public Result<?> list(@Validated PostListVO postListVO) {
-        return postService.list(postListVO);
+    public Result<?> list(@CurrentUser User user,
+                          @Validated PostListVO postListVO) {
+        return postService.list(user, postListVO);
     }
 
     /**
      * 删除
      *
-     * @param tokenInfo 令牌信息
-     * @param idVO      ID VO
+     * @param user 用户
+     * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
-    public Result<?> delete(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> delete(@CurrentUser User user,
                             @RequestBody @Validated IdVO idVO) {
-        return postService.delete(tokenInfo, idVO);
+        return postService.delete(user, idVO);
     }
 
     /**

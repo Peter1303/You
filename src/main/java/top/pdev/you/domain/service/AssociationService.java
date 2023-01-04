@@ -1,6 +1,6 @@
 package top.pdev.you.domain.service;
 
-import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
 import top.pdev.you.interfaces.model.vo.req.AddAssociationVO;
@@ -35,21 +35,21 @@ public interface AssociationService {
     /**
      * 列表
      *
-     * @param searchVO  搜索 VO
-     * @param tokenInfo 令牌信息
+     * @param user     用户
+     * @param searchVO 搜索 VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> list(SearchVO searchVO, TokenInfo tokenInfo);
+    Result<?> list(User user, SearchVO searchVO);
 
     /**
      * 加入
      *
-     * @param directly  直接
-     * @param tokenInfo 令牌信息
-     * @param idVO      ID VO
+     * @param directly 直接
+     * @param user     用户
+     * @param idVO     ID VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO);
+    Result<?> join(boolean directly, User user, IdVO idVO);
 
     /**
      * 审核列表

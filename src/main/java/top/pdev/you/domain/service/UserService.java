@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service;
 
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Role;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
 import top.pdev.you.interfaces.model.vo.req.SetProfileVO;
@@ -36,27 +36,27 @@ public interface UserService {
     /**
      * 信息
      *
-     * @param tokenInfo 令牌信息
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> info(TokenInfo tokenInfo);
+    Result<?> info(User user);
 
     /**
      * 资料
      *
-     * @param tokenInfo 令牌信息
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> profile(TokenInfo tokenInfo);
+    Result<?> profile(User user);
 
     /**
      * 设置资料
      *
-     * @param tokenInfo    令牌信息
+     * @param user         用户
      * @param setProfileVO 设置资料 VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> setProfile(TokenInfo tokenInfo, SetProfileVO setProfileVO);
+    Result<?> setProfile(User user, SetProfileVO setProfileVO);
 
     /**
      * 删除账号
@@ -65,7 +65,7 @@ public interface UserService {
      * @param request   请求
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> deleteAccount(TokenInfo tokenInfo, HttpServletRequest request);
+    Result<?> deleteAccount(User tokenInfo, HttpServletRequest request);
 
     /**
      * 获取用户

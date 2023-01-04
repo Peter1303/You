@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.validator.intefaces.Association;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddAdminVO;
@@ -92,29 +92,30 @@ public class AssociationController {
     /**
      * 列表
      *
-     * @param searchVO  搜索 VO
-     * @param tokenInfo 令牌信息
+     * @param user     用户
+     * @param searchVO 搜索 VO
      * @return {@link Result}<{@link ?}>
      */
     @GetMapping("")
-    public Result<?> list(@Validated(Association.class) SearchVO searchVO,
-                          @CurrentUser TokenInfo tokenInfo) {
-        return associationService.list(searchVO, tokenInfo);
+    public Result<?> list(@CurrentUser User user,
+                          @Validated(Association.class) SearchVO searchVO) {
+        return associationService.list(user, searchVO);
     }
 
     /**
+     * 连接请求
      * 请求加入
      *
-     * @param idVO      ID VO
-     * @param tokenInfo 令牌信息
+     * @param user 用户
+     * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER, lower = true)
     @PostMapping("join/request")
-    public Result<?> joinRequest(@RequestBody @Validated IdVO idVO,
-                                 @CurrentUser TokenInfo tokenInfo) {
-        return associationService.join(false, tokenInfo, idVO);
+    public Result<?> joinRequest(@CurrentUser User user,
+                                 @RequestBody @Validated IdVO idVO) {
+        return associationService.join(false, user, idVO);
     }
 
     /**

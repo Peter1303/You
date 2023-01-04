@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.entity.role.ManagerEntity;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
@@ -148,9 +147,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<?> info(TokenInfo tokenInfo) {
+    public Result<?> info(User user) {
         // 获取用户
-        User user = userRepository.findById(tokenInfo.getUid());
         Integer permission = user.getPermission();
         String association = null;
         List<AssociationBaseInfoDTO> associations = null;
@@ -194,9 +192,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<?> profile(TokenInfo tokenInfo) {
+    public Result<?> profile(User user) {
         // 获取用户
-        User user = userRepository.findById(tokenInfo.getUid());
         Integer permission = user.getPermission();
         String clazz = null;
         String campus = null;
@@ -234,9 +231,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<?> setProfile(TokenInfo tokenInfo,
+    public Result<?> setProfile(User user,
                                 SetProfileVO setProfileVO) {
-        User user = userRepository.findById(tokenInfo.getUid());
         String contact = setProfileVO.getContact();
         RoleEntity role = user.getRoleDomain();
         if (role instanceof Student) {
@@ -252,9 +248,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result<?> deleteAccount(TokenInfo tokenInfo,
+    public Result<?> deleteAccount(User user,
                                    HttpServletRequest request) {
-        User user = userRepository.findById(tokenInfo.getUid());
         user.delete();
         String token = TokenUtil.getTokenByHeader(request);
         redisService.delete(RedisKey.loginToken(token));

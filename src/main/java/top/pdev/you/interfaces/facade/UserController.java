@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.annotation.SkipCheckLogin;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.validator.intefaces.Student;
 import top.pdev.you.common.validator.intefaces.Teacher;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.RegisterVO;
@@ -86,36 +86,43 @@ public class UserController {
     /**
      * 信息
      *
-     * @param tokenInfo 令牌信息
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
     @GetMapping("info")
-    public Result<?> info(@CurrentUser TokenInfo tokenInfo) {
-        return userService.info(tokenInfo);
+    public Result<?> info(@CurrentUser User user) {
+        return userService.info(user);
     }
 
     /**
      * 资料
      *
-     * @param tokenInfo 令牌信息
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
     @GetMapping("profile")
-    public Result<?> profile(@CurrentUser TokenInfo tokenInfo) {
-        return userService.profile(tokenInfo);
+    public Result<?> profile(@CurrentUser User user) {
+        return userService.profile(user);
     }
 
+    /**
+     * 设置资料
+     *
+     * @param user         用户
+     * @param setProfileVO 设置配置文件 VO
+     * @return {@link Result}<{@link ?}>
+     */
     @Transactional(rollbackFor = Exception.class)
     @PutMapping("profile/set")
-    public Result<?> setProfile(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> setProfile(@CurrentUser User user,
                                 @RequestBody SetProfileVO setProfileVO) {
-        return userService.setProfile(tokenInfo, setProfileVO);
+        return userService.setProfile(user, setProfileVO);
     }
 
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("account")
-    public Result<?> deleteAccount(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> deleteAccount(@CurrentUser User user,
                                    HttpServletRequest request) {
-        return userService.deleteAccount(tokenInfo, request);
+        return userService.deleteAccount(user, request);
     }
 }

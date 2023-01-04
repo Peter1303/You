@@ -12,10 +12,6 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 /**
  * 社团管理领域
  * Created in 2023/1/3 16:45

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pdev.you.common.annotation.CurrentUser;
-import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.LikeService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
@@ -30,15 +30,15 @@ public class LikeController {
     /**
      * 添加
      *
-     * @param tokenInfo 令牌信息
-     * @param idVO      ID VO
+     * @param user 用户
+     * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @PostMapping("")
-    public Result<?> add(@CurrentUser TokenInfo tokenInfo,
+    public Result<?> add(@CurrentUser User user,
                          @RequestBody @Validated IdVO idVO) {
-        return likeService.add(tokenInfo, idVO);
+        return likeService.add(user, idVO);
     }
 
     /**

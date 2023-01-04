@@ -4,7 +4,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
@@ -86,9 +85,7 @@ public class AssociationServiceImpl implements AssociationService {
     }
 
     @Override
-    public Result<?> list(SearchVO searchVO, TokenInfo tokenInfo) {
-        Long uid = tokenInfo.getUid();
-        User user = userRepository.findById(uid);
+    public Result<?> list(User user, SearchVO searchVO) {
         // 出学生之外只能显示列表
         AtomicBoolean isStudent = new AtomicBoolean(false);
         AtomicReference<Long> studentId = new AtomicReference<>(null);
@@ -128,12 +125,11 @@ public class AssociationServiceImpl implements AssociationService {
     }
 
     @Override
-    public Result<?> join(boolean directly, TokenInfo tokenInfo, IdVO idVO) {
+    public Result<?> join(boolean directly, User user, IdVO idVO) {
         // 需要审核
         if (!directly) {
             Long associationId = idVO.getId();
             Association association = associationRepository.findById(associationId);
-            User user = userRepository.findById(tokenInfo.getUid());
             Student student = userFactory.getStudent(user);
             association.request(student);
         }

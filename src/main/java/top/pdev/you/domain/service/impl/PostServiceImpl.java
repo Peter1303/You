@@ -1,7 +1,6 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
-import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
@@ -52,7 +51,7 @@ public class PostServiceImpl implements PostService {
     private PostFactory postFactory;
 
     @Override
-    public Result<?> post(TokenInfo tokenInfo, PostVO postVO) {
+    public Result<?> post(User user, PostVO postVO) {
         // TODO implements topic
         Long topicId = postVO.getTopicId();
 
@@ -64,15 +63,15 @@ public class PostServiceImpl implements PostService {
 
         Post post = postFactory.newPost();
         post.setContent(postVO.getContent());
-        post.setUserId(tokenInfo.getUid());
+        post.setUserId(user.getId());
         post.setAssociationId(associationId);
         post.save();
         return Result.ok();
     }
 
     @Override
-    public Result<?> associationPost(TokenInfo tokenInfo, PostVO postVO) {
-        return post(tokenInfo, postVO);
+    public Result<?> associationPost(User user, PostVO postVO) {
+        return post(user, postVO);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<?> list(PostListVO postListVO) {
+    public Result<?> list(User user, PostListVO postListVO) {
         Long id = postListVO.getId();
         List<Post> posts = postRepository.findByAssociationId(id);
         List<PostInfoVO> list = posts.stream().map(post -> {
@@ -102,10 +101,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Result<?> delete(TokenInfo tokenInfo, IdVO idVO) {
+    public Result<?> delete(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
-        Long uid = tokenInfo.getUid();
-        User user = userRepository.findById(uid);
         post.delete(user);
         return Result.ok();
     }
