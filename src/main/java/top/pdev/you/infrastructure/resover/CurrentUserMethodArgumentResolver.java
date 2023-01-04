@@ -1,8 +1,6 @@
 package top.pdev.you.infrastructure.resover;
 
 import cn.hutool.core.util.StrUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -11,12 +9,14 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.constant.Constants;
-import top.pdev.you.common.constant.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.TokenInvalidException;
-import top.pdev.you.infrastructure.redis.RedisService;
+import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.repository.TokenRepository;
+import top.pdev.you.domain.repository.UserRepository;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -28,12 +28,21 @@ import java.util.Optional;
 @Component
 public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentResolver {
     @Resource
-    private RedisService redisService;
+    private TokenRepository tokenRepository;
+
+    @Resource
+    private UserRepository userRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
+        Class<?>[] supports = {
+                TokenInfo.class,
+                User.class
+        };
         return parameter.hasParameterAnnotation(CurrentUser.class)
-                && parameter.getParameterType().isAssignableFrom(TokenInfo.class);
+                && Arrays.stream(supports)
+                .anyMatch(clazz ->
+                        parameter.getParameterType().isAssignableFrom(clazz));
     }
 
     @Override
@@ -47,8 +56,15 @@ public class CurrentUserMethodArgumentResolver implements HandlerMethodArgumentR
         if (StrUtil.isBlank(token)) {
             throw new TokenInvalidException();
         }
+        Object object;
         // 从缓存中读取
-        TokenInfo object = redisService.getObject(RedisKey.loginToken(token), TokenInfo.class);
+        TokenInfo tokenInfo = tokenRepository.findByToken(token);
+        if (parameter.getParameterType().isAssignableFrom(User.class)) {
+            Long uid = tokenInfo.getUid();
+            object = userRepository.findById(uid);
+        } else {
+            object = tokenInfo;
+        }
         Optional.ofNullable(object)
                 .orElseThrow(TokenInvalidException::new);
         return object;

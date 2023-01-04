@@ -24,12 +24,15 @@ public class ApiConfig implements WebMvcConfigurer {
     @Resource
     private CurrentUserMethodArgumentResolver currentUserMethodArgumentResolver;
 
+    @Resource
+    private TokenInterceptor tokenInterceptor;
+
     /**
      * @return 令牌检查拦截器
      */
     @Bean
     public TokenInterceptor getTokenInterceptor() {
-        return new TokenInterceptor();
+        return tokenInterceptor;
     }
 
     /**
