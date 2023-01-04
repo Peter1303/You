@@ -5,12 +5,12 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
@@ -218,18 +218,11 @@ public class AssociationServiceImpl implements AssociationService {
         if (associationManager.exists(role)) {
             throw new BusinessException("已经存在了管理者");
         }
-        // 负责人
+        associationManager.add(role);
         if (role instanceof Student) {
-            Student student = userFactory.getStudent(user);
-            associationManager.add(student);
-            // 同时让负责人直接进入社团
+            // 让负责人直接进入社团
             Association association = associationRepository.findById(associationId);
-            association.accept(student);
-        }
-        // 指导老师
-        if (role instanceof Teacher) {
-            Teacher teacher = userFactory.getTeacher(user);
-            associationManager.add(teacher);
+            association.accept((Student) role);
         }
     }
 

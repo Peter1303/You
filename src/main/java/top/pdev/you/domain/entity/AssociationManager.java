@@ -46,24 +46,20 @@ public class AssociationManager extends BaseEntity {
     /**
      * 添加管理
      *
-     * @param student 学生
+     * @param role 角色
      */
-    public void add(Student student) {
-        setUserId(student.getUserId());
+    public void add(RoleEntity role) {
+        setUserId(role.getUser().getId());
         // 变更权限
-        student.getUser().permissionTo(Permission.MANAGER);
-        setType(Permission.MANAGER.getValue());
-        setAdmin();
-    }
-
-    /**
-     * 添加管理
-     *
-     * @param teacher 老师
-     */
-    public void add(Teacher teacher) {
-        setUserId(teacher.getUserId());
-        setType(Permission.ADMIN.getValue());
+        if (role instanceof Student) {
+            // 负责人
+            Student student = (Student) role;
+            student.getUser().permissionTo(Permission.MANAGER);
+            setType(Permission.MANAGER.getValue());
+        } else if (role instanceof Teacher) {
+            // 指导老师
+            setType(Permission.ADMIN.getValue());
+        }
         setAdmin();
     }
 
