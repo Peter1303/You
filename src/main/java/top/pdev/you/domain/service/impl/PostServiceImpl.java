@@ -1,11 +1,13 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.PostRepository;
+import top.pdev.you.domain.service.AdminService;
 import top.pdev.you.domain.service.PostService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.PostAssembler;
@@ -27,6 +29,9 @@ import java.util.Optional;
  */
 @Service
 public class PostServiceImpl implements PostService {
+    @Resource
+    private AdminService adminService;
+
     @Resource
     private PostRepository postRepository;
 
@@ -88,7 +93,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> delete(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
-        post.delete(user);
+        if (!adminService.editable(user, post.getUserId())) {
+            throw new PermissionDeniedException();
+        }
+        post.delete();
         return Result.ok();
     }
 
