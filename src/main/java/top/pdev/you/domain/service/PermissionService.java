@@ -3,12 +3,12 @@ package top.pdev.you.domain.service;
 import top.pdev.you.domain.entity.User;
 
 /**
- * 管理员服务
+ * 权限服务
  * Created in 2022/8/19 21:53
  *
  * @author Peter1303
  */
-public interface AdminService {
+public interface PermissionService {
     /**
      * 有超级管理员
      *

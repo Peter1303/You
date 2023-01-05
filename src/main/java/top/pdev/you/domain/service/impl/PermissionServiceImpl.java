@@ -11,7 +11,7 @@ import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.UserRepository;
-import top.pdev.you.domain.service.AdminService;
+import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @author Peter1303
  */
 @Service
-public class AdminServiceImpl implements AdminService {
+public class PermissionServiceImpl implements PermissionService {
     @Resource
     private RedisService redisService;
 

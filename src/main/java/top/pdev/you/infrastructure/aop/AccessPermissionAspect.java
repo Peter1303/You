@@ -10,7 +10,7 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.UserRepository;
-import top.pdev.you.domain.service.AdminService;
+import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.infrastructure.util.RequestUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
 
@@ -29,7 +29,7 @@ import java.util.Arrays;
 @Component
 public class AccessPermissionAspect {
     @Resource
-    private AdminService adminService;
+    private PermissionService permissionService;
 
     @Resource
     private UserRepository userRepository;
@@ -45,9 +45,9 @@ public class AccessPermissionAspect {
         String token = TokenUtil.getTokenByHeader(request);
         User user = userRepository.findByWechatId(token);
         Integer currPermission = user.getPermission();
-        boolean manager = adminService.isManager(token);
-        boolean admin = adminService.isAdmin(token);
-        boolean superAdmin = adminService.isSuperAdmin(token);
+        boolean manager = permissionService.isManager(token);
+        boolean admin = permissionService.isAdmin(token);
+        boolean superAdmin = permissionService.isSuperAdmin(token);
         if (specified) {
             boolean ok = Arrays.stream(permissions)
                     .anyMatch(permission ->

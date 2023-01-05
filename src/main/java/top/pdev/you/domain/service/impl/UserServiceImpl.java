@@ -22,7 +22,7 @@ import top.pdev.you.domain.mapper.UserMapper;
 import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.UserRepository;
-import top.pdev.you.domain.service.AdminService;
+import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     private WechatService wechatService;
 
     @Resource
-    private AdminService adminService;
+    private PermissionService permissionService;
 
     @Resource
     private RedisService redisService;
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService {
                 loginResultVO.setToken(openId);
                 // 系统未完成初始化
                 if (!redisService.hasKey(RedisKey.init())) {
-                    if (adminService.hasSuperAdmin()) {
+                    if (permissionService.hasSuperAdmin()) {
                         redisService.set(RedisKey.init(), true);
                     } else {
                         // 保存超管

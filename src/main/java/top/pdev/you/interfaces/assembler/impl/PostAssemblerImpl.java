@@ -7,7 +7,7 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.CommentRepository;
 import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.UserRepository;
-import top.pdev.you.domain.service.AdminService;
+import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.interfaces.assembler.PostAssembler;
 import top.pdev.you.interfaces.model.vo.PostInfoVO;
 
@@ -33,7 +33,7 @@ public class PostAssemblerImpl implements PostAssembler {
     private CommentRepository commentRepository;
 
     @Resource
-    private AdminService adminService;
+    private PermissionService permissionService;
 
     @Override
     public PostInfoVO convert(Post post) {
@@ -54,7 +54,7 @@ public class PostAssemblerImpl implements PostAssembler {
         infoVO.setLikes(likeRepository.countLikesByPostId(postId));
         infoVO.setComments(commentRepository.countCommentByPostId(postId));
         infoVO.setLiked(likeRepository.existsByUserIdAndPostId(user.getId(), postId));
-        infoVO.setDeletable(adminService.editable(currentUser, userId));
+        infoVO.setDeletable(permissionService.editable(currentUser, userId));
         return infoVO;
     }
 

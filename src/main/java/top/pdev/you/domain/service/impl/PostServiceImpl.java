@@ -7,7 +7,7 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.PostRepository;
-import top.pdev.you.domain.service.AdminService;
+import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.domain.service.PostService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.PostAssembler;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @Service
 public class PostServiceImpl implements PostService {
     @Resource
-    private AdminService adminService;
+    private PermissionService permissionService;
 
     @Resource
     private PostRepository postRepository;
@@ -93,7 +93,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> delete(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
-        if (!adminService.editable(user, post.getUserId())) {
+        if (!permissionService.editable(user, post.getUserId())) {
             throw new PermissionDeniedException();
         }
         post.delete();
