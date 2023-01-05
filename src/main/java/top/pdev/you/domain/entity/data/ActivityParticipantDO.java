@@ -1,4 +1,4 @@
-package top.pdev.you.domain.entity;
+package top.pdev.you.domain.entity.data;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  */
 @TableName("activity_participant")
 @Data
-public class ActivityParticipant extends BaseEntity {
+public class ActivityParticipantDO extends BaseEntity {
     /**
      * ID
      */
