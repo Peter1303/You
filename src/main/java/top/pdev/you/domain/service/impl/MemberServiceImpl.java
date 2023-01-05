@@ -13,6 +13,7 @@ import top.pdev.you.interfaces.model.vo.UserInfoVO;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +32,9 @@ public class MemberServiceImpl implements MemberService {
         Manager manager = userFactory.getManager(user);
         Association association = manager.belongAssociation();
         List<Student> participants = association.participants();
-        List<StudentInfoVO> list = participants.stream().map(student -> {
+        List<StudentInfoVO> list = participants.stream()
+                .filter(student -> !Objects.equals(student.getUserId(), user.getId()))
+                .map(student -> {
             StudentInfoVO infoVO = new StudentInfoVO();
             infoVO.setStudentId(student.getId());
             infoVO.setName(student.getName());
