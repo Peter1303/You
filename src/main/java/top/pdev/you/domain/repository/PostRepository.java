@@ -35,4 +35,13 @@ public interface PostRepository extends IService<Post> {
      * @return {@link List}<{@link Post}>
      */
     List<Post> findByAssociationId(Long associationId);
+
+
+    /**
+     * 通过用户 ID 查找
+     *
+     * @param userId 用户 ID
+     * @return {@link List}<{@link Post}>
+     */
+    List<Post> findByUserId(Long userId);
 }

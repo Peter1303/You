@@ -12,6 +12,8 @@ import top.pdev.you.interfaces.assembler.PostAssembler;
 import top.pdev.you.interfaces.model.vo.PostInfoVO;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 帖子封装器实现类
@@ -54,5 +56,20 @@ public class PostAssemblerImpl implements PostAssembler {
         infoVO.setLiked(likeRepository.existsByUserIdAndPostId(user.getId(), postId));
         infoVO.setDeletable(adminService.editable(currentUser, userId));
         return infoVO;
+    }
+
+    @Override
+    public List<PostInfoVO> convertToBriefList(List<Post> posts, User user) {
+        return posts.stream().map(post -> {
+            PostInfoVO infoVO = convert(user, post);
+            String content = post.getContent();
+            infoVO.setContent(null);
+            if (content.length() > 40) {
+                infoVO.setSummary(content.substring(0, 40) + "...");
+            } else {
+                infoVO.setSummary(content);
+            }
+            return infoVO;
+        }).collect(Collectors.toList());
     }
 }

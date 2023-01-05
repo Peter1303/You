@@ -51,6 +51,14 @@ public interface PostService {
     Result<?> list(User user, PostListVO postListVO);
 
     /**
+     * 用户帖子列表
+     *
+     * @param user 用户
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> listOfUser(User user);
+
+    /**
      * 删除
      *
      * @param user 用户

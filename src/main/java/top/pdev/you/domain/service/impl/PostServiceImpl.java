@@ -18,7 +18,6 @@ import top.pdev.you.interfaces.model.vo.req.PostVO;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * 帖子服务实现类
@@ -76,18 +75,14 @@ public class PostServiceImpl implements PostService {
     public Result<?> list(User user, PostListVO postListVO) {
         Long id = postListVO.getId();
         List<Post> posts = postRepository.findByAssociationId(id);
-        List<PostInfoVO> list = posts.stream().map(post -> {
-            PostInfoVO infoVO = postAssembler.convert(user, post);
-            String content = post.getContent();
-            infoVO.setContent(null);
-            if (content.length() > 40) {
-                infoVO.setSummary(content.substring(0, 40) + "...");
-            } else {
-                infoVO.setSummary(content);
-            }
-            return infoVO;
-        }).collect(Collectors.toList());
-        return Result.ok(list);
+        return Result.ok(postAssembler.convertToBriefList(posts, user));
+    }
+
+    @Override
+    public Result<?> listOfUser(User user) {
+        Long id = user.getId();
+        List<Post> posts = postRepository.findByUserId(id);
+        return Result.ok(postAssembler.convertToBriefList(posts, user));
     }
 
     @Override

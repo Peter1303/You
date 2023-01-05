@@ -4,6 +4,8 @@ import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.interfaces.model.vo.PostInfoVO;
 
+import java.util.List;
+
 /**
  * 帖子封装器
  * Created in 2023/1/2 17:41
@@ -27,4 +29,13 @@ public interface PostAssembler {
      * @return {@link PostInfoVO}
      */
     PostInfoVO convert(User currentUser, Post post);
+
+    /**
+     * 转换为简要列表
+     *
+     * @param posts 帖子
+     * @param user  用户
+     * @return {@link List}<{@link PostInfoVO}>
+     */
+    List<PostInfoVO> convertToBriefList(List<Post> posts, User user);
 }

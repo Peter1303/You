@@ -22,6 +22,8 @@ public class UserInfoVO {
     private String no;
 
     private String name;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer permission;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,6 +35,12 @@ public class UserInfoVO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String association;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String institute;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String campus;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AssociationBaseInfoDTO> associations;

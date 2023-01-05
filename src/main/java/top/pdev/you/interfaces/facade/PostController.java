@@ -89,6 +89,17 @@ public class PostController {
     }
 
     /**
+     * 用户帖子列表
+     *
+     * @param user 用户
+     * @return {@link Result}<{@link ?}>
+     */
+    @GetMapping("list/user")
+    public Result<?> listOfUser(@CurrentUser User user) {
+        return postService.listOfUser(user);
+    }
+
+    /**
      * 删除
      *
      * @param user 用户

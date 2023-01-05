@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.constant.RedisKey;
-import top.pdev.you.common.entity.role.ManagerEntity;
+import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
@@ -159,10 +159,13 @@ public class UserServiceImpl implements UserService {
         if (role instanceof Student) {
             Student student = (Student) role;
             // 如果是负责人那么有其管理的社团
-            if (role instanceof ManagerEntity) {
-                AssociationManager associationManager =
-                        associationManagerRepository.findByUserId(user.getId());
-                Association one = associationRepository.findById(associationManager.getAssociationId());
+            if (role instanceof Manager) {
+                List<AssociationManager> associationManagers =
+                        associationManagerRepository.findByUserIdAndType(
+                                user.getId(),
+                                Permission.MANAGER.getValue());
+                AssociationManager manager = associationManagers.get(0);
+                Association one = associationRepository.findById(manager.getAssociationId());
                 association = one.getName();
             }
             List<Association> list = student.getAssociations();

@@ -48,4 +48,11 @@ public class PostRepositoryImpl
         }
         return mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public List<Post> findByUserId(Long userId) {
+        LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Post::getUserId, userId);
+        return mapper.selectList(queryWrapper);
+    }
 }
