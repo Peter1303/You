@@ -53,6 +53,16 @@ public class UserFactory {
     }
 
     /**
+     * 获取负责人
+     *
+     * @param student 学生
+     * @return {@link Manager}
+     */
+    public Manager getManager(Student student) {
+        return new Manager(student.getUser());
+    }
+
+    /**
      * 新老师
      *
      * @return {@link Teacher}

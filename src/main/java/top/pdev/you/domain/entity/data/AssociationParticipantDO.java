@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
+ * 协会参与者 DO
  * 社团成员
  * Created in 2022/10/1 14:13
  *
  * @author Peter1303
+ * @date 2023/01/05
  */
 @TableName("association_participant")
 @Data

@@ -2,6 +2,7 @@ package top.pdev.you.domain.service;
 
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.vo.req.IdVO;
 
 /**
  * 社员服务
@@ -17,4 +18,13 @@ public interface MemberService {
      * @return {@link Result}<{@link ?}>
      */
     Result<?> list(User user);
+
+    /**
+     * 删除
+     *
+     * @param user 用户
+     * @param idVO ID VO
+     * @return {@link Result}<{@link ?}>
+     */
+    Result<?> remove(User user, IdVO idVO);
 }

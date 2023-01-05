@@ -151,6 +151,24 @@ public class Association extends BaseEntity {
     }
 
     /**
+     * 踢除
+     *
+     * @param student 学生
+     */
+    public void kick(Student student) {
+        notNull(Association::getId);
+        AssociationParticipateRepository associationParticipateRepository =
+                SpringUtil.getBean(AssociationParticipateRepository.class);
+        boolean ok = associationParticipateRepository.deleteByAssociationIdAndStudentId(
+                getId(),
+                student.getId()
+        );
+        if (!ok) {
+            throw new BusinessException("无法移出社团");
+        }
+    }
+
+    /**
      * 参与者
      *
      * @return {@link List}<{@link Student}>

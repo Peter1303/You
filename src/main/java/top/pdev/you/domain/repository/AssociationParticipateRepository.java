@@ -31,6 +31,15 @@ public interface AssociationParticipateRepository
     List<AssociationParticipantDO> findByAssociationId(Long associationId);
 
     /**
+     * 通过社团 ID和学生 ID 删除
+     *
+     * @param associationId 协会 ID
+     * @param studentId     学生 ID
+     * @return boolean
+     */
+    boolean deleteByAssociationIdAndStudentId(Long associationId, Long studentId);
+
+    /**
      * 存在
      *
      * @param studentId     学生 ID
