@@ -16,6 +16,7 @@ import top.pdev.you.infrastructure.util.TokenUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 /**
  * 访问权限切面
@@ -36,7 +37,7 @@ public class AccessPermissionAspect {
     @Before("execution(* top.pdev.you.interfaces.facade.*.*(..)) " +
             "&& @annotation(accessPermission) ")
     public void checkPermission(JoinPoint point, AccessPermission accessPermission) {
-        Permission permission = accessPermission.permission();
+        Permission[] permissions = accessPermission.permission();
         boolean lower = accessPermission.lower();
         // 指定权限
         boolean specified = accessPermission.specified();
@@ -48,27 +49,33 @@ public class AccessPermissionAspect {
         boolean admin = adminService.isAdmin(token);
         boolean superAdmin = adminService.isSuperAdmin(token);
         if (specified) {
-            if (permission.getValue() != currPermission) {
+            boolean ok = Arrays.stream(permissions)
+                    .anyMatch(permission ->
+                            permission.getValue() == currPermission);
+            if (!ok) {
                 throw new PermissionDeniedException("功能不可用");
             }
         }
         if (lower) {
-            if (permission.getValue() < currPermission) {
+            boolean bigger = Arrays.stream(permissions)
+                    .anyMatch(permission ->
+                            permission.getValue() < currPermission);
+            if (bigger) {
                 throw new PermissionDeniedException("功能不可用");
             }
         } else {
-            boolean ok = true;
-            switch (permission) {
-                case SUPER:
-                    ok = superAdmin;
-                    break;
-                case ADMIN:
-                    ok = admin;
-                    break;
-                case MANAGER:
-                    ok = manager;
-                    break;
-            }
+            boolean ok = Arrays.stream(permissions)
+                    .anyMatch(permission -> {
+                        switch (permission) {
+                            case SUPER:
+                                return superAdmin;
+                            case ADMIN:
+                                return admin;
+                            case MANAGER:
+                                return manager;
+                        }
+                        return false;
+                    });
             if (!ok) {
                 throw new PermissionDeniedException();
             }

@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface AccessPermission {
-    Permission permission() default Permission.USER;
+    Permission[] permission() default Permission.USER;
 
     /**
      * 需要比目标权限低
