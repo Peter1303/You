@@ -35,14 +35,14 @@ public class MemberServiceImpl implements MemberService {
         List<StudentInfoVO> list = participants.stream()
                 .filter(student -> !Objects.equals(student.getUserId(), user.getId()))
                 .map(student -> {
-            StudentInfoVO infoVO = new StudentInfoVO();
-            infoVO.setStudentId(student.getId());
-            infoVO.setName(student.getName());
-            infoVO.setClazz(student.getClazz());
-            infoVO.setInstitute(student.getInstitute());
-            infoVO.setCampus(student.getCampus());
-            return infoVO;
-        }).collect(Collectors.toList());
+                    StudentInfoVO infoVO = new StudentInfoVO();
+                    infoVO.setStudentId(student.getId());
+                    infoVO.setName(student.getName());
+                    infoVO.setClazz(student.getClazz());
+                    infoVO.setInstitute(student.getInstitute());
+                    infoVO.setCampus(student.getCampus());
+                    return infoVO;
+                }).collect(Collectors.toList());
         return Result.ok(list);
     }
 }
