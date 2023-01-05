@@ -8,6 +8,7 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.service.MemberService;
 import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.interfaces.model.vo.StudentInfoVO;
 import top.pdev.you.interfaces.model.vo.UserInfoVO;
 
 import javax.annotation.Resource;
@@ -30,9 +31,9 @@ public class MemberServiceImpl implements MemberService {
         Manager manager = userFactory.getManager(user);
         Association association = manager.belongAssociation();
         List<Student> participants = association.participants();
-        List<UserInfoVO> list = participants.stream().map(student -> {
-            UserInfoVO infoVO = new UserInfoVO();
-            infoVO.setId(student.getId());
+        List<StudentInfoVO> list = participants.stream().map(student -> {
+            StudentInfoVO infoVO = new StudentInfoVO();
+            infoVO.setStudentId(student.getId());
             infoVO.setName(student.getName());
             infoVO.setClazz(student.getClazz());
             infoVO.setInstitute(student.getInstitute());
