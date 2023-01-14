@@ -21,12 +21,12 @@ public interface CommentRepository extends IService<Comment> {
     Comment findById(Long commentId);
 
     /**
-     * 通过帖子 ID 查找
+     * 通过帖子 ID 查找，按照时间降序
      *
      * @param id ID
      * @return {@link List}<{@link Comment}>
      */
-    List<Comment> findByPostId(Long id);
+    List<Comment> findByPostIdOrderByTimeDesc(Long id);
 
     /**
      * 通过帖子 ID 统计评论

@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Result<?> postComments(IdVO idVO) {
-        List<Comment> list = commentRepository.findByPostId(idVO.getId());
+        List<Comment> list = commentRepository.findByPostIdOrderByTimeDesc(idVO.getId());
         List<CommentInfoVO> result = list.stream().map(comment -> {
             CommentInfoVO infoVO = CommentAssembler.INSTANCE.convert(comment);
             Long userId = comment.getUserId();

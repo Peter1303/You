@@ -35,9 +35,10 @@ public class CommentRepositoryImpl
     }
 
     @Override
-    public List<Comment> findByPostId(Long id) {
+    public List<Comment> findByPostIdOrderByTimeDesc(Long id) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Comment::getPostId, id);
+        queryWrapper.eq(Comment::getPostId, id)
+                .orderByDesc(Comment::getTime);
         return mapper.selectList(queryWrapper);
     }
 
