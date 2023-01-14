@@ -53,7 +53,7 @@ public class PostAssemblerImpl implements PostAssembler {
         Long postId = post.getId();
         infoVO.setLikes(likeRepository.countLikesByPostId(postId));
         infoVO.setComments(commentRepository.countCommentByPostId(postId));
-        infoVO.setLiked(likeRepository.existsByUserIdAndPostId(user.getId(), postId));
+        infoVO.setLiked(likeRepository.existsByUserIdAndPostId(currentUser.getId(), postId));
         infoVO.setDeletable(permissionService.editable(currentUser, userId));
         return infoVO;
     }
