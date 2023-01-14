@@ -80,6 +80,10 @@ public class PermissionServiceImpl implements PermissionService {
             return true;
         }
         RoleEntity role = currentUser.getRoleDomain();
+        User targetUser = userRepository.findById(targetUserId);
+        if (targetUser.getPermission() > currentUser.getPermission()) {
+            return false;
+        }
         if (role instanceof Manager) {
             return true;
         }
