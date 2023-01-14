@@ -79,14 +79,14 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> list(User user, PostListVO postListVO) {
         Long id = postListVO.getId();
-        List<Post> posts = postRepository.findByAssociationId(id);
+        List<Post> posts = postRepository.findByAssociationIdOrderByTimeDesc(id);
         return Result.ok(postAssembler.convertToBriefList(posts, user));
     }
 
     @Override
     public Result<?> listOfUser(User user) {
         Long id = user.getId();
-        List<Post> posts = postRepository.findByUserId(id);
+        List<Post> posts = postRepository.findByUserIdOrderByTimeDesc(id);
         return Result.ok(postAssembler.convertToBriefList(posts, user));
     }
 

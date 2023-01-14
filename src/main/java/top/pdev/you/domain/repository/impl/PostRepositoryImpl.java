@@ -41,18 +41,20 @@ public class PostRepositoryImpl
     }
 
     @Override
-    public List<Post> findByAssociationId(Long associationId) {
+    public List<Post> findByAssociationIdOrderByTimeDesc(Long associationId) {
         LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
         if (Optional.ofNullable(associationId).isPresent()) {
             queryWrapper.eq(Post::getAssociationId, associationId);
         }
+        queryWrapper.orderByDesc(Post::getTime);
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public List<Post> findByUserId(Long userId) {
+    public List<Post> findByUserIdOrderByTimeDesc(Long userId) {
         LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Post::getUserId, userId);
+        queryWrapper.eq(Post::getUserId, userId)
+                .orderByDesc(Post::getTime);
         return mapper.selectList(queryWrapper);
     }
 }

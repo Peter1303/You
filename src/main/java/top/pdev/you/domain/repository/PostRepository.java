@@ -29,19 +29,19 @@ public interface PostRepository extends IService<Post> {
     Boolean existsById(Long id);
 
     /**
-     * 通过社团 ID 获取列表
+     * 通过社团 ID 获取列表，按照时间降序
      *
      * @param associationId 社团 ID
      * @return {@link List}<{@link Post}>
      */
-    List<Post> findByAssociationId(Long associationId);
+    List<Post> findByAssociationIdOrderByTimeDesc(Long associationId);
 
 
     /**
-     * 通过用户 ID 查找
+     * 通过用户 ID 查找，按照时间降序
      *
      * @param userId 用户 ID
      * @return {@link List}<{@link Post}>
      */
-    List<Post> findByUserId(Long userId);
+    List<Post> findByUserIdOrderByTimeDesc(Long userId);
 }
