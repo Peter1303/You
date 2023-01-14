@@ -23,8 +23,9 @@ public interface LikeService {
     /**
      * 删除
      *
+     * @param user 用户
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> delete(IdVO idVO);
+    Result<?> delete(User user, IdVO idVO);
 }

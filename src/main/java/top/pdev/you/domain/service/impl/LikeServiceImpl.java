@@ -39,8 +39,8 @@ public class LikeServiceImpl implements LikeService {
     }
 
     @Override
-    public Result<?> delete(IdVO idVO) {
-        Like like = likeRepository.findById(idVO.getId());
+    public Result<?> delete(User user, IdVO idVO) {
+        Like like = likeRepository.findByPostIdAndUserId(idVO.getId(), user.getId());
         like.cancelLike();
         return Result.ok();
     }

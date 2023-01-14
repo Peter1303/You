@@ -19,6 +19,15 @@ public interface LikeRepository extends IService<Like> {
     Like findById(Long likeId);
 
     /**
+     * 通过帖子 ID 和用户 ID 查找
+     *
+     * @param postId 帖子 ID
+     * @param userId 用户 ID
+     * @return {@link Like}
+     */
+    Like findByPostIdAndUserId(Long postId, Long userId);
+
+    /**
      * 通过帖子 ID 统计点赞
      *
      * @param id ID

@@ -34,6 +34,18 @@ public class LikeRepositoryImpl
     }
 
     @Override
+    public Like findByPostIdAndUserId(Long postId, Long userId) {
+        LambdaQueryWrapper<Like> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Like::getPostId, postId)
+                .eq(Like::getUserId, userId);
+        Like like = mapper.selectOne(queryWrapper);
+        if (!Optional.ofNullable(like).isPresent()) {
+            throw new BusinessException("找不到点赞");
+        }
+        return like;
+    }
+
+    @Override
     public Long countLikesByPostId(Long id) {
         LambdaQueryWrapper<Like> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Like::getPostId, id);

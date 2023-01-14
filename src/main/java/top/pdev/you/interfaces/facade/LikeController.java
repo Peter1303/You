@@ -45,11 +45,13 @@ public class LikeController {
      * 取消
      *
      * @param idVO ID VO
+     * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
     @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
-    public Result<?> cancel(@RequestBody @Validated IdVO idVO) {
-        return likeService.delete(idVO);
+    public Result<?> cancel(@CurrentUser User user,
+                            @RequestBody @Validated IdVO idVO) {
+        return likeService.delete(user, idVO);
     }
 }
