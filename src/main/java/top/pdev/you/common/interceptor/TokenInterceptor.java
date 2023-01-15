@@ -6,12 +6,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.pdev.you.common.constant.Constants;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.TokenInvalidException;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.repository.TokenRepository;
 import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -48,13 +49,14 @@ public class TokenInterceptor implements HandlerInterceptor {
         // 如果有
         if (StrUtil.isNotBlank(token)) {
             // 从缓存中读取 若令牌已过期那么阻止
-            if (!tokenRepository.exists(RedisKey.loginToken(token))) {
+            String tag = TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token);
+            if (!tokenRepository.exists(tag)) {
                 User user = userRepository.findByWechatId(token);
                 Optional.ofNullable(user).orElseThrow(TokenInvalidException::new);
                 TokenInfo info = new TokenInfo();
                 info.setUid(user.getId());
                 // 缓存一个月
-                tokenRepository.save(RedisKey.loginToken(token), info, 30, TimeUnit.DAYS);
+                tokenRepository.save(tag, info, 30, TimeUnit.DAYS);
             }
         }
         return true;

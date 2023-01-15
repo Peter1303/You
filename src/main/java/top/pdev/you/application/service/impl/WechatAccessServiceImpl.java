@@ -6,11 +6,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatAccessService;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.wechat.result.WechatAccessResult;
 import top.pdev.you.infrastructure.config.WechatProperties;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.util.JacksonUtil;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
 import java.util.Optional;
@@ -33,8 +34,9 @@ public class WechatAccessServiceImpl implements WechatAccessService {
 
     @Override
     public String access() {
-        if (redisService.hasKey(RedisKey.getWechatAccessToken())) {
-            return redisService.getObject(RedisKey.getWechatAccessToken(), String.class);
+        String tag = TagKeyUtil.get(RedisKey.WECHAT_ACCESS_TOKEN);
+        if (redisService.hasKey(tag)) {
+            return redisService.getObject(tag, String.class);
         }
         String appId = wechatProperties.getAppId();
         String secret = wechatProperties.getSecretKey();
@@ -54,7 +56,7 @@ public class WechatAccessServiceImpl implements WechatAccessService {
                     accessToken = accessResult.getAccessToken();
                     Long expiresIn = accessResult.getExpiresIn();
                     if (Optional.ofNullable(expiresIn).isPresent()) {
-                        redisService.set(RedisKey.getWechatAccessToken(),
+                        redisService.set(tag,
                                 accessToken,
                                 expiresIn - 100,
                                 TimeUnit.SECONDS);

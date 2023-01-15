@@ -1,10 +1,11 @@
 package top.pdev.you.domain.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.domain.repository.TokenRepository;
 import top.pdev.you.domain.repository.base.CacheRepositoryImpl;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 /**
  * 令牌仓库实现类
@@ -18,6 +19,6 @@ public class TokenRepositoryImpl
         implements TokenRepository {
     @Override
     public TokenInfo findByToken(String token) {
-        return find(RedisKey.loginToken(token), TokenInfo.class);
+        return find(TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token), TokenInfo.class);
     }
 }

@@ -24,23 +24,14 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Peter1303
  */
-@Slf4j
-@Service
-public class RedisService {
-    @Resource
-    private CacheProperties cacheProperties;
-
-    private final StringRedisTemplate stringRedisTemplate = SpringUtil.getBean(StringRedisTemplate.class);
-
+public interface RedisService {
     /**
      * 数据缓存至 redis
      *
      * @param key   键
      * @param value 值
      */
-    public <K, V> void set(K key, V value) {
-        set(key, value, -1, null);
-    }
+    <K, V> void set(K key, V value);
 
     /**
      * 数据缓存至 redis 并设置过期时间
@@ -50,20 +41,7 @@ public class RedisService {
      * @param timeout 过期
      * @param unit    过期单位
      */
-    public <K, V> void set(K key, V value, long timeout, TimeUnit unit) {
-        try {
-            if (value != null) {
-                stringRedisTemplate.opsForValue().set(cacheProperties.getPrefix() + key,
-                        JacksonUtil.getInstance().writeValueAsString(value));
-                if (unit != null) {
-                    stringRedisTemplate.expire(cacheProperties.getPrefix() + key, timeout, unit);
-                }
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException("数据缓存至 redis 失败");
-        }
-    }
+    <K, V> void set(K key, V value, long timeout, TimeUnit unit);
 
     /**
      * 写入 hash-set
@@ -73,9 +51,7 @@ public class RedisService {
      * @param subKey 不可为 {@literal null}.
      * @param value  写入的值
      */
-    public <K, SK, V> void setHashCache(K key, SK subKey, V value) {
-        stringRedisTemplate.opsForHash().put(cacheProperties.getPrefix() + key, subKey, value);
-    }
+    <K, SK, V> void setHashCache(K key, SK subKey, V value);
 
     /**
      * 写入 hash-set 并设置过期时间
@@ -86,10 +62,7 @@ public class RedisService {
      * @param timeout 过期
      * @param unit    过期单位
      */
-    public <K, SK, V> void setHashCache(K key, SK subKey, V value, long timeout, TimeUnit unit) {
-        stringRedisTemplate.opsForHash().put(cacheProperties.getPrefix() + key, subKey, value);
-        stringRedisTemplate.expire(cacheProperties.getPrefix() + key, timeout, unit);
-    }
+    <K, SK, V> void setHashCache(K key, SK subKey, V value, long timeout, TimeUnit unit);
 
     /**
      * 获取 hash-setValue
@@ -97,10 +70,7 @@ public class RedisService {
      * @param key    不可为 {@literal null}.
      * @param subKey 不可为 {@literal null}.
      */
-    public <K, SK> Object getHashCache(K key, SK subKey) {
-        return stringRedisTemplate.opsForHash().get(cacheProperties.getPrefix() + key, subKey);
-    }
-
+    <K, SK> Object getHashCache(K key, SK subKey);
 
     /**
      * 从 redis 中获取缓存数据转成对象
@@ -109,18 +79,7 @@ public class RedisService {
      * @param clazz 对象类型
      * @return 对象
      */
-    public <K, V> V getObject(K key, Class<V> clazz) {
-        String value = this.get(key);
-        V result = null;
-        if (!StrUtil.isEmpty(value)) {
-            try {
-                result = JacksonUtil.getInstance().readValue(value, clazz);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
+    <K, V> V getObject(K key, Class<V> clazz);
 
     /**
      * 从 redis 中获取缓存数据 转成 list
@@ -128,20 +87,7 @@ public class RedisService {
      * @param key 不可为 {@literal null}.
      * @return list
      */
-    public <K, V> List<V> getList(K key) {
-        String value = this.get(key);
-        List<V> result = Collections.emptyList();
-        if (!StrUtil.isEmpty(value)) {
-            try {
-                result = JacksonUtil.getInstance()
-                        .readValue(value, new TypeReference<List<V>>() {
-                        });
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
+    <K, V> List<V> getList(K key);
 
     /**
      * 获取 {@code key}
@@ -149,80 +95,50 @@ public class RedisService {
      * @param key 不可为 {@literal null}
      * @return java.lang.String
      **/
-    public <K> String get(K key) {
-        String value;
-        try {
-            value = stringRedisTemplate.opsForValue().get(cacheProperties.getPrefix() + key);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException("从 redis 缓存中获取缓存数据失败");
-        }
-        return value;
-    }
+    <K> String get(K key);
 
     /**
      * 删除 key
      */
-    public void delete(String key) {
-        stringRedisTemplate.delete(cacheProperties.getPrefix() + key);
-    }
+    void delete(String key);
 
     /**
      * 批量删除 key
      */
-    public void delete(Collection<String> keys) {
-        Collection<String> temp = new ArrayList<>();
-        keys.forEach(key -> temp.add(cacheProperties.getPrefix() + temp));
-        stringRedisTemplate.delete(keys);
-    }
+    void delete(Collection<String> keys);
 
     /**
      * 序列化 key
      */
-    public byte[] dump(String key) {
-        return stringRedisTemplate.dump(key);
-    }
+    byte[] dump(String key);
 
     /**
      * 是否存在 key
      */
-    public Boolean hasKey(String key) {
-        return stringRedisTemplate.hasKey(cacheProperties.getPrefix() + key);
-    }
+    Boolean hasKey(String key);
 
     /**
      * 设置过期时间
      */
-    public Boolean expire(String key, long timeout, TimeUnit unit) {
-        return stringRedisTemplate.expire(key, timeout, unit);
-    }
+    Boolean expire(String key, long timeout, TimeUnit unit);
 
     /**
      * 设置过期时间
      */
-    public Boolean expireAt(String key, DateTime dateTime) {
-        return stringRedisTemplate.expireAt(key, dateTime.toJdkDate());
-    }
-
+    Boolean expireAt(String key, DateTime dateTime);
 
     /**
      * 移除 key 的过期时间，key 将持久保持
      */
-    public Boolean persist(String key) {
-        return stringRedisTemplate.persist(key);
-    }
+    Boolean persist(String key);
 
     /**
      * 返回 key 的剩余的过期时间
      */
-    public Long getExpire(String key, TimeUnit unit) {
-        return stringRedisTemplate.getExpire(key, unit);
-    }
+    Long getExpire(String key, TimeUnit unit);
 
     /**
      * 返回 key 的剩余的过期时间
      */
-    public Long getExpire(String key) {
-        return stringRedisTemplate.getExpire(key);
-    }
+    Long getExpire(String key);
 }

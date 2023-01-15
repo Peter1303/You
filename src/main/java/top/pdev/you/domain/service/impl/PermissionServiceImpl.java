@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
@@ -14,6 +14,7 @@ import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean isManager(Object uidOrToken) {
         check(uidOrToken);
-        Integer permission = redisService.getObject(RedisKey.permission(uidOrToken), Integer.class);
+        Integer permission = redisService.getObject(TagKeyUtil.get(RedisKey.PERMISSION, uidOrToken), Integer.class);
         if (Optional.ofNullable(permission).isPresent()) {
             return permission >= Permission.MANAGER.getValue();
         }
@@ -52,7 +53,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean isAdmin(Object uidOrToken) {
         check(uidOrToken);
-        Integer permission = redisService.getObject(RedisKey.permission(uidOrToken), Integer.class);
+        Integer permission = redisService.getObject(TagKeyUtil.get(RedisKey.PERMISSION, uidOrToken), Integer.class);
         if (Optional.ofNullable(permission).isPresent()) {
             return permission >= Permission.ADMIN.getValue();
         }
@@ -62,7 +63,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public boolean isSuperAdmin(Object uidOrToken) {
         check(uidOrToken);
-        Integer permission = redisService.getObject(RedisKey.permission(uidOrToken), Integer.class);
+        Integer permission = redisService.getObject(TagKeyUtil.get(RedisKey.PERMISSION, uidOrToken), Integer.class);
         if (Optional.ofNullable(permission).isPresent()) {
             return permission >= Permission.SUPER.getValue();
         }
@@ -105,7 +106,7 @@ public class PermissionServiceImpl implements PermissionService {
             throw new InternalErrorException("传值错误");
         }
         if (Optional.ofNullable(user).isPresent()) {
-            redisService.set(RedisKey.permission(uidOrToken), user.getPermission(),
+            redisService.set(TagKeyUtil.get(RedisKey.PERMISSION, uidOrToken), user.getPermission(),
                     1, TimeUnit.DAYS);
         }
     }

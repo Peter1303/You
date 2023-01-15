@@ -5,7 +5,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatService;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
@@ -27,6 +27,7 @@ import top.pdev.you.domain.service.UserService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
@@ -83,9 +84,10 @@ public class UserServiceImpl implements UserService {
                 LoginResultVO loginResultVO = new LoginResultVO();
                 loginResultVO.setToken(openId);
                 // 系统未完成初始化
-                if (!redisService.hasKey(RedisKey.init())) {
+                String tag = TagKeyUtil.get(RedisKey.INIT);
+                if (!redisService.hasKey(tag)) {
                     if (permissionService.hasSuperAdmin()) {
-                        redisService.set(RedisKey.init(), true);
+                        redisService.set(tag, true);
                     } else {
                         // 保存超管
                         User user = userFactory.newUser();
@@ -93,7 +95,7 @@ public class UserServiceImpl implements UserService {
                         user.setPermission(Permission.SUPER.getValue());
                         user.setWechatId(openId);
                         user.save();
-                        redisService.set(RedisKey.init(), true);
+                        redisService.set(tag, true);
                         return Result.ok()
                                 .setData(loginResultVO)
                                 .setMessage("超级管理员");
@@ -255,7 +257,7 @@ public class UserServiceImpl implements UserService {
                                    HttpServletRequest request) {
         user.delete();
         String token = TokenUtil.getTokenByHeader(request);
-        redisService.delete(RedisKey.loginToken(token));
+        redisService.delete(TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token));
         return Result.ok();
     }
 

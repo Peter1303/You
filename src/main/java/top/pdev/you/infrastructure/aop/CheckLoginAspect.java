@@ -5,12 +5,13 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.RequestUtil;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
 
 import javax.annotation.Resource;
@@ -42,7 +43,7 @@ public class CheckLoginAspect {
         HttpServletRequest request = RequestUtil.getRequest();
         String token = TokenUtil.getTokenByHeader(request);
         // 检验 Token
-        TokenInfo tokenInfo = redisService.getObject(RedisKey.loginToken(token), TokenInfo.class);
+        TokenInfo tokenInfo = redisService.getObject(TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token), TokenInfo.class);
         if (!Optional.ofNullable(tokenInfo).isPresent()) {
             // 没有缓存记录
             throw new BusinessException(ResultCode.PERMISSION_DENIED);

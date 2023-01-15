@@ -5,9 +5,10 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import top.pdev.you.common.constant.RedisKey;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.infrastructure.redis.RedisService;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
 
@@ -30,7 +31,7 @@ public class SystemInitDetectRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (userRepository.superAdminExists()) {
-            redisService.set(RedisKey.init(), true);
+            redisService.set(TagKeyUtil.get(RedisKey.INIT), true);
         } else {
             log.warn("系统未完成初始化");
         }
