@@ -1,6 +1,7 @@
 package top.pdev.you.interfaces.model.vo.req;
 
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Positive;
 
@@ -14,4 +15,7 @@ import javax.validation.constraints.Positive;
 public class PostListVO {
     @Positive
     private Long id;
+
+    @Length(max = 255)
+    private String search;
 }

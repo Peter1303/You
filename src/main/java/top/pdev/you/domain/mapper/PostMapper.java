@@ -2,7 +2,10 @@ package top.pdev.you.domain.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import top.pdev.you.domain.entity.Post;
+
+import java.util.List;
 
 /**
  * 帖子持久化
@@ -12,4 +15,6 @@ import top.pdev.you.domain.entity.Post;
  */
 @Mapper
 public interface PostMapper extends BaseMapper<Post> {
+    List<Post> findByAssociationIdOrContentContainingOrderByTimeDesc(@Param("aid") Long associationId,
+                                                                     @Param("content") String content);
 }

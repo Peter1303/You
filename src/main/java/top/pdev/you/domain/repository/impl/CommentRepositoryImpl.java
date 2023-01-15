@@ -43,6 +43,13 @@ public class CommentRepositoryImpl
     }
 
     @Override
+    public List<Comment> findCommentContainingOrderByTimeDesc(String content) {
+        LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Comment::getComment, content);
+        return mapper.selectList(queryWrapper);
+    }
+
+    @Override
     public Long countCommentByPostId(Long id) {
         LambdaQueryWrapper<Comment> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Comment::getPostId, id);

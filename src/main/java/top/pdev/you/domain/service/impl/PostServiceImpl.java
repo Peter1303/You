@@ -2,10 +2,12 @@ package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.exception.PermissionDeniedException;
+import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.PostFactory;
 import top.pdev.you.domain.repository.AssociationRepository;
+import top.pdev.you.domain.repository.CommentRepository;
 import top.pdev.you.domain.repository.PostRepository;
 import top.pdev.you.domain.service.PermissionService;
 import top.pdev.you.domain.service.PostService;
@@ -20,6 +22,7 @@ import top.pdev.you.interfaces.model.vo.req.PostVO;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 帖子服务实现类
@@ -37,6 +40,9 @@ public class PostServiceImpl implements PostService {
 
     @Resource
     private AssociationRepository associationRepository;
+
+    @Resource
+    private CommentRepository commentRepository;
 
     @Resource
     private PostFactory postFactory;
@@ -79,7 +85,19 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> list(User user, PostListVO postListVO) {
         Long id = postListVO.getId();
-        List<Post> posts = postRepository.findByAssociationIdOrderByTimeDesc(id);
+        String search = postListVO.getSearch();
+        List<Post> posts =
+                postRepository.findByAssociationIdOrContentContainingOrderByTimeDesc(id, search);
+        if (Optional.ofNullable(search).isPresent()) {
+            List<Comment> comments = commentRepository.findCommentContainingOrderByTimeDesc(search);
+            List<Long> idList = comments.stream()
+                    .map(Comment::getPostId)
+                    .collect(Collectors.toList());
+            List<Post> postList = idList.stream()
+                    .map(postId -> postRepository.findById(postId))
+                    .collect(Collectors.toList());
+            posts.addAll(postList);
+        }
         return Result.ok(postAssembler.convertToBriefList(posts, user));
     }
 

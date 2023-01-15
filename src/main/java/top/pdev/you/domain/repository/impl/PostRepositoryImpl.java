@@ -41,13 +41,9 @@ public class PostRepositoryImpl
     }
 
     @Override
-    public List<Post> findByAssociationIdOrderByTimeDesc(Long associationId) {
-        LambdaQueryWrapper<Post> queryWrapper = new LambdaQueryWrapper<>();
-        if (Optional.ofNullable(associationId).isPresent()) {
-            queryWrapper.eq(Post::getAssociationId, associationId);
-        }
-        queryWrapper.orderByDesc(Post::getTime);
-        return mapper.selectList(queryWrapper);
+    public List<Post> findByAssociationIdOrContentContainingOrderByTimeDesc(Long associationId,
+                                                                            String content) {
+        return mapper.findByAssociationIdOrContentContainingOrderByTimeDesc(associationId, content);
     }
 
     @Override

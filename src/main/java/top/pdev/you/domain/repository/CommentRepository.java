@@ -29,6 +29,14 @@ public interface CommentRepository extends IService<Comment> {
     List<Comment> findByPostIdOrderByTimeDesc(Long id);
 
     /**
+     * 通过评论相似查找，按照时间降序排序
+     *
+     * @param content 内容
+     * @return {@link List}<{@link Comment}>
+     */
+    List<Comment> findCommentContainingOrderByTimeDesc(String content);
+
+    /**
      * 通过帖子 ID 统计评论
      *
      * @param id ID
