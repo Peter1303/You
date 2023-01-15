@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +43,6 @@ public class CommentController {
      * @param addCommentVO 添加评论 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddCommentVO addCommentVO) {
         return commentService.add(addCommentVO);
@@ -56,7 +54,6 @@ public class CommentController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {
         return commentService.delete(idVO);

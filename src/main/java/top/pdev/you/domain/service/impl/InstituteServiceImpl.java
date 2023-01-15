@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Institute;
 import top.pdev.you.domain.factory.InstituteFactory;
@@ -36,6 +37,7 @@ public class InstituteServiceImpl implements InstituteService {
      * @param addInstituteVO 添加学院 VO
      * @return {@link Result}<{@link ?}>
      */
+    @Transactional
     @Override
     public Result<?> add(AddInstituteVO addInstituteVO) {
         Institute institute = instituteFactory.newInstitute();
@@ -50,6 +52,7 @@ public class InstituteServiceImpl implements InstituteService {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
+    @Transactional
     @Override
     public Result<?> delete(IdVO idVO) {
         if (!instituteRepository.removeById(idVO.getId())) {

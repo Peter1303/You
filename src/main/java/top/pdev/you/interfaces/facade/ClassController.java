@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,6 @@ public class ClassController {
      * @param addClassVO 添加班级 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddClassVO addClassVO) {
@@ -47,7 +45,6 @@ public class ClassController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {

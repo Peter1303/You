@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.factory.ClassFactory;
@@ -38,6 +39,7 @@ public class ClassServiceImpl implements ClassService {
         return Result.ok(listVO);
     }
 
+    @Transactional
     @Override
     public Result<?> add(AddClassVO addClassVO) {
         Clazz clazz = classFactory.newClazz();
@@ -49,6 +51,7 @@ public class ClassServiceImpl implements ClassService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> delete(IdVO idVO) {
         if (!classRepository.removeById(idVO.getId())) {

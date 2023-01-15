@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.WechatService;
 import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.domain.entity.Manager;
@@ -75,6 +76,7 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserFactory userFactory;
 
+    @Transactional
     @Override
     public Result<?> login(UserLoginVO vo) {
         WechatLoginDTO dto = wechatService.login(vo.getCode());
@@ -111,6 +113,7 @@ public class UserServiceImpl implements UserService {
         throw new BusinessException(ResultCode.FAILED, "登录失败");
     }
 
+    @Transactional
     @Override
     public Result<?> register(Role role, RegisterVO vo) {
         WechatLoginDTO loginDTO = wechatService.login(vo.getCode());
@@ -235,6 +238,7 @@ public class UserServiceImpl implements UserService {
         return Result.ok(vo);
     }
 
+    @Transactional
     @Override
     public Result<?> setProfile(User user,
                                 SetProfileVO setProfileVO) {
@@ -252,6 +256,7 @@ public class UserServiceImpl implements UserService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> deleteAccount(User user,
                                    HttpServletRequest request) {

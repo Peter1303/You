@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
@@ -50,6 +51,7 @@ public class PostServiceImpl implements PostService {
     @Resource
     private PostAssembler postAssembler;
 
+    @Transactional
     @Override
     public Result<?> post(User user, PostVO postVO) {
         // TODO implements topic
@@ -69,6 +71,7 @@ public class PostServiceImpl implements PostService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> associationPost(User user, PostVO postVO) {
         return post(user, postVO);
@@ -108,6 +111,7 @@ public class PostServiceImpl implements PostService {
         return Result.ok(postAssembler.convertToBriefList(posts, user));
     }
 
+    @Transactional
     @Override
     public Result<?> delete(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
@@ -118,6 +122,7 @@ public class PostServiceImpl implements PostService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> changePost(ChangePostVO changePostVO) {
         Long id = changePostVO.getId();

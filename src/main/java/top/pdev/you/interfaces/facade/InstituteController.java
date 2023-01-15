@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,14 +27,12 @@ public class InstituteController {
     @Resource
     private InstituteService instituteService;
 
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddInstituteVO addInstituteVO) {
         return instituteService.add(addInstituteVO);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {

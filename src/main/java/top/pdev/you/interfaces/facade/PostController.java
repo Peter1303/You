@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +39,6 @@ public class PostController {
      * @param postVO 帖子 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("post")
     public Result<?> post(@CurrentUser User user,
                           @RequestBody @Validated PostVO postVO) {
@@ -68,7 +66,6 @@ public class PostController {
      * @param postVO 帖子 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("post/association")
     public Result<?> associationPost(@CurrentUser User user,
                                      @RequestBody @Validated(Association.class) PostVO postVO) {
@@ -106,7 +103,6 @@ public class PostController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
     public Result<?> delete(@CurrentUser User user,
                             @RequestBody @Validated IdVO idVO) {
@@ -119,7 +115,6 @@ public class PostController {
      * @param changePostVO 修改帖子 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PutMapping("")
     public Result<?> changePost(@RequestBody @Validated ChangePostVO changePostVO) {
         return postService.changePost(changePostVO);

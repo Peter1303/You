@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +42,6 @@ public class AssociationController {
      * @param addAssociationVO 添加社团 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddAssociationVO addAssociationVO) {
@@ -56,7 +54,6 @@ public class AssociationController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdVO idVO) {
@@ -69,7 +66,6 @@ public class AssociationController {
      * @param nameVO 名字 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("name")
     public Result<?> setName(@RequestBody @Validated ChangeNameVO nameVO) {
@@ -82,7 +78,6 @@ public class AssociationController {
      * @param nameVO 名字 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("summary")
     public Result<?> setSummary(@RequestBody @Validated ChangeNameVO nameVO) {
@@ -110,7 +105,6 @@ public class AssociationController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER, lower = true)
     @PostMapping("join/request")
     public Result<?> joinRequest(@CurrentUser User user,
@@ -135,7 +129,6 @@ public class AssociationController {
      *
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER)
     @PutMapping("pass")
     public Result<?> pass(@RequestBody @Validated IdVO idVO) {
@@ -148,7 +141,6 @@ public class AssociationController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.MANAGER)
     @PutMapping("reject")
     public Result<?> reject(@RequestBody @Validated IdVO idVO) {
@@ -161,7 +153,6 @@ public class AssociationController {
      * @param addAdminVO 添加负责人 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.ADMIN)
     @PostMapping("manager")
     public Result<?> addManager(@RequestBody @Validated AddAdminVO addAdminVO) {
@@ -174,7 +165,6 @@ public class AssociationController {
      * @param removeAdminVO 删除管理 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.ADMIN)
     @DeleteMapping("manager")
     public Result<?> removeManager(@RequestBody @Validated RemoveAdminVO removeAdminVO) {
@@ -187,7 +177,6 @@ public class AssociationController {
      * @param addAdminVO 添加指导老师 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("admin")
     public Result<?> addAdmin(@RequestBody @Validated AddAdminVO addAdminVO) {
@@ -200,7 +189,6 @@ public class AssociationController {
      * @param removeAdminVO 删除管理 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @AccessPermission(permission = Permission.ADMIN)
     @DeleteMapping("admin")
     public Result<?> removeAdmin(@RequestBody @Validated RemoveAdminVO removeAdminVO) {

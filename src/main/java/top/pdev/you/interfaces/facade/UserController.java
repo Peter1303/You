@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -58,7 +57,6 @@ public class UserController {
      * @return {@link Result}<{@link ?}>
      */
     @SkipCheckLogin
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("register/teacher")
     public Result<?> registerOfTeacher(@RequestBody @Validated(Teacher.class) RegisterVO vo) {
         return userService.register(Role.TEACHER, vo);
@@ -71,7 +69,6 @@ public class UserController {
      * @return {@link Result}<{@link ?}>
      */
     @SkipCheckLogin
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("register/student")
     public Result<?> registerOfStudent(@RequestBody @Validated(Student.class) RegisterVO vo) {
         return userService.register(Role.STUDENT, vo);
@@ -112,14 +109,12 @@ public class UserController {
      * @param setProfileVO 设置配置文件 VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PutMapping("profile/set")
     public Result<?> setProfile(@CurrentUser User user,
                                 @RequestBody SetProfileVO setProfileVO) {
         return userService.setProfile(user, setProfileVO);
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("account")
     public Result<?> deleteAccount(@CurrentUser User user,
                                    HttpServletRequest request) {

@@ -1,6 +1,5 @@
 package top.pdev.you.interfaces.facade;
 
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,6 @@ public class LikeController {
      * @param idVO ID VO
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @PostMapping("")
     public Result<?> add(@CurrentUser User user,
                          @RequestBody @Validated IdVO idVO) {
@@ -48,7 +46,6 @@ public class LikeController {
      * @param user 用户
      * @return {@link Result}<{@link ?}>
      */
-    @Transactional(rollbackFor = Exception.class)
     @DeleteMapping("")
     public Result<?> cancel(@CurrentUser User user,
                             @RequestBody @Validated IdVO idVO) {

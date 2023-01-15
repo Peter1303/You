@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
@@ -52,6 +53,7 @@ public class CommentServiceImpl implements CommentService {
         return Result.ok(result);
     }
 
+    @Transactional
     @Override
     public Result<?> add(AddCommentVO addCommentVO) {
         Long id = addCommentVO.getId();
@@ -62,6 +64,7 @@ public class CommentServiceImpl implements CommentService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> delete(IdVO idVO) {
         Comment comment = commentRepository.findById(idVO.getId());

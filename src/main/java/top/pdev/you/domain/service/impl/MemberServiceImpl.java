@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
@@ -56,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
         return Result.ok(list);
     }
 
+    @Transactional
     @Override
     public Result<?> remove(User user, IdVO idVO) {
         Long studentId = idVO.getId();

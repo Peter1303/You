@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
@@ -30,6 +31,7 @@ public class LikeServiceImpl implements LikeService {
     @Resource
     private LikeFactory likeFactory;
 
+    @Transactional
     @Override
     public Result<?> add(User user, IdVO idVO) {
         Post post = postRepository.findById(idVO.getId());
@@ -38,6 +40,7 @@ public class LikeServiceImpl implements LikeService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> delete(User user, IdVO idVO) {
         Like like = likeRepository.findByPostIdAndUserId(idVO.getId(), user.getId());

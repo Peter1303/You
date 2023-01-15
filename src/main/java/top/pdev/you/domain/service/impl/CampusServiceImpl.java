@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.impl;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
 import top.pdev.you.domain.factory.CampusFactory;
@@ -30,6 +31,7 @@ public class CampusServiceImpl implements CampusService {
     @Resource
     private CampusFactory campusFactory;
 
+    @Transactional
     @Override
     public Result<?> add(AddCampusVO addCampusVO) {
         Campus campus = campusFactory.newCampus();
@@ -38,6 +40,7 @@ public class CampusServiceImpl implements CampusService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> delete(IdVO idVO) {
         if (!campusRepository.removeById(idVO.getId())) {

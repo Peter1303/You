@@ -2,6 +2,7 @@ package top.pdev.you.domain.service.impl;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.role.RoleEntity;
@@ -69,6 +70,7 @@ public class AssociationServiceImpl implements AssociationService {
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
 
+    @Transactional
     @Override
     public Result<?> add(AddAssociationVO addAssociationVO) {
         Association association = associationFactory.newAssociation();
@@ -78,6 +80,7 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> delete(IdVO idVO) {
         Association association = associationRepository.findById(idVO.getId());
@@ -125,6 +128,7 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok(list);
     }
 
+    @Transactional
     @Override
     public Result<?> join(boolean directly, User user, IdVO idVO) {
         // 需要审核
@@ -176,18 +180,21 @@ public class AssociationServiceImpl implements AssociationService {
         }
     }
 
+    @Transactional
     @Override
     public Result<?> pass(IdVO idVO) {
         auditAssociationRequest(idVO, true);
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> reject(IdVO idVO) {
         auditAssociationRequest(idVO, false);
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> addManager(AddAdminVO addAdminVO) {
         // TODO 老师添加负责人的时候只允许老师的社团
@@ -195,12 +202,14 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> addAdmin(AddAdminVO addAdminVO) {
         addAdmin(addAdminVO.getAssociationId(), addAdminVO.getUid());
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> setName(ChangeNameVO nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
@@ -208,6 +217,7 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> setSummary(ChangeNameVO nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
@@ -215,12 +225,14 @@ public class AssociationServiceImpl implements AssociationService {
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> removeManager(RemoveAdminVO removeAdminVO) {
         removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
         return Result.ok();
     }
 
+    @Transactional
     @Override
     public Result<?> removeAdmin(RemoveAdminVO removeAdminVO) {
         removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
