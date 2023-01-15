@@ -25,6 +25,7 @@ public abstract class CacheRepositoryImpl<E> implements CacheRepository<E> {
 
     @Override
     public void save(String key, E entity, long timeout, TimeUnit unit) {
+        redisService.set(key, entity, timeout, unit);
     }
 
     @Override
