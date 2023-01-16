@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
@@ -76,6 +77,7 @@ public class Teacher extends RoleEntity {
         init(user);
     }
 
+    @JsonIgnore
     @Override
     public User getUser() {
         if (!Optional.ofNullable(user).isPresent()) {
@@ -91,6 +93,7 @@ public class Teacher extends RoleEntity {
      *
      * @return {@link List}<{@link Association}>
      */
+    @JsonIgnore
     public List<Association> getManagedAssociationList() {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);

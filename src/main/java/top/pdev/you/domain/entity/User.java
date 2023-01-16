@@ -4,6 +4,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
@@ -115,6 +116,7 @@ public class User extends BaseEntity {
      *
      * @return {@link RoleEntity}
      */
+    @JsonIgnore
     public RoleEntity getRoleDomain() {
         UserFactory userFactory =
                 SpringUtil.getBean(UserFactory.class);

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
@@ -67,6 +68,12 @@ public class Student extends RoleEntity {
     private String campus;
 
     @TableField(exist = false)
+    private String institute;
+
+    @TableField(exist = false)
+    private Integer grade;
+
+    @TableField(exist = false)
     private User user;
 
     /**
@@ -98,6 +105,7 @@ public class Student extends RoleEntity {
         init(user);
     }
 
+    @JsonIgnore
     @Override
     public User getUser() {
         if (!Optional.ofNullable(user).isPresent()) {
@@ -108,6 +116,7 @@ public class Student extends RoleEntity {
         return user;
     }
 
+    @JsonIgnore
     public List<Association> getAssociations() {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);
@@ -120,9 +129,12 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getClazz() {
+        if (Optional.ofNullable(clazz).isPresent()) {
+            return this.clazz;
+        }
         ClassRepository classRepository = SpringUtil.getBean(ClassRepository.class);
         Clazz cls = classRepository.findById(getClassId());
-        return cls.getName();
+        return (this.clazz = cls.getName());
     }
 
     /**
@@ -131,10 +143,13 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getCampus() {
+        if (Optional.ofNullable(campus).isPresent()) {
+            return this.campus;
+        }
         CampusFactory campusFactory =
                 SpringUtil.getBean(CampusFactory.class);
         Campus c = campusFactory.newCampus();
-        return c.getStudentCampusName(this);
+        return (this.campus = c.getStudentCampusName(this));
     }
 
     /**
@@ -143,10 +158,13 @@ public class Student extends RoleEntity {
      * @return {@link String}
      */
     public String getInstitute() {
+        if (Optional.ofNullable(institute).isPresent()) {
+            return this.institute;
+        }
         InstituteFactory instituteFactory =
                 SpringUtil.getBean(InstituteFactory.class);
         Institute institute = instituteFactory.newInstitute();
-        return institute.getStudentInstituteName(this);
+        return (this.institute = institute.getStudentInstituteName(this));
     }
 
     /**
@@ -155,11 +173,14 @@ public class Student extends RoleEntity {
      * @return {@link Integer}
      */
     public Integer getGrade() {
+        if (Optional.ofNullable(grade).isPresent()) {
+            return this.grade;
+        }
         Long classId = getClassId();
         ClassRepository classRepository =
                 SpringUtil.getBean(ClassRepository.class);
         Clazz clz = classRepository.findById(classId);
-        return clz.getYear();
+        return (grade = clz.getYear());
     }
 
     /**
