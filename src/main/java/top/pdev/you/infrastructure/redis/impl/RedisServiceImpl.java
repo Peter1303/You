@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -112,6 +113,17 @@ public class RedisServiceImpl implements RedisService {
             throw new RuntimeException("从 redis 缓存中获取缓存数据失败");
         }
         return value;
+    }
+
+    @Override
+    public Set<String> keys(String pattern) {
+        return stringRedisTemplate.keys(cacheProperties.getPrefix() + pattern);
+    }
+
+    @Override
+    public void deleteContaining(String patten) {
+        Set<String> keys = keys(patten);
+        keys.forEach(this::delete);
     }
 
     @Override

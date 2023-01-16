@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateTime;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -84,6 +85,21 @@ public interface RedisService {
      * @return java.lang.String
      **/
     <K> String get(K key);
+
+    /**
+     * 键
+     *
+     * @param pattern 模糊
+     * @return {@link Set}<{@link String}>
+     */
+    Set<String> keys(String pattern);
+
+    /**
+     * 删除包含
+     *
+     * @param patten 彭定康
+     */
+    void deleteContaining(String patten);
 
     /**
      * 删除 key
