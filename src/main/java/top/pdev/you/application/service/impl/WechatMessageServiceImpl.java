@@ -3,6 +3,7 @@ package top.pdev.you.application.service.impl;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatAccessService;
@@ -10,7 +11,6 @@ import top.pdev.you.application.service.WechatMessageService;
 import top.pdev.you.common.entity.wechat.WechatTemplateData;
 import top.pdev.you.common.entity.wechat.result.base.WechatBaseResult;
 import top.pdev.you.common.entity.wechat.template.base.BaseTemplate;
-import top.pdev.you.infrastructure.util.JacksonUtil;
 
 import javax.annotation.Resource;
 
@@ -25,6 +25,9 @@ import javax.annotation.Resource;
 public class WechatMessageServiceImpl implements WechatMessageService {
     @Resource
     private WechatAccessService wechatAccessService;
+
+    @Resource
+    private ObjectMapper objectMapper;
 
     @Override
     public boolean sendTemplateMessage(String toUser, String pageUrl, BaseTemplate baseTemplate) {
@@ -45,15 +48,14 @@ public class WechatMessageServiceImpl implements WechatMessageService {
         }
         String data;
         try {
-            data = JacksonUtil.getInstance().writeValueAsString(templateData);
+            data = objectMapper.writeValueAsString(templateData);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;
         }
         String json = HttpUtil.post(url, data);
         try {
-            WechatBaseResult wechatBaseResult = JacksonUtil.getInstance()
-                    .readValue(json, WechatBaseResult.class);
+            WechatBaseResult wechatBaseResult = objectMapper.readValue(json, WechatBaseResult.class);
             if (wechatBaseResult != null) {
                 if (wechatBaseResult.getErrcode() == 0) {
                     return true;

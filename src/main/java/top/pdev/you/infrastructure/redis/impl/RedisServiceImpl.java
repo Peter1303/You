@@ -4,12 +4,12 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import top.pdev.you.infrastructure.config.CacheProperties;
 import top.pdev.you.infrastructure.redis.RedisService;
-import top.pdev.you.infrastructure.util.JacksonUtil;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -33,6 +33,9 @@ public class RedisServiceImpl implements RedisService {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
+    @Resource
+    private ObjectMapper objectMapper;
+
     @Override
     public <K, V> void set(K key, V value) {
         set(key, value, -1, null);
@@ -43,7 +46,7 @@ public class RedisServiceImpl implements RedisService {
         try {
             if (value != null) {
                 stringRedisTemplate.opsForValue().set(cacheProperties.getPrefix() + key,
-                        JacksonUtil.getInstance().writeValueAsString(value));
+                        objectMapper.writeValueAsString(value));
                 if (unit != null) {
                     stringRedisTemplate.expire(cacheProperties.getPrefix() + key, timeout, unit);
                 }
@@ -76,7 +79,7 @@ public class RedisServiceImpl implements RedisService {
         V result = null;
         if (!StrUtil.isEmpty(value)) {
             try {
-                result = JacksonUtil.getInstance().readValue(value, clazz);
+                result = objectMapper.readValue(value, clazz);
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
@@ -90,8 +93,7 @@ public class RedisServiceImpl implements RedisService {
         List<V> result = Collections.emptyList();
         if (!StrUtil.isEmpty(value)) {
             try {
-                result = JacksonUtil.getInstance()
-                        .readValue(value, new TypeReference<List<V>>() {
+                result = objectMapper.readValue(value, new TypeReference<List<V>>() {
                         });
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

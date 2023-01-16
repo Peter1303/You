@@ -1,20 +1,8 @@
 package top.pdev.you.infrastructure.redis;
 
 import cn.hutool.core.date.DateTime;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Service;
-import top.pdev.you.infrastructure.config.CacheProperties;
-import top.pdev.you.infrastructure.util.JacksonUtil;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

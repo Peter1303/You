@@ -3,6 +3,7 @@ package top.pdev.you.application.service.impl;
 import cn.hutool.core.text.StrBuilder;
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.WechatAccessService;
@@ -10,7 +11,6 @@ import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.wechat.result.WechatAccessResult;
 import top.pdev.you.infrastructure.config.WechatProperties;
 import top.pdev.you.infrastructure.redis.RedisService;
-import top.pdev.you.infrastructure.util.JacksonUtil;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
@@ -32,6 +32,9 @@ public class WechatAccessServiceImpl implements WechatAccessService {
     @Resource
     private RedisService redisService;
 
+    @Resource
+    private ObjectMapper objectMapper;
+
     @Override
     public String access() {
         String tag = TagKeyUtil.get(RedisKey.WECHAT_ACCESS_TOKEN);
@@ -48,8 +51,7 @@ public class WechatAccessServiceImpl implements WechatAccessService {
         String json = HttpUtil.get(builder.toString());
         String accessToken = null;
         try {
-            WechatAccessResult accessResult = JacksonUtil.getInstance()
-                    .readValue(json, WechatAccessResult.class);
+            WechatAccessResult accessResult = objectMapper.readValue(json, WechatAccessResult.class);
             // 没有错误
             if (accessResult != null) {
                 if (accessResult.getErrcode() == null) {
