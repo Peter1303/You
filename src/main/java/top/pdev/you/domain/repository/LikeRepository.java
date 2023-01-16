@@ -43,4 +43,12 @@ public interface LikeRepository extends IService<Like> {
      * @return {@link Boolean}
      */
     Boolean existsByUserIdAndPostId(Long userId, Long postId);
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean deleteById(Long id);
 }

@@ -81,17 +81,23 @@ public class User extends BaseEntity {
         if (permission == Permission.SUPER.getValue()) {
             throw new BusinessException("核心管理员不可删除");
         }
+        boolean deleted;
         if (permission == Permission.ADMIN.getValue()) {
             TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
-            teacherRepository.removeById(id);
+            deleted = teacherRepository.deleteById(id);
         } else {
             StudentRepository studentRepository =
                     SpringUtil.getBean(StudentRepository.class);
-            studentRepository.removeById(id);
+            deleted = studentRepository.deleteById(id);
         }
-        UserRepository userRepository =
-                SpringUtil.getBean(UserRepository.class);
-        userRepository.removeById(id);
+        if (deleted) {
+            UserRepository userRepository =
+                    SpringUtil.getBean(UserRepository.class);
+            deleted = userRepository.deleteById(id);
+        }
+        if (!deleted) {
+            throw new BusinessException("删除失败");
+        }
     }
 
     /**

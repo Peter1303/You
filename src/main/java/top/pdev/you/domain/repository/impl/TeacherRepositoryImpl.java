@@ -39,4 +39,9 @@ public class TeacherRepositoryImpl
         }
         return teacher;
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

@@ -55,4 +55,9 @@ public class CommentRepositoryImpl
         queryWrapper.eq(Comment::getPostId, id);
         return mapper.selectCount(queryWrapper);
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

@@ -43,4 +43,9 @@ public class StudentRepositoryImpl
         }
         return student;
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

@@ -43,4 +43,12 @@ public interface CommentRepository extends IService<Comment> {
      * @return {@link Long}
      */
     Long countCommentByPostId(Long id);
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean deleteById(Long id);
 }

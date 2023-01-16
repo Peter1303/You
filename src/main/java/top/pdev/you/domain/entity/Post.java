@@ -63,7 +63,7 @@ public class Post extends BaseEntity {
      */
     public void delete() {
         PostRepository postRepository = SpringUtil.getBean(PostRepository.class);
-        if (!postRepository.removeById(this.id)) {
+        if (!postRepository.deleteById(this.id)) {
             throw new BusinessException("无法删除帖子");
         }
     }

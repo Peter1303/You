@@ -59,4 +59,9 @@ public class LikeRepositoryImpl
                 .eq(Like::getUserId, userId);
         return mapper.exists(queryWrapper);
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

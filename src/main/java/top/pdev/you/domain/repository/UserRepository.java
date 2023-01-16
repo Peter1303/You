@@ -32,4 +32,12 @@ public interface UserRepository extends IService<User> {
      * @return {@link Boolean}
      */
     Boolean superAdminExists();
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean deleteById(Long id);
 }

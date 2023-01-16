@@ -55,4 +55,12 @@ public interface AssociationRepository extends IService<Association> {
      * @return boolean
      */
     boolean existsByName(String name);
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean deleteById(Long id);
 }

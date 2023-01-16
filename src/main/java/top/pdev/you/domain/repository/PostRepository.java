@@ -46,4 +46,12 @@ public interface PostRepository extends IService<Post> {
      * @return {@link List}<{@link Post}>
      */
     List<Post> findByUserIdOrderByTimeDesc(Long userId);
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return {@link Boolean}
+     */
+    Boolean deleteById(Long id);
 }

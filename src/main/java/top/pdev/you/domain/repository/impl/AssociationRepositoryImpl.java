@@ -91,4 +91,9 @@ public class AssociationRepositoryImpl
         queryWrapper.like(Association::getName, name);
         return mapper.exists(queryWrapper);
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

@@ -69,7 +69,7 @@ public class Comment extends BaseEntity {
      */
     public void delete() {
         CommentRepository commentRepository = SpringUtil.getBean(CommentRepository.class);
-        if (!commentRepository.removeById(this.id)) {
+        if (!commentRepository.deleteById(this.id)) {
             throw new BusinessException("删除评论失败");
         }
     }

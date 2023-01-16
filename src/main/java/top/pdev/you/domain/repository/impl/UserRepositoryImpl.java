@@ -54,4 +54,9 @@ public class UserRepositoryImpl
         queryWrapper.eq(User::getPermission, Permission.SUPER.getValue());
         return mapper.exists(queryWrapper);
     }
+
+    @Override
+    public boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

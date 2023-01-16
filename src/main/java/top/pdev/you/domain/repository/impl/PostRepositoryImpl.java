@@ -53,4 +53,9 @@ public class PostRepositoryImpl
                 .orderByDesc(Post::getTime);
         return mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        return removeById(id);
+    }
 }

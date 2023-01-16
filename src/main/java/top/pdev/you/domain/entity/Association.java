@@ -112,7 +112,7 @@ public class Association extends BaseEntity {
     public void delete() {
         AssociationRepository associationRepository =
                 SpringUtil.getBean(AssociationRepository.class);
-        if (!associationRepository.removeById(id)) {
+        if (!associationRepository.deleteById(id)) {
             throw new BusinessException("无法删除社团");
         }
     }

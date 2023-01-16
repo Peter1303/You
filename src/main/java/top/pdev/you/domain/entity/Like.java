@@ -60,7 +60,7 @@ public class Like extends BaseEntity {
      */
     public void cancelLike() {
         LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
-        if (!likeRepository.removeById(id)) {
+        if (!likeRepository.deleteById(id)) {
             throw new BusinessException("取消点赞失败");
         }
     }

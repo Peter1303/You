@@ -25,4 +25,12 @@ public interface TeacherRepository extends IService<Teacher> {
      * @return {@link Teacher}
      */
     Teacher findByUserId(Long id);
+
+    /**
+     * 通过 ID 删除
+     *
+     * @param id ID
+     * @return boolean
+     */
+    boolean deleteById(Long id);
 }
