@@ -12,6 +12,10 @@ import java.util.Locale;
  */
 public enum RedisKey {
     /**
+     * 实体
+     */
+    ENTITY,
+    /**
      * 登录令牌
      */
     LOGIN_TOKEN(),
