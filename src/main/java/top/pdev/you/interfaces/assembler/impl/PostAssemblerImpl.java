@@ -64,8 +64,8 @@ public class PostAssemblerImpl implements PostAssembler {
             PostInfoVO infoVO = convert(user, post);
             String content = post.getContent();
             infoVO.setContent(null);
-            if (content.length() > 40) {
-                infoVO.setSummary(content.substring(0, 40) + "...");
+            if (content.length() > 70) {
+                infoVO.setSummary(content.substring(0, 70) + "...");
             } else {
                 infoVO.setSummary(content);
             }
