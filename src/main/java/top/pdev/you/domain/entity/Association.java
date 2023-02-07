@@ -101,6 +101,10 @@ public class Association extends BaseEntity {
         associationParticipantDO.setStudentId(student.getId());
         AssociationParticipateRepository associationParticipateRepository =
                 SpringUtil.getBean(AssociationParticipateRepository.class);
+        // 跳过已经加了
+        if (associationParticipateRepository.existsByStudentIdAndAssociationId(student.getId(), getId())) {
+            return;
+        }
         if (!associationParticipateRepository.save(associationParticipantDO)) {
             throw new BusinessException("加入社团失败");
         }
