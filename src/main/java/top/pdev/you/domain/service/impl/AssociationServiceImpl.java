@@ -1,21 +1,26 @@
 package top.pdev.you.domain.service.impl;
 
+import cn.hutool.extra.spring.SpringUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
+import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
+import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.UserRepository;
@@ -23,6 +28,7 @@ import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
 import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
+import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.StudentInfoDTO;
 import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
 import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
@@ -54,6 +60,9 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Resource
     private AssociationAuditRepository associationAuditRepository;
+
+    @Resource
+    private AssociationManagerRepository associationManagerRepository;
 
     @Resource
     private AssociationFactory associationFactory;
@@ -235,7 +244,7 @@ public class AssociationServiceImpl implements AssociationService {
     @Transactional
     @Override
     public Result<?> removeAdmin(RemoveAdminVO removeAdminVO) {
-        removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
+        removeAdmin(null, removeAdminVO.getUid());
         return Result.ok();
     }
 
@@ -257,10 +266,21 @@ public class AssociationServiceImpl implements AssociationService {
     }
 
     private void removeAdmin(Long associationId, Long userId) {
-        AssociationManager associationManager = associationFactory.newAssociationManger();
-        associationManager.setAssociationId(associationId);
         User user = userRepository.findById(userId);
         RoleEntity role = user.getRoleDomain();
+        // 如果是负责人直接获取管理的社团
+        if (role instanceof Manager) {
+            AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
+            List<AssociationBaseInfoDTO> associations = associationMapper.getListByAdmin(user.getId());
+            Optional<AssociationBaseInfoDTO> first = associations.stream().findFirst();
+            if (first.isPresent()) {
+                associationId = first.get().getId();
+            }
+        } else if (!(role instanceof Teacher)){
+            throw new BusinessException("没有这个管理者");
+        }
+        AssociationManager associationManager = associationFactory.newAssociationManger();
+        associationManager.setAssociationId(associationId);
         // 检查社团是否已经被相关的管理接管
         if (!associationManager.exists(role)) {
             throw new BusinessException("没有该管理者");

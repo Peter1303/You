@@ -2,6 +2,8 @@ package top.pdev.you.interfaces.model.vo.req;
 
 import lombok.Data;
 
+import javax.validation.constraints.Min;
+
 /**
  * 添加指导老师 VO
  * Created in 2022/11/15 18:34
@@ -9,5 +11,7 @@ import lombok.Data;
  * @author Peter1303
  */
 @Data
-public class RemoveAdminVO extends AddAdminVO {
+public class RemoveAdminVO extends UidVO {
+    @Min(1)
+    private Long associationId;
 }
