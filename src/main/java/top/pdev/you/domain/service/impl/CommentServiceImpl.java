@@ -55,10 +55,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public Result<?> add(AddCommentVO addCommentVO) {
+    public Result<?> add(User user, AddCommentVO addCommentVO) {
         Long id = addCommentVO.getId();
         Post post = postRepository.findById(id);
         Comment comment = commentFactory.newComment();
+        comment.setUserId(user.getId());
         comment.setComment(addCommentVO.getComment());
         comment.save(post);
         return Result.ok();

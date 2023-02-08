@@ -53,8 +53,9 @@ public class Comment extends BaseEntity {
      */
     public void save(Post post) {
         this.postId = post.getId();
-        this.userId = post.getUserId();
         setComment(comment);
+        notNull(Comment::getUserId);
+        notNull(Comment::getComment);
         setUserId(userId);
         setPostId(postId);
         setTime(LocalDateTime.now());

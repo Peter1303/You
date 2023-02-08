@@ -1,5 +1,6 @@
 package top.pdev.you.domain.service;
 
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddCommentVO;
 import top.pdev.you.interfaces.model.vo.req.IdVO;
@@ -22,10 +23,11 @@ public interface CommentService {
     /**
      * 添加
      *
+     * @param user         用户
      * @param addCommentVO 添加评论 VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> add(AddCommentVO addCommentVO);
+    Result<?> add(User user, AddCommentVO addCommentVO);
 
     /**
      * 删除

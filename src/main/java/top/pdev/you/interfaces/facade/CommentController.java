@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.common.annotation.CurrentUser;
+import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.CommentService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.model.vo.req.AddCommentVO;
@@ -40,12 +42,14 @@ public class CommentController {
     /**
      * 添加
      *
+     * @param user         用户
      * @param addCommentVO 添加评论 VO
      * @return {@link Result}<{@link ?}>
      */
     @PostMapping("")
-    public Result<?> add(@RequestBody @Validated AddCommentVO addCommentVO) {
-        return commentService.add(addCommentVO);
+    public Result<?> add(@CurrentUser User user,
+                         @RequestBody @Validated AddCommentVO addCommentVO) {
+        return commentService.add(user, addCommentVO);
     }
 
     /**
