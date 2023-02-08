@@ -286,8 +286,6 @@ public class AssociationServiceImpl implements AssociationService {
             if (first.isPresent()) {
                 associationId = first.get().getId();
             }
-            // 更改权限
-            role.getUser().permissionTo(Permission.USER);
         } else if (!(role instanceof Teacher)) {
             throw new BusinessException("没有这个管理者");
         }
@@ -297,6 +295,10 @@ public class AssociationServiceImpl implements AssociationService {
         // 检查社团是否已经被相关的管理接管
         if (!associationManager.exists(role)) {
             throw new BusinessException("没有该管理者");
+        }
+        if (role instanceof Manager) {
+            // 更改权限
+            role.getUser().permissionTo(Permission.USER);
         }
         associationManager.remove(role);
     }
