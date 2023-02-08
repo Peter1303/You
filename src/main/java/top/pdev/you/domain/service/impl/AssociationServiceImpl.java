@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationAudit;
@@ -285,6 +286,8 @@ public class AssociationServiceImpl implements AssociationService {
             if (first.isPresent()) {
                 associationId = first.get().getId();
             }
+            // 更改权限
+            role.getUser().permissionTo(Permission.USER);
         } else if (!(role instanceof Teacher)) {
             throw new BusinessException("没有这个管理者");
         }
