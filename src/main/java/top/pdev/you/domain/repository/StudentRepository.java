@@ -27,10 +27,10 @@ public interface StudentRepository extends IService<Student> {
     Student findByUserId(Long id);
 
     /**
-     * 通过 ID 删除
+     * 通过用户 ID删除
      *
      * @param id ID
      * @return boolean
      */
-    boolean deleteById(Long id);
+    boolean deleteByUserId(Long id);
 }

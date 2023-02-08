@@ -41,7 +41,9 @@ public class TeacherRepositoryImpl
     }
 
     @Override
-    public boolean deleteById(Long id) {
-        return removeById(id);
+    public boolean deleteByUserId(Long id) {
+        LambdaQueryWrapper<Teacher> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Teacher::getUserId, id);
+        return remove(queryWrapper);
     }
 }

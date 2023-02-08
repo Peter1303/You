@@ -27,10 +27,10 @@ public interface TeacherRepository extends IService<Teacher> {
     Teacher findByUserId(Long id);
 
     /**
-     * 通过 ID 删除
+     * 通过 用户ID 删除
      *
      * @param id ID
      * @return boolean
      */
-    boolean deleteById(Long id);
+    boolean deleteByUserId(Long id);
 }

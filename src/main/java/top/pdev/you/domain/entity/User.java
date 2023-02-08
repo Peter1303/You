@@ -84,11 +84,11 @@ public class User extends BaseEntity {
         boolean deleted;
         if (permission == Permission.ADMIN.getValue()) {
             TeacherRepository teacherRepository = SpringUtil.getBean(TeacherRepository.class);
-            deleted = teacherRepository.deleteById(id);
+            deleted = teacherRepository.deleteByUserId(id);
         } else {
             StudentRepository studentRepository =
                     SpringUtil.getBean(StudentRepository.class);
-            deleted = studentRepository.deleteById(id);
+            deleted = studentRepository.deleteByUserId(id);
         }
         if (deleted) {
             UserRepository userRepository =
