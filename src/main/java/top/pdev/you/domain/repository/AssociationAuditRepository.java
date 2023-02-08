@@ -2,7 +2,6 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.AssociationAudit;
-import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import java.util.List;
 
@@ -32,10 +31,10 @@ public interface AssociationAuditRepository extends IService<AssociationAudit> {
     AssociationAudit findByStudentIdAndAssociationIdAndStatusNull(Long studentId, Long associationId);
 
     /**
-     * 获取审核列表
+     * 通过社团 ID 查找
      *
-     * @param associationId 社团 ID
-     * @return {@link List}<{@link AssociationAuditDTO}>
+     * @param associationId 协会 ID
+     * @return {@link List}<{@link AssociationAudit}>
      */
-    List<AssociationAuditDTO> getAuditList(Long associationId);
+    List<AssociationAudit> findByAssociationIdAndStatusNull(Long associationId);
 }

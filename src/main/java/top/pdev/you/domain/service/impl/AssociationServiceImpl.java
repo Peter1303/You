@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.role.RoleEntity;
-import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationAudit;
@@ -27,7 +26,6 @@ import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.interfaces.assembler.AssociationAssembler;
-import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.StudentInfoDTO;
 import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
@@ -160,10 +158,16 @@ public class AssociationServiceImpl implements AssociationService {
             associationId = association.getId();
         }
         // 没有过滤社团负责人的
-        List<AssociationAuditDTO> auditList = associationAuditRepository.getAuditList(associationId);
+        List<AssociationAudit> auditList = associationAuditRepository.findByAssociationIdAndStatusNull(associationId);
         List<AssociationAuditVO> list = auditList.stream()
                 .map(item -> {
-                    AssociationAuditVO auditVO = AssociationAssembler.INSTANCE.convert2auditInfoVO(item);
+                    Long aid = item.getAssociationId();
+                    Association association = associationRepository.findById(aid);
+                    AssociationAuditVO auditVO = new AssociationAuditVO();
+                    auditVO.setId(item.getId());
+                    auditVO.setName(association.getName());
+                    auditVO.setTime(item.getTime());
+
                     Student student = studentRepository.findById(item.getStudentId());
                     StudentInfoDTO dto = new StudentInfoDTO();
                     dto.setName(student.getName());

@@ -7,7 +7,6 @@ import top.pdev.you.domain.entity.AssociationAudit;
 import top.pdev.you.domain.mapper.AssociationAuditMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
-import top.pdev.you.interfaces.model.dto.AssociationAuditDTO;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,7 +45,10 @@ public class AssociationAuditRepositoryImpl
     }
 
     @Override
-    public List<AssociationAuditDTO> getAuditList(Long associationId) {
-        return mapper.getAuditList(associationId);
+    public List<AssociationAudit> findByAssociationIdAndStatusNull(Long associationId) {
+        LambdaQueryWrapper<AssociationAudit> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationAudit::getAssociationId, associationId)
+                .isNull(AssociationAudit::getStatus);
+        return mapper.selectList(queryWrapper);
     }
 }
