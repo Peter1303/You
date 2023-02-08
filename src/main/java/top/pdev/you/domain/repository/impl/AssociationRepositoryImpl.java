@@ -13,8 +13,6 @@ import top.pdev.you.domain.repository.AssociationManagerRepository;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.base.BaseRepository;
-import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
-import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -81,11 +79,6 @@ public class AssociationRepositoryImpl
     }
 
     @Override
-    public List<AssociationInfoDTO> getInfoList(SearchVO searchVO) {
-        return mapper.getInfoList(searchVO);
-    }
-
-    @Override
     public boolean existsByName(String name) {
         LambdaQueryWrapper<Association> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(Association::getName, name);
@@ -95,5 +88,12 @@ public class AssociationRepositoryImpl
     @Override
     public boolean deleteById(Long id) {
         return removeById(id);
+    }
+
+    @Override
+    public List<Association> findNameContaining(String name) {
+        LambdaQueryWrapper<Association> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Association::getName, name);
+        return mapper.selectList(queryWrapper);
     }
 }

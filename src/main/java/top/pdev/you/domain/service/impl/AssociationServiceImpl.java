@@ -19,13 +19,12 @@ import top.pdev.you.domain.factory.AssociationFactory;
 import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.mapper.AssociationMapper;
 import top.pdev.you.domain.repository.AssociationAuditRepository;
-import top.pdev.you.domain.repository.AssociationManagerRepository;
+import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.AssociationRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.domain.service.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.interfaces.assembler.AssociationAssembler;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.interfaces.model.dto.StudentInfoDTO;
 import top.pdev.you.interfaces.model.vo.AssociationAuditVO;
@@ -39,7 +38,6 @@ import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -60,7 +58,7 @@ public class AssociationServiceImpl implements AssociationService {
     private AssociationAuditRepository associationAuditRepository;
 
     @Resource
-    private AssociationManagerRepository associationManagerRepository;
+    private AssociationParticipateRepository associationParticipateRepository;
 
     @Resource
     private AssociationFactory associationFactory;
@@ -106,22 +104,29 @@ public class AssociationServiceImpl implements AssociationService {
             isStudent.set(true);
         } catch (Exception ignored) {
         }
+        if (!Optional.ofNullable(searchVO.getName()).isPresent()) {
+            searchVO.setName("");
+        }
         List<AssociationInfoVO> list =
-                associationRepository.getInfoList(searchVO)
+                associationRepository.findNameContaining(searchVO.getName())
                         .stream()
                         .map(item -> {
-                            AssociationInfoVO infoVO =
-                                    AssociationAssembler.INSTANCE.convert2infoVO(item);
+                            AssociationInfoVO infoVO = new AssociationInfoVO();
+                            Long associationId = item.getId();
+                            infoVO.setId(associationId);
+                            infoVO.setName(item.getName());
+                            infoVO.setSummary(item.getSummary());
+                            infoVO.setNumbers(associationParticipateRepository.countByAssociationId(associationId));
                             if (isStudent.get()) {
                                 int status = AssociationStatus.NOT;
                                 // 有该学生即已经加入
                                 Long id = studentId.get();
-                                if (Objects.equals(item.getStudentId(), id)) {
+                                if (associationParticipateRepository.existsByStudentIdAndAssociationId(id, associationId)) {
                                     status = AssociationStatus.JOINED;
                                 } else {
                                     AssociationAudit one =
                                             associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(
-                                                    id, item.getId());
+                                                    id, associationId);
                                     // 如果存在审核记录
                                     if (Optional.ofNullable(one).isPresent()) {
                                         status = AssociationStatus.AUDIT;

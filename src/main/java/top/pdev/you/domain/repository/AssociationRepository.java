@@ -7,6 +7,7 @@ import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
 import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,12 +42,12 @@ public interface AssociationRepository extends IService<Association> {
     List<Association> ofStudentList(Student student);
 
     /**
-     * 获取信息列表
+     * 查找名字包含
      *
-     * @param searchVO 搜索 VO
-     * @return {@link List}<{@link AssociationInfoDTO}>
+     * @param name 名字
+     * @return {@link List}<{@link Association}>
      */
-    List<AssociationInfoDTO> getInfoList(SearchVO searchVO);
+    List<Association> findNameContaining(String name);
 
     /**
      * 存在

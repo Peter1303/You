@@ -31,6 +31,14 @@ public interface AssociationParticipateRepository
     List<AssociationParticipantDO> findByAssociationId(Long associationId);
 
     /**
+     * 通过 社团ID 统计
+     *
+     * @param id ID
+     * @return long
+     */
+    long countByAssociationId(long id);
+
+    /**
      * 通过社团 ID和学生 ID 删除
      *
      * @param associationId 协会 ID

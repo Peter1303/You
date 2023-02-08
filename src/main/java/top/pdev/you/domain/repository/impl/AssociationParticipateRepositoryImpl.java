@@ -39,6 +39,13 @@ public class AssociationParticipateRepositoryImpl
     }
 
     @Override
+    public long countByAssociationId(long id) {
+        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipantDO::getAssociationId, id);
+        return mapper.selectCount(queryWrapper);
+    }
+
+    @Override
     public boolean deleteByAssociationIdAndStudentId(Long associationId, Long studentId) {
         LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationParticipantDO::getAssociationId, associationId)

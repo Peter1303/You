@@ -5,8 +5,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO;
-import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
-import top.pdev.you.interfaces.model.vo.AssociationInfoVO;
 
 /**
  * 社团组装器
@@ -22,11 +20,4 @@ public interface AssociationAssembler {
     @Mapping(source = "name", target = "name")
     @Mapping(source = "summary", target = "summary")
     AssociationBaseInfoDTO convert(Association associationDO);
-
-    @Mapping(target = "status", ignore = true)
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "summary", target = "summary")
-    @Mapping(source = "numbers", target = "numbers")
-    AssociationInfoVO convert2infoVO(AssociationInfoDTO infoDTO);
 }

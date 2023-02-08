@@ -17,5 +17,5 @@ public class AssociationInfoVO {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer status;
-    private Integer numbers;
+    private Long numbers;
 }

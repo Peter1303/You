@@ -2,23 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.pdev.you.domain.mapper.AssociationMapper">
-    <select id="getInfoList" resultType="top.pdev.you.interfaces.model.dto.AssociationInfoDTO">
-        SELECT a.id                              AS id,
-               a.name                            AS name,
-               a.summary                         AS summary,
-               ap.student_id                     AS student_id,
-               (SELECT COUNT(*)
-                FROM association_participant app
-                WHERE app.association_id = a.id) AS numbers
-        FROM association a
-                 LEFT JOIN association_participant ap
-                           ON ap.association_id = a.id
-        <where>
-            <if test="vo.name != null">
-                AND a.name LIKE CONCAT('%', #{vo.name}, '%')
-            </if>
-        </where>
-    </select>
     <select id="getListByParticipant" resultType="top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO">
         SELECT a.id         AS id,
                a.name       AS name,
