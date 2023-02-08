@@ -241,14 +241,14 @@ public class AssociationServiceImpl implements AssociationService {
     @Transactional
     @Override
     public Result<?> removeManager(RemoveAdminVO removeAdminVO) {
-        removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
+        removeAdmin(null, removeAdminVO.getUid());
         return Result.ok();
     }
 
     @Transactional
     @Override
     public Result<?> removeAdmin(RemoveAdminVO removeAdminVO) {
-        removeAdmin(null, removeAdminVO.getUid());
+        removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
         return Result.ok();
     }
 
@@ -280,9 +280,10 @@ public class AssociationServiceImpl implements AssociationService {
             if (first.isPresent()) {
                 associationId = first.get().getId();
             }
-        } else if (!(role instanceof Teacher)){
+        } else if (!(role instanceof Teacher)) {
             throw new BusinessException("没有这个管理者");
         }
+        Optional.ofNullable(associationId).orElseThrow(() -> new BusinessException("没有社团 ID"));
         AssociationManager associationManager = associationFactory.newAssociationManger();
         associationManager.setAssociationId(associationId);
         // 检查社团是否已经被相关的管理接管
