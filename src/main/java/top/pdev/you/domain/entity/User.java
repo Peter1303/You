@@ -71,6 +71,7 @@ public class User extends BaseEntity {
         } else if (role instanceof Teacher) {
             setPermission(Permission.ADMIN.getValue());
         }
+        setTime(LocalDateTime.now());
         save();
     }
 
