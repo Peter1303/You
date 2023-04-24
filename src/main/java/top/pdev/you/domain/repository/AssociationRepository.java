@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.interfaces.model.dto.AssociationInfoDTO;
-import top.pdev.you.interfaces.model.vo.req.SearchVO;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**

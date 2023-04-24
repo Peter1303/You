@@ -7,8 +7,8 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
 import top.pdev.you.domain.mapper.CampusMapper;
 import top.pdev.you.domain.repository.CampusRepository;
-import top.pdev.you.interfaces.assembler.CampusAssembler;
-import top.pdev.you.interfaces.model.dto.CampusInfoDTO;
+import top.pdev.you.infrastructure.assembler.CampusAssembler;
+import top.pdev.you.domain.ui.dto.CampusInfoDTO;
 
 import javax.annotation.Resource;
 import java.util.List;

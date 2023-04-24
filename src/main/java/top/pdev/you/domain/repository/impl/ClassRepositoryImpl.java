@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.mapper.ClassMapper;
 import top.pdev.you.domain.repository.ClassRepository;
-import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
-import top.pdev.you.interfaces.model.vo.req.SearchVO;
+import top.pdev.you.domain.ui.dto.ClassInfoDTO;
+import top.pdev.you.web.query.command.SearchCommand;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,8 +39,8 @@ public class ClassRepositoryImpl
     }
 
     @Override
-    public List<ClassInfoDTO> getClassInfo(SearchVO searchVO) {
-        return mapper.getClassInfoList(searchVO);
+    public List<ClassInfoDTO> getClassInfo(SearchCommand searchCommand) {
+        return mapper.getClassInfoList(searchCommand);
     }
 
     @Override

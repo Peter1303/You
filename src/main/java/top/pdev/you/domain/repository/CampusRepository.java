@@ -2,7 +2,7 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.interfaces.model.dto.CampusInfoDTO;
+import top.pdev.you.domain.ui.dto.CampusInfoDTO;
 
 import java.util.List;
 

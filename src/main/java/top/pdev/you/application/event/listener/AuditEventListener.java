@@ -6,7 +6,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.application.event.AuditEvent;
-import top.pdev.you.application.service.WechatMessageService;
+import top.pdev.you.application.service.wechat.WechatMessageService;
 import top.pdev.you.common.entity.wechat.template.AuditTemplate;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;

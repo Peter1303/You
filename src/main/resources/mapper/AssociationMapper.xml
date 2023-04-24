@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.pdev.you.domain.mapper.AssociationMapper">
-    <select id="getListByParticipant" resultType="top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO">
+    <select id="getListByParticipant" resultType="top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO">
         SELECT a.id         AS id,
                a.name       AS name,
                a.summary    AS summary
@@ -13,7 +13,7 @@
                       ON s.id = ap.student_id
         WHERE ap.student_id = #{sid}
     </select>
-    <select id="getListByAdmin" resultType="top.pdev.you.interfaces.model.dto.AssociationBaseInfoDTO">
+    <select id="getListByAdmin" resultType="top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO">
         SELECT a.id         AS id,
                a.name       AS name,
                a.summary    AS summary

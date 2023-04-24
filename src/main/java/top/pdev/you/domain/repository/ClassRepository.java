@@ -2,8 +2,8 @@ package top.pdev.you.domain.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.interfaces.model.dto.ClassInfoDTO;
-import top.pdev.you.interfaces.model.vo.req.SearchVO;
+import top.pdev.you.domain.ui.dto.ClassInfoDTO;
+import top.pdev.you.web.query.command.SearchCommand;
 
 import java.util.List;
 
@@ -25,10 +25,10 @@ public interface ClassRepository extends IService<Clazz> {
     /**
      * 获取班级信息
      *
-     * @param searchVO 搜索 VO
+     * @param searchCommand 搜索 VO
      * @return {@link List}<{@link ClassInfoDTO}>
      */
-    List<ClassInfoDTO> getClassInfo(SearchVO searchVO);
+    List<ClassInfoDTO> getClassInfo(SearchCommand searchCommand);
 
     /**
      * 班级存在
