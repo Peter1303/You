@@ -1,4 +1,4 @@
-package top.pdev.you.infrastructure.resover;
+package top.pdev.you.application.resover;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
