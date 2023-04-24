@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui;
+package top.pdev.you.domain.ui.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author Peter1303
  */
 @Data
-public class UserInfoVO {
+public class UserInfoResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 

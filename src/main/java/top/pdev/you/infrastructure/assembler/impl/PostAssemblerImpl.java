@@ -9,7 +9,7 @@ import top.pdev.you.domain.repository.LikeRepository;
 import top.pdev.you.domain.repository.UserRepository;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.assembler.PostAssembler;
-import top.pdev.you.domain.ui.PostInfoVO;
+import top.pdev.you.domain.ui.vm.PostInfoResponse;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,15 +36,15 @@ public class PostAssemblerImpl implements PostAssembler {
     private PermissionService permissionService;
 
     @Override
-    public PostInfoVO convert(Post post) {
-        PostInfoVO vo = new PostInfoVO();
+    public PostInfoResponse convert(Post post) {
+        PostInfoResponse vo = new PostInfoResponse();
         vo.setId(post.getId());
         vo.setTime(post.getTime());
         return vo;
     }
 
-    public PostInfoVO convert(User currentUser, Post post) {
-        PostInfoVO infoVO = convert(post);
+    public PostInfoResponse convert(User currentUser, Post post) {
+        PostInfoResponse infoVO = convert(post);
         Long userId = post.getUserId();
         User user = userRepository.findById(userId);
         RoleEntity role = user.getRoleDomain();
@@ -59,9 +59,9 @@ public class PostAssemblerImpl implements PostAssembler {
     }
 
     @Override
-    public List<PostInfoVO> convertToBriefList(List<Post> posts, User user) {
+    public List<PostInfoResponse> convertToBriefList(List<Post> posts, User user) {
         return posts.stream().map(post -> {
-            PostInfoVO infoVO = convert(user, post);
+            PostInfoResponse infoVO = convert(user, post);
             String content = post.getContent();
             infoVO.setContent(null);
             if (content.length() > 70) {

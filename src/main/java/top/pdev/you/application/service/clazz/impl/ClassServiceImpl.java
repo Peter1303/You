@@ -9,7 +9,7 @@ import top.pdev.you.domain.factory.ClassFactory;
 import top.pdev.you.domain.repository.ClassRepository;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.domain.ui.dto.ClassInfoDTO;
-import top.pdev.you.domain.ui.ListVO;
+import top.pdev.you.domain.ui.vm.ListResponse;
 import top.pdev.you.web.clazz.command.AddClassCommand;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.query.command.SearchCommand;
@@ -34,9 +34,9 @@ public class ClassServiceImpl implements ClassService {
     @Override
     public Result<?> getClassList(SearchCommand vo) {
         List<ClassInfoDTO> list = classRepository.getClassInfo(vo);
-        ListVO<ClassInfoDTO> listVO = new ListVO<>();
-        listVO.setList(list);
-        return Result.ok(listVO);
+        ListResponse<ClassInfoDTO> listResponse = new ListResponse<>();
+        listResponse.setList(list);
+        return Result.ok(listResponse);
     }
 
     @Transactional

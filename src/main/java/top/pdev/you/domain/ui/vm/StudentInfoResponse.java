@@ -1,16 +1,16 @@
-package top.pdev.you.domain.ui;
+package top.pdev.you.domain.ui.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
- * 学生信息 VO
+ * 学生信息值对象
  * Created in 2023/1/5 15:07
  *
  * @author Peter1303
  */
 @Data
-public class StudentInfoVO extends UserInfoVO {
+public class StudentInfoResponse extends UserInfoResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long studentId;
 }

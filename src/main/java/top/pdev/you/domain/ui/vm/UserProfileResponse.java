@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui;
+package top.pdev.you.domain.ui.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @author Peter1303
  */
 @Data
-public class UserProfileVO {
+public class UserProfileResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String no;
 

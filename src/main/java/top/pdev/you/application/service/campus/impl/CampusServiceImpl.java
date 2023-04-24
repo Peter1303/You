@@ -9,7 +9,7 @@ import top.pdev.you.domain.factory.CampusFactory;
 import top.pdev.you.domain.repository.CampusRepository;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.domain.ui.dto.CampusInfoDTO;
-import top.pdev.you.domain.ui.ListVO;
+import top.pdev.you.domain.ui.vm.ListResponse;
 import top.pdev.you.web.campus.command.AddCampusCommand;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.query.command.SearchCommand;
@@ -52,8 +52,8 @@ public class CampusServiceImpl implements CampusService {
     @Override
     public Result<?> getCampusList(SearchCommand searchCommand) {
         List<CampusInfoDTO> list = campusRepository.getCampusInfo(searchCommand.getName());
-        ListVO<CampusInfoDTO> listVO = new ListVO<>();
-        listVO.setList(list);
-        return Result.ok(listVO);
+        ListResponse<CampusInfoDTO> listResponse = new ListResponse<>();
+        listResponse.setList(list);
+        return Result.ok(listResponse);
     }
 }

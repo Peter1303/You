@@ -13,7 +13,7 @@ import top.pdev.you.domain.factory.UserFactory;
 import top.pdev.you.domain.repository.AssociationParticipateRepository;
 import top.pdev.you.domain.repository.StudentRepository;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.domain.ui.StudentInfoVO;
+import top.pdev.you.domain.ui.vm.StudentInfoResponse;
 import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
@@ -43,10 +43,10 @@ public class MemberServiceImpl implements MemberService {
         Manager manager = userFactory.getManager(user);
         Association association = manager.belongAssociation();
         List<Student> participants = association.participants();
-        List<StudentInfoVO> list = participants.stream()
+        List<StudentInfoResponse> list = participants.stream()
                 .filter(student -> !Objects.equals(student.getUserId(), user.getId()))
                 .map(student -> {
-                    StudentInfoVO infoVO = new StudentInfoVO();
+                    StudentInfoResponse infoVO = new StudentInfoResponse();
                     infoVO.setStudentId(student.getId());
                     infoVO.setName(student.getName());
                     infoVO.setClazz(student.getClazz());

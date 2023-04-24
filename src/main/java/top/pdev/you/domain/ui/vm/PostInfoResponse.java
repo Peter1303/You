@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui;
+package top.pdev.you.domain.ui.vm;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @author Peter1303
  */
 @Data
-public class PostInfoVO {
+public class PostInfoResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long id;
 

@@ -33,9 +33,9 @@ import top.pdev.you.infrastructure.util.TokenUtil;
 import top.pdev.you.infrastructure.assembler.AssociationAssembler;
 import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
 import top.pdev.you.domain.ui.dto.WechatLoginDTO;
-import top.pdev.you.domain.ui.LoginResultVO;
-import top.pdev.you.domain.ui.UserInfoVO;
-import top.pdev.you.domain.ui.UserProfileVO;
+import top.pdev.you.domain.ui.vm.LoginResultResponse;
+import top.pdev.you.domain.ui.vm.UserInfoResponse;
+import top.pdev.you.domain.ui.vm.UserProfileResponse;
 import top.pdev.you.web.user.command.RegisterCommand;
 import top.pdev.you.web.user.command.SetProfileCommand;
 import top.pdev.you.web.user.command.UserLoginCommand;
@@ -83,8 +83,8 @@ public class UserServiceImpl implements UserService {
         if (Optional.ofNullable(dto).isPresent()) {
             String openId = dto.getOpenId();
             if (Optional.ofNullable(openId).isPresent()) {
-                LoginResultVO loginResultVO = new LoginResultVO();
-                loginResultVO.setToken(openId);
+                LoginResultResponse loginResultResponse = new LoginResultResponse();
+                loginResultResponse.setToken(openId);
                 // 系统未完成初始化
                 String tag = TagKeyUtil.get(RedisKey.INIT);
                 if (!redisService.hasKey(tag)) {
@@ -99,13 +99,13 @@ public class UserServiceImpl implements UserService {
                         user.save();
                         redisService.set(tag, true);
                         return Result.ok()
-                                .setData(loginResultVO)
+                                .setData(loginResultResponse)
                                 .setMessage("超级管理员");
                     }
                 }
                 User user = userRepository.findByWechatId(openId);
                 if (Optional.ofNullable(user).isPresent()) {
-                    return Result.ok().setData(loginResultVO);
+                    return Result.ok().setData(loginResultResponse);
                 }
                 throw new BusinessException(ResultCode.NOT_REGISTERED);
             }
@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
             default:
                 break;
         }
-        LoginResultVO resultVO = new LoginResultVO();
+        LoginResultResponse resultVO = new LoginResultResponse();
         resultVO.setToken(openId);
         return Result.ok().setData(resultVO);
     }
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
         }
         // 信息
-        UserInfoVO vo = new UserInfoVO();
+        UserInfoResponse vo = new UserInfoResponse();
         vo.setNo(no);
         vo.setName(name);
         vo.setPermission(permission);
@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
             name = teacher.getName();
         }
         // 资料
-        UserProfileVO vo = new UserProfileVO();
+        UserProfileResponse vo = new UserProfileResponse();
         vo.setNo(no);
         vo.setName(name);
         vo.setClazz(clazz);
@@ -272,7 +272,7 @@ public class UserServiceImpl implements UserService {
         AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
         UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
         List<User> list = userMapper.selectList(new LambdaQueryWrapper<>());
-        List<UserInfoVO> userInfoList = new ArrayList<>();
+        List<UserInfoResponse> userInfoList = new ArrayList<>();
         list.forEach(user -> {
             // 如果是超级管理那么跳过
             if (Permission.SUPER.getValue() == user.getPermission()) {
@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
                     associations = associationMapper.getListByParticipant(student.getId());
                 }
             }
-            UserInfoVO infoVO = new UserInfoVO();
+            UserInfoResponse infoVO = new UserInfoResponse();
             infoVO.setId(user.getId());
             infoVO.setNo(no);
             infoVO.setPermission(permission);

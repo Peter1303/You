@@ -14,7 +14,7 @@ import top.pdev.you.domain.repository.PostRepository;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.assembler.PostAssembler;
-import top.pdev.you.domain.ui.PostInfoVO;
+import top.pdev.you.domain.ui.vm.PostInfoResponse;
 import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.post.command.PostListCommand;
@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> details(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
-        PostInfoVO infoVO = postAssembler.convert(user, post);
+        PostInfoResponse infoVO = postAssembler.convert(user, post);
         infoVO.setContent(post.getContent());
         return Result.ok(infoVO);
     }
