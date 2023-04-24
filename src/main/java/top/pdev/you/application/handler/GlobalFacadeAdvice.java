@@ -1,4 +1,4 @@
-package top.pdev.you.infrastructure.handler;
+package top.pdev.you.application.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NestedRuntimeException;

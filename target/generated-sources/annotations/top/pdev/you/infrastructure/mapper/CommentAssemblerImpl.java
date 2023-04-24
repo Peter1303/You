@@ -6,7 +6,7 @@ import top.pdev.you.web.comment.command.CommentInfoCommand;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-04-24T17:20:33+0800",
+    date = "2023-04-24T20:19:58+0800",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.1 (Oracle Corporation)"
 )
 public class CommentAssemblerImpl implements CommentAssembler {
