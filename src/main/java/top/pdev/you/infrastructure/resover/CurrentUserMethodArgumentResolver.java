@@ -12,8 +12,8 @@ import top.pdev.you.common.constant.Constants;
 import top.pdev.you.common.entity.TokenInfo;
 import top.pdev.you.common.exception.TokenInvalidException;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.repository.TokenRepository;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.persistence.repository.TokenRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import javax.annotation.Resource;
 import java.util.Arrays;

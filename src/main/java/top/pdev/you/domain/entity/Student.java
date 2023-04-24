@@ -10,12 +10,12 @@ import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.factory.CampusFactory;
-import top.pdev.you.domain.factory.InstituteFactory;
-import top.pdev.you.domain.repository.AssociationRepository;
-import top.pdev.you.domain.repository.ClassRepository;
-import top.pdev.you.domain.repository.StudentRepository;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.infrastructure.factory.CampusFactory;
+import top.pdev.you.infrastructure.factory.InstituteFactory;
+import top.pdev.you.persistence.repository.AssociationRepository;
+import top.pdev.you.persistence.repository.ClassRepository;
+import top.pdev.you.persistence.repository.StudentRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.infrastructure.result.ResultCode;
 
 import java.util.List;

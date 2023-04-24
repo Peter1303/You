@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.repository.ClassRepository;
-import top.pdev.you.domain.repository.InstituteRepository;
+import top.pdev.you.persistence.repository.ClassRepository;
+import top.pdev.you.persistence.repository.InstituteRepository;
 
 import java.util.Optional;
 

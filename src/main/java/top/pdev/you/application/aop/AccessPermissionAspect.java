@@ -9,7 +9,7 @@ import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.util.RequestUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
@@ -34,7 +34,7 @@ public class AccessPermissionAspect {
     @Resource
     private UserRepository userRepository;
 
-    @Before("execution(* top.pdev.you.web.facade.*.*(..)) " +
+    @Before("execution(* top.pdev.you.web..*.*(..)) " +
             "&& @annotation(accessPermission) ")
     public void checkPermission(JoinPoint point, AccessPermission accessPermission) {
         Permission[] permissions = accessPermission.permission();

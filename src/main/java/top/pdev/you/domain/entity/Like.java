@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.repository.LikeRepository;
+import top.pdev.you.persistence.repository.LikeRepository;
 
 /**
  * 点赞领域

@@ -37,7 +37,7 @@ public class CheckLoginAspect {
      * @param point 切入点
      * @return {@link Object}
      */
-    @Around("execution(* top.pdev.you.web.facade.*.*(..)) " +
+    @Around("execution(* top.pdev.you.web..*.*(..)) " +
             "&& !@annotation(top.pdev.you.common.annotation.SkipCheckLogin) ")
     public Object checkLogin(ProceedingJoinPoint point) throws Throwable {
         HttpServletRequest request = RequestUtil.getRequest();

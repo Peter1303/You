@@ -12,10 +12,10 @@ import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.factory.UserFactory;
-import top.pdev.you.domain.repository.StudentRepository;
-import top.pdev.you.domain.repository.TeacherRepository;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.infrastructure.factory.UserFactory;
+import top.pdev.you.persistence.repository.StudentRepository;
+import top.pdev.you.persistence.repository.TeacherRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import java.time.LocalDateTime;
 

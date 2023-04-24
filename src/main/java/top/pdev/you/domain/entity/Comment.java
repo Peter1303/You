@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.repository.CommentRepository;
+import top.pdev.you.persistence.repository.CommentRepository;
 
 import java.time.LocalDateTime;
 

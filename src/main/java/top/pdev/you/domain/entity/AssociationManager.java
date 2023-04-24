@@ -9,8 +9,8 @@ import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.domain.repository.AssociationManagerRepository;
-import top.pdev.you.domain.repository.AssociationRepository;
+import top.pdev.you.persistence.repository.AssociationManagerRepository;
+import top.pdev.you.persistence.repository.AssociationRepository;
 
 import java.util.List;
 

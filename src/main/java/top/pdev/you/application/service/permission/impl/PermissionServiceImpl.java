@@ -10,7 +10,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;

@@ -3,7 +3,7 @@ package top.pdev.you.common.entity.role;
 import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.factory.UserFactory;
+import top.pdev.you.infrastructure.factory.UserFactory;
 
 /**
  * 超级管理员

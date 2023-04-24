@@ -10,9 +10,9 @@ import lombok.Data;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
-import top.pdev.you.domain.repository.AssociationRepository;
-import top.pdev.you.domain.repository.TeacherRepository;
-import top.pdev.you.domain.repository.UserRepository;
+import top.pdev.you.persistence.repository.AssociationRepository;
+import top.pdev.you.persistence.repository.TeacherRepository;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

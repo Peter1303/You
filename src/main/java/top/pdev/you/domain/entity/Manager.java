@@ -2,7 +2,7 @@ package top.pdev.you.domain.entity;
 
 import cn.hutool.extra.spring.SpringUtil;
 import top.pdev.you.common.enums.Permission;
-import top.pdev.you.domain.repository.AssociationManagerRepository;
+import top.pdev.you.persistence.repository.AssociationManagerRepository;
 
 import java.util.List;
 

@@ -6,9 +6,9 @@ import top.pdev.you.application.service.like.LikeService;
 import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.factory.LikeFactory;
-import top.pdev.you.domain.repository.LikeRepository;
-import top.pdev.you.domain.repository.PostRepository;
+import top.pdev.you.infrastructure.factory.LikeFactory;
+import top.pdev.you.persistence.repository.LikeRepository;
+import top.pdev.you.persistence.repository.PostRepository;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.command.IdCommand;
 

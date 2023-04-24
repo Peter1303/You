@@ -9,10 +9,10 @@ import lombok.Data;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
 import top.pdev.you.domain.entity.data.AssociationParticipantDO;
-import top.pdev.you.domain.repository.AssociationAuditRepository;
-import top.pdev.you.domain.repository.AssociationParticipateRepository;
-import top.pdev.you.domain.repository.AssociationRepository;
-import top.pdev.you.domain.repository.StudentRepository;
+import top.pdev.you.persistence.repository.AssociationAuditRepository;
+import top.pdev.you.persistence.repository.AssociationParticipateRepository;
+import top.pdev.you.persistence.repository.AssociationRepository;
+import top.pdev.you.persistence.repository.StudentRepository;
 
 import java.util.List;
 import java.util.Optional;
