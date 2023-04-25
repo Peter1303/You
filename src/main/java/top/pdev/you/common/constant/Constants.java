@@ -6,10 +6,7 @@ package top.pdev.you.common.constant;
  *
  * @author Peter1303
  */
-public class Constants {
-    private Constants() {
-    }
-
-    public static final String TOKEN = "token";
-    public static final String ERROR = "error";
+public interface Constants {
+    String TOKEN = "token";
+    String ERROR = "error";
 }

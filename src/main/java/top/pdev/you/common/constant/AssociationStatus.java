@@ -6,11 +6,8 @@ package top.pdev.you.common.constant;
  *
  * @author Peter1303
  */
-public class AssociationStatus {
-    private AssociationStatus() {
-    }
-
-    public static final int NOT = 0;
-    public static final int JOINED = 1;
-    public static final int AUDIT = 2;
+public interface AssociationStatus {
+    int NOT = 0;
+    int JOINED = 1;
+    int AUDIT = 2;
 }
