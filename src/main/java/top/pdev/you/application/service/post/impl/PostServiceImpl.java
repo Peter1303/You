@@ -2,23 +2,23 @@ package top.pdev.you.application.service.post.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.application.service.post.PostService;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.vm.PostInfoResponse;
 import top.pdev.you.infrastructure.factory.PostFactory;
+import top.pdev.you.infrastructure.mapper.PostInfoMapper;
+import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.persistence.repository.AssociationRepository;
 import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.PostRepository;
-import top.pdev.you.application.service.permission.PermissionService;
-import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.infrastructure.mapper.PostMapper;
-import top.pdev.you.domain.ui.vm.PostInfoResponse;
-import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.post.command.PostListCommand;
+import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.post.command.PostCommand;
+import top.pdev.you.web.post.command.PostListCommand;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
     private PostFactory postFactory;
 
     @Resource
-    private PostMapper postMapper;
+    private PostInfoMapper postInfoMapper;
 
     @Transactional
     @Override
@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> details(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
-        PostInfoResponse infoVO = postMapper.convert(user, post);
+        PostInfoResponse infoVO = postInfoMapper.convert(user, post);
         infoVO.setContent(post.getContent());
         return Result.ok(infoVO);
     }
@@ -101,14 +101,14 @@ public class PostServiceImpl implements PostService {
                     .collect(Collectors.toList());
             posts.addAll(postList);
         }
-        return Result.ok(postMapper.convertToBriefList(posts, user));
+        return Result.ok(postInfoMapper.convertToBriefList(posts, user));
     }
 
     @Override
     public Result<?> listOfUser(User user) {
         Long id = user.getId();
         List<Post> posts = postRepository.findByUserIdOrderByTimeDesc(id);
-        return Result.ok(postMapper.convertToBriefList(posts, user));
+        return Result.ok(postInfoMapper.convertToBriefList(posts, user));
     }
 
     @Transactional

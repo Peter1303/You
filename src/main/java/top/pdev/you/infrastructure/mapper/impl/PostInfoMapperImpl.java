@@ -8,7 +8,7 @@ import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.LikeRepository;
 import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.application.service.permission.PermissionService;
-import top.pdev.you.infrastructure.mapper.PostMapper;
+import top.pdev.you.infrastructure.mapper.PostInfoMapper;
 import top.pdev.you.domain.ui.vm.PostInfoResponse;
 
 import javax.annotation.Resource;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author Peter1303
  */
 @Component
-public class PostMapperImpl implements PostMapper {
+public class PostInfoMapperImpl implements PostInfoMapper {
     @Resource
     private UserRepository userRepository;
 
