@@ -13,7 +13,7 @@ import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.PostRepository;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.infrastructure.mapper.PostAssembler;
+import top.pdev.you.infrastructure.mapper.PostMapper;
 import top.pdev.you.domain.ui.vm.PostInfoResponse;
 import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.command.IdCommand;
@@ -49,7 +49,7 @@ public class PostServiceImpl implements PostService {
     private PostFactory postFactory;
 
     @Resource
-    private PostAssembler postAssembler;
+    private PostMapper postMapper;
 
     @Transactional
     @Override
@@ -80,7 +80,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public Result<?> details(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
-        PostInfoResponse infoVO = postAssembler.convert(user, post);
+        PostInfoResponse infoVO = postMapper.convert(user, post);
         infoVO.setContent(post.getContent());
         return Result.ok(infoVO);
     }
@@ -101,14 +101,14 @@ public class PostServiceImpl implements PostService {
                     .collect(Collectors.toList());
             posts.addAll(postList);
         }
-        return Result.ok(postAssembler.convertToBriefList(posts, user));
+        return Result.ok(postMapper.convertToBriefList(posts, user));
     }
 
     @Override
     public Result<?> listOfUser(User user) {
         Long id = user.getId();
         List<Post> posts = postRepository.findByUserIdOrderByTimeDesc(id);
-        return Result.ok(postAssembler.convertToBriefList(posts, user));
+        return Result.ok(postMapper.convertToBriefList(posts, user));
     }
 
     @Transactional

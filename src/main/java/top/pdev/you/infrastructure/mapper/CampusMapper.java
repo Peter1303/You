@@ -13,8 +13,8 @@ import top.pdev.you.domain.ui.dto.CampusInfoDTO;
  * @author Peter1303
  */
 @Mapper
-public interface CampusAssembler {
-    CampusAssembler INSTANCE = Mappers.getMapper(CampusAssembler.class);
+public interface CampusMapper {
+    CampusMapper INSTANCE = Mappers.getMapper(CampusMapper.class);
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "name", source = "name")

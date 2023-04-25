@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author Peter1303
  */
-public interface PostAssembler {
+public interface PostMapper {
     /**
      * 转换
      *

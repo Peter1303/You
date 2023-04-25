@@ -5,9 +5,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.persistence.mapper.CampusMapper;
 import top.pdev.you.persistence.repository.CampusRepository;
-import top.pdev.you.infrastructure.mapper.CampusAssembler;
+import top.pdev.you.infrastructure.mapper.CampusMapper;
 import top.pdev.you.domain.ui.dto.CampusInfoDTO;
 
 import javax.annotation.Resource;
@@ -23,10 +22,10 @@ import java.util.stream.Collectors;
  */
 @Repository
 public class CampusRepositoryImpl
-        extends ServiceImpl<CampusMapper, Campus>
+        extends ServiceImpl<top.pdev.you.persistence.mapper.CampusMapper, Campus>
         implements CampusRepository {
     @Resource
-    private CampusMapper mapper;
+    private top.pdev.you.persistence.mapper.CampusMapper mapper;
 
     @Override
     public Campus findById(Long id) {
@@ -43,7 +42,7 @@ public class CampusRepositoryImpl
         queryWrapper.like(Campus::getName, name);
         List<Campus> list = mapper.selectList(queryWrapper);
         return list.stream()
-                .map(CampusAssembler.INSTANCE::convert)
+                .map(CampusMapper.INSTANCE::convert)
                 .collect(Collectors.toList());
     }
 

@@ -25,13 +25,12 @@ import top.pdev.you.domain.ui.vm.LoginResultResponse;
 import top.pdev.you.domain.ui.vm.UserInfoResponse;
 import top.pdev.you.domain.ui.vm.UserProfileResponse;
 import top.pdev.you.infrastructure.factory.UserFactory;
-import top.pdev.you.infrastructure.mapper.AssociationAssembler;
+import top.pdev.you.infrastructure.mapper.AssociationMapper;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
-import top.pdev.you.persistence.mapper.AssociationMapper;
 import top.pdev.you.persistence.mapper.UserMapper;
 import top.pdev.you.persistence.repository.AssociationManagerRepository;
 import top.pdev.you.persistence.repository.AssociationRepository;
@@ -176,7 +175,7 @@ public class UserServiceImpl implements UserService {
             List<Association> list = student.getAssociations();
             associations = list
                     .stream()
-                    .map(AssociationAssembler.INSTANCE::convert)
+                    .map(AssociationMapper.INSTANCE::convert)
                     .collect(Collectors.toList());
         }
         // 为老师
@@ -186,7 +185,7 @@ public class UserServiceImpl implements UserService {
             List<Association> managedList = teacher.getManagedAssociationList();
             associations = managedList
                     .stream()
-                    .map(AssociationAssembler.INSTANCE::convert)
+                    .map(AssociationMapper.INSTANCE::convert)
                     .collect(Collectors.toList());
         }
         // 信息
@@ -269,7 +268,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result<?> getUsers() {
         // 时间不足 暂时用 MVC 后续可改为注入
-        AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
+        top.pdev.you.persistence.mapper.AssociationMapper associationMapper = SpringUtil.getBean(top.pdev.you.persistence.mapper.AssociationMapper.class);
         UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
         List<User> list = userMapper.selectList(new LambdaQueryWrapper<>());
         List<UserInfoResponse> userInfoList = new ArrayList<>();

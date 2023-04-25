@@ -7,11 +7,11 @@ import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.factory.CommentFactory;
+import top.pdev.you.infrastructure.mapper.CommentMapper;
 import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.PostRepository;
 import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.infrastructure.mapper.CommentAssembler;
 import top.pdev.you.web.comment.command.CommentInfoCommand;
 import top.pdev.you.web.comment.command.AddCommentCommand;
 import top.pdev.you.web.command.IdCommand;
@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
     public Result<?> postComments(IdCommand idCommand) {
         List<Comment> list = commentRepository.findByPostIdOrderByTimeDesc(idCommand.getId());
         List<CommentInfoCommand> result = list.stream().map(comment -> {
-            CommentInfoCommand infoVO = CommentAssembler.INSTANCE.convert(comment);
+            CommentInfoCommand infoVO = CommentMapper.INSTANCE.convert(comment);
             Long userId = comment.getUserId();
             User user = userRepository.findById(userId);
             infoVO.setName(user.getRoleDomain().getName());

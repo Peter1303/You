@@ -13,8 +13,8 @@ import top.pdev.you.web.comment.command.CommentInfoCommand;
  * @author Peter1303
  */
 @Mapper
-public interface CommentAssembler {
-    CommentAssembler INSTANCE = Mappers.getMapper(CommentAssembler.class);
+public interface CommentMapper {
+    CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "comment", source = "comment")

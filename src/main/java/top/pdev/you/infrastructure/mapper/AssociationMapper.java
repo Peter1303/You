@@ -13,8 +13,8 @@ import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
  * @author Peter1303
  */
 @Mapper
-public interface AssociationAssembler {
-    AssociationAssembler INSTANCE = Mappers.getMapper(AssociationAssembler.class);
+public interface AssociationMapper {
+    AssociationMapper INSTANCE = Mappers.getMapper(AssociationMapper.class);
 
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
