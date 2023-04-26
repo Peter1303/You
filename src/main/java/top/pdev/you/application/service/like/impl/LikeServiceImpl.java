@@ -9,7 +9,6 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.factory.LikeFactory;
 import top.pdev.you.persistence.repository.LikeRepository;
 import top.pdev.you.persistence.repository.PostRepository;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
@@ -33,18 +32,16 @@ public class LikeServiceImpl implements LikeService {
 
     @Transactional
     @Override
-    public Result<?> add(User user, IdCommand idCommand) {
+    public void add(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
         Like like = likeFactory.newLike();
         like.addLike(user, post);
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> delete(User user, IdCommand idCommand) {
+    public void delete(User user, IdCommand idCommand) {
         Like like = likeRepository.findByPostIdAndUserId(idCommand.getId(), user.getId());
         like.cancelLike();
-        return Result.ok();
     }
 }

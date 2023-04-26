@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.like.LikeService;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.like.LikeService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.command.IdCommand;
 
@@ -36,7 +36,8 @@ public class LikeController {
     @PostMapping("")
     public Result<?> add(@CurrentUser User user,
                          @RequestBody @Validated IdCommand idCommand) {
-        return likeService.add(user, idCommand);
+        likeService.add(user, idCommand);
+        return Result.ok();
     }
 
     /**
@@ -49,6 +50,7 @@ public class LikeController {
     @DeleteMapping("")
     public Result<?> cancel(@CurrentUser User user,
                             @RequestBody @Validated IdCommand idCommand) {
-        return likeService.delete(user, idCommand);
+        likeService.delete(user, idCommand);
+        return Result.ok();
     }
 }

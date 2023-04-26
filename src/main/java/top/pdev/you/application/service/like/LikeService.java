@@ -1,7 +1,6 @@
 package top.pdev.you.application.service.like;
 
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.command.IdCommand;
 
 /**
@@ -16,16 +15,14 @@ public interface LikeService {
      *
      * @param user 用户
      * @param idCommand ID VO
-     * @return {@link Result}<{@link ?}>
      */
-    Result<?> add(User user, IdCommand idCommand);
+    void add(User user, IdCommand idCommand);
 
     /**
      * 删除
      *
      * @param user 用户
      * @param idCommand ID VO
-     * @return {@link Result}<{@link ?}>
      */
-    Result<?> delete(User user, IdCommand idCommand);
+    void delete(User user, IdCommand idCommand);
 }
