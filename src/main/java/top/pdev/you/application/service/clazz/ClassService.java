@@ -1,5 +1,7 @@
 package top.pdev.you.application.service.clazz;
 
+import top.pdev.you.domain.ui.dto.ClassInfoDTO;
+import top.pdev.you.domain.ui.vm.ListResponse;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.clazz.command.AddClassCommand;
 import top.pdev.you.web.command.IdCommand;
@@ -18,21 +20,19 @@ public interface ClassService {
      * @param vo VO
      * @return {@link Result}<{@link ?}>
      */
-    Result<?> getClassList(SearchCommand vo);
+    ListResponse<ClassInfoDTO> getClassList(SearchCommand vo);
 
     /**
      * 添加
      *
      * @param addClassCommand 添加班级 VO
-     * @return {@link Result}<{@link ?}>
      */
-    Result<?> add(AddClassCommand addClassCommand);
+    void add(AddClassCommand addClassCommand);
 
     /**
      * 删除
      *
      * @param idCommand ID VO
-     * @return {@link Result}<{@link ?}>
      */
-    Result<?> delete(IdCommand idCommand);
+    void delete(IdCommand idCommand);
 }

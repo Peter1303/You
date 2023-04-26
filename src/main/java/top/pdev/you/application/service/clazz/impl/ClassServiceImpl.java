@@ -5,11 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.clazz.ClassService;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.infrastructure.factory.ClassFactory;
-import top.pdev.you.persistence.repository.ClassRepository;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.domain.ui.dto.ClassInfoDTO;
 import top.pdev.you.domain.ui.vm.ListResponse;
+import top.pdev.you.infrastructure.factory.ClassFactory;
+import top.pdev.you.persistence.repository.ClassRepository;
 import top.pdev.you.web.clazz.command.AddClassCommand;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.query.command.SearchCommand;
@@ -32,31 +31,29 @@ public class ClassServiceImpl implements ClassService {
     private ClassFactory classFactory;
 
     @Override
-    public Result<?> getClassList(SearchCommand vo) {
+    public ListResponse<ClassInfoDTO> getClassList(SearchCommand vo) {
         List<ClassInfoDTO> list = classRepository.getClassInfo(vo);
         ListResponse<ClassInfoDTO> listResponse = new ListResponse<>();
         listResponse.setList(list);
-        return Result.ok(listResponse);
+        return listResponse;
     }
 
     @Transactional
     @Override
-    public Result<?> add(AddClassCommand addClassCommand) {
+    public void add(AddClassCommand addClassCommand) {
         Clazz clazz = classFactory.newClazz();
         clazz.setInstituteId(addClassCommand.getInstituteId());
         clazz.setCampusId(addClassCommand.getCampusId());
         clazz.setName(addClassCommand.getName());
         clazz.setYear(addClassCommand.getGrade());
         clazz.save();
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> delete(IdCommand idCommand) {
+    public void delete(IdCommand idCommand) {
         if (!classRepository.removeById(idCommand.getId())) {
             throw new BusinessException("删除班级失败");
         }
-        return Result.ok();
     }
 }

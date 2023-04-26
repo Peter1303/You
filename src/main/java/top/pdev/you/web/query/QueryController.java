@@ -4,13 +4,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.campus.CampusService;
+import top.pdev.you.application.service.clazz.ClassService;
+import top.pdev.you.application.service.institute.InstituteService;
 import top.pdev.you.common.annotation.SkipCheckLogin;
 import top.pdev.you.common.validator.intefaces.Campus;
 import top.pdev.you.common.validator.intefaces.Clazz;
 import top.pdev.you.common.validator.intefaces.Institute;
-import top.pdev.you.application.service.campus.CampusService;
-import top.pdev.you.application.service.clazz.ClassService;
-import top.pdev.you.application.service.institute.InstituteService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.query.command.SearchCommand;
 
@@ -37,7 +37,7 @@ public class QueryController {
     @SkipCheckLogin
     @GetMapping("class")
     public Result<?> clazz(@Validated(Clazz.class) SearchCommand vo) {
-        return classService.getClassList(vo);
+        return Result.ok(classService.getClassList(vo));
     }
 
     @SkipCheckLogin
