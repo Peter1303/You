@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.comment.CommentService;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.comment.CommentService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.comment.command.AddCommentCommand;
 import top.pdev.you.web.command.IdCommand;
+import top.pdev.you.web.comment.command.AddCommentCommand;
 
 import javax.annotation.Resource;
 
@@ -36,7 +36,8 @@ public class CommentController {
      */
     @GetMapping("post")
     public Result<?> postComments(@Validated IdCommand idCommand) {
-        return commentService.postComments(idCommand);
+        commentService.postComments(idCommand);
+        return Result.ok();
     }
 
     /**
@@ -49,7 +50,8 @@ public class CommentController {
     @PostMapping("")
     public Result<?> add(@CurrentUser User user,
                          @RequestBody @Validated AddCommentCommand addCommentVO) {
-        return commentService.add(user, addCommentVO);
+        commentService.add(user, addCommentVO);
+        return Result.ok();
     }
 
     /**
@@ -60,6 +62,7 @@ public class CommentController {
      */
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdCommand idCommand) {
-        return commentService.delete(idCommand);
+        commentService.delete(idCommand);
+        return Result.ok();
     }
 }

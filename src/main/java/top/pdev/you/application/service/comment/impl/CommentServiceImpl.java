@@ -11,10 +11,9 @@ import top.pdev.you.infrastructure.mapper.CommentMapper;
 import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.PostRepository;
 import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.comment.command.CommentInfoCommand;
-import top.pdev.you.web.comment.command.AddCommentCommand;
 import top.pdev.you.web.command.IdCommand;
+import top.pdev.you.web.comment.command.AddCommentCommand;
+import top.pdev.you.web.comment.command.CommentInfoCommand;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -41,7 +40,7 @@ public class CommentServiceImpl implements CommentService {
     private CommentFactory commentFactory;
 
     @Override
-    public Result<?> postComments(IdCommand idCommand) {
+    public void postComments(IdCommand idCommand) {
         List<Comment> list = commentRepository.findByPostIdOrderByTimeDesc(idCommand.getId());
         List<CommentInfoCommand> result = list.stream().map(comment -> {
             CommentInfoCommand infoVO = CommentMapper.INSTANCE.convert(comment);
@@ -50,26 +49,23 @@ public class CommentServiceImpl implements CommentService {
             infoVO.setName(user.getRoleDomain().getName());
             return infoVO;
         }).collect(Collectors.toList());
-        return Result.ok(result);
     }
 
     @Transactional
     @Override
-    public Result<?> add(User user, AddCommentCommand addCommentVO) {
+    public void add(User user, AddCommentCommand addCommentVO) {
         Long id = addCommentVO.getId();
         Post post = postRepository.findById(id);
         Comment comment = commentFactory.newComment();
         comment.setUserId(user.getId());
         comment.setComment(addCommentVO.getComment());
         comment.save(post);
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> delete(IdCommand idCommand) {
+    public void delete(IdCommand idCommand) {
         Comment comment = commentRepository.findById(idCommand.getId());
         comment.delete();
-        return Result.ok();
     }
 }
