@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.annotation.SkipCheckLogin;
@@ -16,7 +17,6 @@ import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.validator.intefaces.Student;
 import top.pdev.you.common.validator.intefaces.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.user.command.RegisterCommand;
 import top.pdev.you.web.user.command.SetProfileCommand;
@@ -47,7 +47,7 @@ public class UserController {
     @SkipCheckLogin
     @PutMapping("login")
     public Result<?> login(@RequestBody @Valid UserLoginCommand vo) {
-        return userService.login(vo);
+        return Result.ok(userService.login(vo));
     }
 
     /**
@@ -59,7 +59,7 @@ public class UserController {
     @SkipCheckLogin
     @PostMapping("register/teacher")
     public Result<?> registerOfTeacher(@RequestBody @Validated(Teacher.class) RegisterCommand vo) {
-        return userService.register(Role.TEACHER, vo);
+        return Result.ok(userService.register(Role.TEACHER, vo));
     }
 
     /**
@@ -71,13 +71,13 @@ public class UserController {
     @SkipCheckLogin
     @PostMapping("register/student")
     public Result<?> registerOfStudent(@RequestBody @Validated(Student.class) RegisterCommand vo) {
-        return userService.register(Role.STUDENT, vo);
+        return Result.ok(userService.register(Role.STUDENT, vo));
     }
 
     @AccessPermission(permission = Permission.ADMIN)
     @GetMapping("")
     public Result<?> getUsers() {
-        return userService.getUsers();
+        return Result.ok(userService.getUsers());
     }
 
     /**
@@ -88,7 +88,7 @@ public class UserController {
      */
     @GetMapping("info")
     public Result<?> info(@CurrentUser User user) {
-        return userService.info(user);
+        return Result.ok(userService.info(user));
     }
 
     /**
@@ -99,7 +99,7 @@ public class UserController {
      */
     @GetMapping("profile")
     public Result<?> profile(@CurrentUser User user) {
-        return userService.profile(user);
+        return Result.ok(userService.profile(user));
     }
 
     /**
@@ -112,12 +112,14 @@ public class UserController {
     @PutMapping("profile/set")
     public Result<?> setProfile(@CurrentUser User user,
                                 @RequestBody SetProfileCommand setProfileCommand) {
-        return userService.setProfile(user, setProfileCommand);
+        userService.setProfile(user, setProfileCommand);
+        return Result.ok();
     }
 
     @DeleteMapping("account")
     public Result<?> deleteAccount(@CurrentUser User user,
                                    HttpServletRequest request) {
-        return userService.deleteAccount(user, request);
+        userService.deleteAccount(user, request);
+        return Result.ok();
     }
 }

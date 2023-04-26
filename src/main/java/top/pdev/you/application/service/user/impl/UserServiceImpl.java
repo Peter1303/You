@@ -27,7 +27,6 @@ import top.pdev.you.domain.ui.vm.UserProfileResponse;
 import top.pdev.you.infrastructure.factory.UserFactory;
 import top.pdev.you.infrastructure.mapper.AssociationMapper;
 import top.pdev.you.infrastructure.redis.RedisService;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
@@ -77,7 +76,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Result<?> login(UserLoginCommand vo) {
+    public LoginResultResponse login(UserLoginCommand vo) {
         WechatLoginDTO dto = wechatService.login(vo.getCode());
         if (Optional.ofNullable(dto).isPresent()) {
             String openId = dto.getOpenId();
@@ -97,14 +96,12 @@ public class UserServiceImpl implements UserService {
                         user.setWechatId(openId);
                         user.save();
                         redisService.set(tag, true);
-                        return Result.ok()
-                                .setData(loginResultResponse)
-                                .setMessage("超级管理员");
+                        return loginResultResponse;
                     }
                 }
                 User user = userRepository.findByWechatId(openId);
                 if (Optional.ofNullable(user).isPresent()) {
-                    return Result.ok().setData(loginResultResponse);
+                    return loginResultResponse;
                 }
                 throw new BusinessException(ResultCode.NOT_REGISTERED);
             }
@@ -114,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public Result<?> register(Role role, RegisterCommand vo) {
+    public LoginResultResponse register(Role role, RegisterCommand vo) {
         WechatLoginDTO loginDTO = wechatService.login(vo.getCode());
         String openId = loginDTO.getOpenId();
         if (Optional.ofNullable(userRepository.findByWechatId(openId)).isPresent()) {
@@ -147,11 +144,11 @@ public class UserServiceImpl implements UserService {
         }
         LoginResultResponse resultVO = new LoginResultResponse();
         resultVO.setToken(openId);
-        return Result.ok().setData(resultVO);
+        return resultVO;
     }
 
     @Override
-    public Result<?> info(User user) {
+    public UserInfoResponse info(User user) {
         // 获取用户
         Integer permission = user.getPermission();
         String association = null;
@@ -195,11 +192,11 @@ public class UserServiceImpl implements UserService {
         vo.setPermission(permission);
         vo.setAssociation(association);
         vo.setAssociations(associations);
-        return Result.ok(vo);
+        return vo;
     }
 
     @Override
-    public Result<?> profile(User user) {
+    public UserProfileResponse profile(User user) {
         // 获取用户
         Integer permission = user.getPermission();
         String clazz = null;
@@ -234,12 +231,12 @@ public class UserServiceImpl implements UserService {
         vo.setContact(contact);
         vo.setGrade(grade);
         vo.setPermission(permission);
-        return Result.ok(vo);
+        return vo;
     }
 
     @Transactional
     @Override
-    public Result<?> setProfile(User user,
+    public void setProfile(User user,
                                 SetProfileCommand setProfileCommand) {
         String contact = setProfileCommand.getContact();
         RoleEntity role = user.getRoleDomain();
@@ -252,21 +249,19 @@ public class UserServiceImpl implements UserService {
             Teacher teacher = (Teacher) role;
             teacher.saveContact(contact);
         }
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> deleteAccount(User user,
+    public void deleteAccount(User user,
                                    HttpServletRequest request) {
         user.delete();
         String token = TokenUtil.getTokenByHeader(request);
         redisService.delete(TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token));
-        return Result.ok();
     }
 
     @Override
-    public Result<?> getUsers() {
+    public List<UserInfoResponse> getUsers() {
         // 时间不足 暂时用 MVC 后续可改为注入
         top.pdev.you.persistence.mapper.AssociationMapper associationMapper = SpringUtil.getBean(top.pdev.you.persistence.mapper.AssociationMapper.class);
         UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
@@ -309,6 +304,6 @@ public class UserServiceImpl implements UserService {
             infoVO.setClazz(clazz);
             userInfoList.add(infoVO);
         });
-        return Result.ok().setData(userInfoList);
+        return userInfoList;
     }
 }
