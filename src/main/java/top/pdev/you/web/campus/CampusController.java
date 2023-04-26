@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.campus.CampusService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
-import top.pdev.you.application.service.campus.CampusService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.campus.command.AddCampusCommand;
 import top.pdev.you.web.command.IdCommand;
@@ -36,7 +36,8 @@ public class CampusController {
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddCampusCommand addCampusCommand) {
-        return campusService.add(addCampusCommand);
+        campusService.add(addCampusCommand);
+        return Result.ok();
     }
 
     /**
@@ -48,6 +49,7 @@ public class CampusController {
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdCommand idCommand) {
-        return campusService.delete(idCommand);
+        campusService.delete(idCommand);
+        return Result.ok();
     }
 }

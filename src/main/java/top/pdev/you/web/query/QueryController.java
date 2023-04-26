@@ -43,7 +43,7 @@ public class QueryController {
     @SkipCheckLogin
     @GetMapping("campus")
     public Result<?> campus(@Validated(Campus.class) SearchCommand searchCommand) {
-        return campusService.getCampusList(searchCommand);
+        return Result.ok(campusService.getCampusList(searchCommand));
     }
 
     @SkipCheckLogin

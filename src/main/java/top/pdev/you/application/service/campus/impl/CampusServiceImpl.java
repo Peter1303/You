@@ -5,11 +5,10 @@ import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.campus.CampusService;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.infrastructure.factory.CampusFactory;
-import top.pdev.you.persistence.repository.CampusRepository;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.domain.ui.dto.CampusInfoDTO;
 import top.pdev.you.domain.ui.vm.ListResponse;
+import top.pdev.you.infrastructure.factory.CampusFactory;
+import top.pdev.you.persistence.repository.CampusRepository;
 import top.pdev.you.web.campus.command.AddCampusCommand;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.query.command.SearchCommand;
@@ -33,27 +32,25 @@ public class CampusServiceImpl implements CampusService {
 
     @Transactional
     @Override
-    public Result<?> add(AddCampusCommand addCampusCommand) {
+    public void add(AddCampusCommand addCampusCommand) {
         Campus campus = campusFactory.newCampus();
         campus.setName(addCampusCommand.getName());
         campus.save();
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> delete(IdCommand idCommand) {
+    public void delete(IdCommand idCommand) {
         if (!campusRepository.removeById(idCommand.getId())) {
             throw new BusinessException("删除校区失败");
         }
-        return Result.ok();
     }
 
     @Override
-    public Result<?> getCampusList(SearchCommand searchCommand) {
+    public ListResponse<CampusInfoDTO> getCampusList(SearchCommand searchCommand) {
         List<CampusInfoDTO> list = campusRepository.getCampusInfo(searchCommand.getName());
         ListResponse<CampusInfoDTO> listResponse = new ListResponse<>();
         listResponse.setList(list);
-        return Result.ok(listResponse);
+        return listResponse;
     }
 }
