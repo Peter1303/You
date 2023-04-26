@@ -49,6 +49,6 @@ public class QueryController {
     @SkipCheckLogin
     @GetMapping("institute")
     public Result<?> institute(@Validated(Institute.class) SearchCommand searchCommand) {
-        return instituteService.getInstituteList(searchCommand);
+        return Result.ok(instituteService.getInstituteList(searchCommand));
     }
 }

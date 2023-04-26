@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.institute.InstituteService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
-import top.pdev.you.application.service.institute.InstituteService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.institute.command.AddInstituteCommand;
 import top.pdev.you.web.command.IdCommand;
+import top.pdev.you.web.institute.command.AddInstituteCommand;
 
 import javax.annotation.Resource;
 
@@ -30,12 +30,14 @@ public class InstituteController {
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddInstituteCommand addInstituteCommand) {
-        return instituteService.add(addInstituteCommand);
+        instituteService.add(addInstituteCommand);
+        return Result.ok();
     }
 
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdCommand idCommand) {
-        return instituteService.delete(idCommand);
+        instituteService.delete(idCommand);
+        return Result.ok();
     }
 }
