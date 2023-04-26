@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.post.PostService;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.validator.intefaces.Association;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.post.PostService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.post.command.PostListCommand;
+import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.post.command.PostCommand;
+import top.pdev.you.web.post.command.PostListCommand;
 
 import javax.annotation.Resource;
 
@@ -42,7 +42,8 @@ public class PostController {
     @PostMapping("post")
     public Result<?> post(@CurrentUser User user,
                           @RequestBody @Validated PostCommand postCommand) {
-        return postService.post(user, postCommand);
+        postService.post(user, postCommand);
+        return Result.ok();
     }
 
     /**
@@ -55,7 +56,7 @@ public class PostController {
     @GetMapping("")
     public Result<?> details(@CurrentUser User user,
                              @Validated IdCommand idCommand) {
-        return postService.details(user, idCommand);
+        return Result.ok(postService.details(user, idCommand));
     }
 
 
@@ -69,7 +70,8 @@ public class PostController {
     @PostMapping("post/association")
     public Result<?> associationPost(@CurrentUser User user,
                                      @RequestBody @Validated(Association.class) PostCommand postCommand) {
-        return postService.associationPost(user, postCommand);
+        postService.associationPost(user, postCommand);
+        return Result.ok();
     }
 
     /**
@@ -82,7 +84,7 @@ public class PostController {
     @GetMapping("list")
     public Result<?> list(@CurrentUser User user,
                           @Validated PostListCommand postListCommand) {
-        return postService.list(user, postListCommand);
+        return Result.ok(postService.list(user, postListCommand));
     }
 
     /**
@@ -93,7 +95,7 @@ public class PostController {
      */
     @GetMapping("list/user")
     public Result<?> listOfUser(@CurrentUser User user) {
-        return postService.listOfUser(user);
+        return Result.ok(postService.listOfUser(user));
     }
 
     /**
@@ -106,7 +108,8 @@ public class PostController {
     @DeleteMapping("")
     public Result<?> delete(@CurrentUser User user,
                             @RequestBody @Validated IdCommand idCommand) {
-        return postService.delete(user, idCommand);
+        postService.delete(user, idCommand);
+        return Result.ok();
     }
 
     /**
@@ -117,6 +120,7 @@ public class PostController {
      */
     @PutMapping("")
     public Result<?> changePost(@RequestBody @Validated ChangePostCommand changePostVO) {
-        return postService.changePost(changePostVO);
+        postService.changePost(changePostVO);
+        return Result.ok();
     }
 }

@@ -11,7 +11,6 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.ui.vm.PostInfoResponse;
 import top.pdev.you.infrastructure.factory.PostFactory;
 import top.pdev.you.infrastructure.mapper.PostInfoMapper;
-import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.persistence.repository.AssociationRepository;
 import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.PostRepository;
@@ -53,7 +52,7 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public Result<?> post(User user, PostCommand postCommand) {
+    public void post(User user, PostCommand postCommand) {
         // TODO implements topic
         Long topicId = postCommand.getTopicId();
 
@@ -68,25 +67,24 @@ public class PostServiceImpl implements PostService {
         post.setUserId(user.getId());
         post.setAssociationId(associationId);
         post.save();
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> associationPost(User user, PostCommand postCommand) {
-        return post(user, postCommand);
+    public void associationPost(User user, PostCommand postCommand) {
+        post(user, postCommand);
     }
 
     @Override
-    public Result<?> details(User user, IdCommand idCommand) {
+    public PostInfoResponse details(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
         PostInfoResponse infoVO = postInfoMapper.convert(user, post);
         infoVO.setContent(post.getContent());
-        return Result.ok(infoVO);
+        return infoVO;
     }
 
     @Override
-    public Result<?> list(User user, PostListCommand postListCommand) {
+    public List<PostInfoResponse> list(User user, PostListCommand postListCommand) {
         Long id = postListCommand.getId();
         String search = postListCommand.getSearch();
         List<Post> posts =
@@ -101,34 +99,32 @@ public class PostServiceImpl implements PostService {
                     .collect(Collectors.toList());
             posts.addAll(postList);
         }
-        return Result.ok(postInfoMapper.convertToBriefList(posts, user));
+        return postInfoMapper.convertToBriefList(posts, user);
     }
 
     @Override
-    public Result<?> listOfUser(User user) {
+    public List<PostInfoResponse> listOfUser(User user) {
         Long id = user.getId();
         List<Post> posts = postRepository.findByUserIdOrderByTimeDesc(id);
-        return Result.ok(postInfoMapper.convertToBriefList(posts, user));
+        return postInfoMapper.convertToBriefList(posts, user);
     }
 
     @Transactional
     @Override
-    public Result<?> delete(User user, IdCommand idCommand) {
+    public void delete(User user, IdCommand idCommand) {
         Post post = postRepository.findById(idCommand.getId());
         if (!permissionService.editable(user, post.getUserId())) {
             throw new PermissionDeniedException();
         }
         post.delete();
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> changePost(ChangePostCommand changePostVO) {
+    public void changePost(ChangePostCommand changePostVO) {
         Long id = changePostVO.getId();
         Post post = postRepository.findById(id);
         // TODO changeTopicId
         post.changeContent(changePostVO.getContent());
-        return Result.ok();
     }
 }
