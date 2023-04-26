@@ -1,8 +1,10 @@
 package top.pdev.you.application.service.member;
 
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.infrastructure.result.Result;
+import top.pdev.you.domain.ui.vm.StudentInfoResponse;
 import top.pdev.you.web.command.IdCommand;
+
+import java.util.List;
 
 /**
  * 社员服务
@@ -15,16 +17,15 @@ public interface MemberService {
      * 列表
      *
      * @param user 用户
-     * @return {@link Result}<{@link ?}>
+     * @return {@link List}<{@link StudentInfoResponse}>
      */
-    Result<?> list(User user);
+    List<StudentInfoResponse> list(User user);
 
     /**
      * 删除
      *
      * @param user 用户
      * @param idCommand ID VO
-     * @return {@link Result}<{@link ?}>
      */
-    Result<?> remove(User user, IdCommand idCommand);
+    void remove(User user, IdCommand idCommand);
 }

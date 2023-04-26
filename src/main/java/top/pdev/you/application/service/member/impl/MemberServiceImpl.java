@@ -9,11 +9,10 @@ import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.vm.StudentInfoResponse;
 import top.pdev.you.infrastructure.factory.UserFactory;
 import top.pdev.you.persistence.repository.AssociationParticipateRepository;
 import top.pdev.you.persistence.repository.StudentRepository;
-import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.domain.ui.vm.StudentInfoResponse;
 import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
@@ -39,11 +38,11 @@ public class MemberServiceImpl implements MemberService {
     private UserFactory userFactory;
 
     @Override
-    public Result<?> list(User user) {
+    public List<StudentInfoResponse> list(User user) {
         Manager manager = userFactory.getManager(user);
         Association association = manager.belongAssociation();
         List<Student> participants = association.participants();
-        List<StudentInfoResponse> list = participants.stream()
+        return participants.stream()
                 .filter(student -> !Objects.equals(student.getUserId(), user.getId()))
                 .map(student -> {
                     StudentInfoResponse infoVO = new StudentInfoResponse();
@@ -54,12 +53,11 @@ public class MemberServiceImpl implements MemberService {
                     infoVO.setCampus(student.getCampus());
                     return infoVO;
                 }).collect(Collectors.toList());
-        return Result.ok(list);
     }
 
     @Transactional
     @Override
-    public Result<?> remove(User user, IdCommand idCommand) {
+    public void remove(User user, IdCommand idCommand) {
         Long studentId = idCommand.getId();
         // 目标学生
         Student student = studentRepository.findById(studentId);
@@ -77,6 +75,5 @@ public class MemberServiceImpl implements MemberService {
         }
         // 踢出
         association.kick(student);
-        return Result.ok();
     }
 }

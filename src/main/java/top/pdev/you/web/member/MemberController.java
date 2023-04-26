@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.member.MemberService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.member.MemberService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.command.IdCommand;
 
@@ -36,7 +36,7 @@ public class MemberController {
     @AccessPermission(permission = Permission.MANAGER, specified = true)
     @GetMapping("")
     public Result<?> list(@CurrentUser User user) {
-        return memberService.list(user);
+        return Result.ok(memberService.list(user));
     }
 
     /**
@@ -50,6 +50,7 @@ public class MemberController {
     @DeleteMapping("")
     public Result<?> remove(@CurrentUser User user,
                             @RequestBody @Validated IdCommand idCommand) {
-        return memberService.remove(user, idCommand);
+        memberService.remove(user, idCommand);
+        return Result.ok();
     }
 }
