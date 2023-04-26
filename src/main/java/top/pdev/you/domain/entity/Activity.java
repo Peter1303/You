@@ -134,5 +134,43 @@ public class Activity extends BaseEntity {
         private Integer rule;
 
         private String value;
+
+        public void validate(Object value) {
+            switch (rule) {
+                case ActivityRule.TEACHER:
+                    // 没有允许老师参加
+                    if (this.value.equals("0")) {
+                        // 然而是老师
+                        if ("1".equals(value)) {
+                            throw new BusinessException("不允许老师参与");
+                        }
+                    }
+                    break;
+                case ActivityRule.TOTAL:
+                    // 如果活动达到了最大
+                    if (Integer.parseInt(this.value) == (Integer) value) {
+                        throw new BusinessException("活动人数已满");
+                    }
+                    break;
+                case ActivityRule.GRADE:
+                    int targetGrade = Integer.parseInt(this.value);
+                    // 如果有年级限制
+                    if (targetGrade != 0) {
+                        if (targetGrade != (Integer) value) {
+                            throw new BusinessException("只允许 " + targetGrade + " 年级参加");
+                        }
+                    }
+                    break;
+                case ActivityRule.END_TIME:
+                    DateTime end = DateUtil.parse(this.value);
+                    if (end != null) {
+                        String dateString = (String) value;
+                        if (end.before(DateUtil.parse(dateString))) {
+                            throw new BusinessException("你错过活动时间了");
+                        }
+                    }
+                    break;
+            }
+        }
     }
 }

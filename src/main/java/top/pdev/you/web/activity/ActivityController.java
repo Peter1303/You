@@ -59,4 +59,10 @@ public class ActivityController {
         List<ActivityInfoDTO> list = activityService.list();
         return Result.ok(list);
     }
+
+    @PostMapping("participate")
+    public Result<?> participate(@RequestBody @Validated IdCommand command) {
+        activityService.participate(command);
+        return Result.ok();
+    }
 }

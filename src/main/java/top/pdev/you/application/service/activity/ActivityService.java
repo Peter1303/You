@@ -23,4 +23,6 @@ public interface ActivityService {
     void update(UpdateActivityCommand command);
 
     void delete(IdCommand command);
+
+    void participate(IdCommand command);
 }
