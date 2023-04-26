@@ -1,16 +1,16 @@
-package top.pdev.you.web.association.command;
+package top.pdev.you.domain.ui.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 /**
- * 社团信息命令
+ * 社团信息
  * Created in 2022/11/8 22:33
  *
  * @author Peter1303
  */
 @Data
-public class AssociationInfoCommand {
+public class AssociationInfoResponse {
     private Long id;
     private String name;
     private String summary;

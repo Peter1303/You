@@ -17,6 +17,10 @@ import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
+import top.pdev.you.domain.ui.dto.StudentInfoDTO;
+import top.pdev.you.domain.ui.vm.AssociationAuditResponse;
+import top.pdev.you.domain.ui.vm.AssociationInfoResponse;
 import top.pdev.you.infrastructure.factory.AssociationFactory;
 import top.pdev.you.infrastructure.factory.UserFactory;
 import top.pdev.you.persistence.mapper.AssociationMapper;
@@ -25,17 +29,12 @@ import top.pdev.you.persistence.repository.AssociationParticipateRepository;
 import top.pdev.you.persistence.repository.AssociationRepository;
 import top.pdev.you.persistence.repository.StudentRepository;
 import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
-import top.pdev.you.domain.ui.dto.StudentInfoDTO;
-import top.pdev.you.web.association.command.AssociationAuditCommand;
-import top.pdev.you.web.association.command.AssociationInfoCommand;
-import top.pdev.you.web.user.command.AddAdminCommand;
 import top.pdev.you.web.association.command.AddAssociationCommand;
 import top.pdev.you.web.association.command.ChangeNameCommand;
 import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.user.command.RemoveAdminCommand;
 import top.pdev.you.web.query.command.SearchCommand;
+import top.pdev.you.web.user.command.AddAdminCommand;
+import top.pdev.you.web.user.command.RemoveAdminCommand;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -76,86 +75,8 @@ public class AssociationServiceImpl implements AssociationService {
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
 
-    @Transactional
     @Override
-    public Result<?> add(AddAssociationCommand addAssociationCommand) {
-        Association association = associationFactory.newAssociation();
-        association.setName(addAssociationCommand.getName());
-        association.setSummary(addAssociationCommand.getSummary());
-        association.save();
-        return Result.ok();
-    }
-
-    @Transactional
-    @Override
-    public Result<?> delete(IdCommand idCommand) {
-        Association association = associationRepository.findById(idCommand.getId());
-        association.delete();
-        return Result.ok();
-    }
-
-    @Override
-    public Result<?> list(User user, SearchCommand searchCommand) {
-        // 出学生之外只能显示列表
-        AtomicBoolean isStudent = new AtomicBoolean(false);
-        AtomicReference<Long> studentId = new AtomicReference<>(null);
-        try {
-            Student student = userFactory.getStudent(user);
-            studentId.set(student.getId());
-            isStudent.set(true);
-        } catch (Exception ignored) {
-        }
-        if (!Optional.ofNullable(searchCommand.getName()).isPresent()) {
-            searchCommand.setName("");
-        }
-        List<AssociationInfoCommand> list =
-                associationRepository.findNameContaining(searchCommand.getName())
-                        .stream()
-                        .map(item -> {
-                            AssociationInfoCommand infoVO = new AssociationInfoCommand();
-                            Long associationId = item.getId();
-                            infoVO.setId(associationId);
-                            infoVO.setName(item.getName());
-                            infoVO.setSummary(item.getSummary());
-                            infoVO.setNumbers(associationParticipateRepository.countByAssociationId(associationId));
-                            if (isStudent.get()) {
-                                int status = AssociationStatus.NOT;
-                                // 有该学生即已经加入
-                                Long id = studentId.get();
-                                if (associationParticipateRepository.existsByStudentIdAndAssociationId(id, associationId)) {
-                                    status = AssociationStatus.JOINED;
-                                } else {
-                                    AssociationAudit one =
-                                            associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(
-                                                    id, associationId);
-                                    // 如果存在审核记录
-                                    if (Optional.ofNullable(one).isPresent()) {
-                                        status = AssociationStatus.AUDIT;
-                                    }
-                                }
-                                infoVO.setStatus(status);
-                            }
-                            return infoVO;
-                        })
-                        .collect(Collectors.toList());
-        return Result.ok(list);
-    }
-
-    @Transactional
-    @Override
-    public Result<?> join(boolean directly, User user, IdCommand idCommand) {
-        // 需要审核
-        if (!directly) {
-            Long associationId = idCommand.getId();
-            Association association = associationRepository.findById(associationId);
-            Student student = userFactory.getStudent(user);
-            association.request(student);
-        }
-        return Result.ok();
-    }
-
-    @Override
-    public Result<?> auditList(User user) {
+    public List<AssociationAuditResponse> auditList(User user) {
         RoleEntity role = user.getRoleDomain();
         Long associationId = null;
         if (role instanceof Manager) {
@@ -165,11 +86,11 @@ public class AssociationServiceImpl implements AssociationService {
         }
         // 没有过滤社团负责人的
         List<AssociationAudit> auditList = associationAuditRepository.findByAssociationIdAndStatusNull(associationId);
-        List<AssociationAuditCommand> list = auditList.stream()
+        return auditList.stream()
                 .map(item -> {
                     Long aid = item.getAssociationId();
                     Association association = associationRepository.findById(aid);
-                    AssociationAuditCommand auditVO = new AssociationAuditCommand();
+                    AssociationAuditResponse auditVO = new AssociationAuditResponse();
                     auditVO.setId(item.getId());
                     auditVO.setName(association.getName());
                     auditVO.setTime(item.getTime());
@@ -185,7 +106,79 @@ public class AssociationServiceImpl implements AssociationService {
                     return auditVO;
                 })
                 .collect(Collectors.toList());
-        return Result.ok(list);
+    }
+
+    @Transactional
+    @Override
+    public void add(AddAssociationCommand addAssociationCommand) {
+        Association association = associationFactory.newAssociation();
+        association.setName(addAssociationCommand.getName());
+        association.setSummary(addAssociationCommand.getSummary());
+        association.save();
+    }
+
+    @Transactional
+    @Override
+    public void delete(IdCommand idCommand) {
+        Association association = associationRepository.findById(idCommand.getId());
+        association.delete();
+    }
+
+    @Override
+    public List<AssociationInfoResponse> list(User user, SearchCommand searchCommand) {
+        // 出学生之外只能显示列表
+        AtomicBoolean isStudent = new AtomicBoolean(false);
+        AtomicReference<Long> studentId = new AtomicReference<>(null);
+        try {
+            Student student = userFactory.getStudent(user);
+            studentId.set(student.getId());
+            isStudent.set(true);
+        } catch (Exception ignored) {
+        }
+        if (!Optional.ofNullable(searchCommand.getName()).isPresent()) {
+            searchCommand.setName("");
+        }
+        return associationRepository.findNameContaining(searchCommand.getName())
+                .stream()
+                .map(item -> {
+                    AssociationInfoResponse infoVO = new AssociationInfoResponse();
+                    Long associationId = item.getId();
+                    infoVO.setId(associationId);
+                    infoVO.setName(item.getName());
+                    infoVO.setSummary(item.getSummary());
+                    infoVO.setNumbers(associationParticipateRepository.countByAssociationId(associationId));
+                    if (isStudent.get()) {
+                        int status = AssociationStatus.NOT;
+                        // 有该学生即已经加入
+                        Long id = studentId.get();
+                        if (associationParticipateRepository.existsByStudentIdAndAssociationId(id, associationId)) {
+                            status = AssociationStatus.JOINED;
+                        } else {
+                            AssociationAudit one =
+                                    associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(
+                                            id, associationId);
+                            // 如果存在审核记录
+                            if (Optional.ofNullable(one).isPresent()) {
+                                status = AssociationStatus.AUDIT;
+                            }
+                        }
+                        infoVO.setStatus(status);
+                    }
+                    return infoVO;
+                })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    @Override
+    public void join(boolean directly, User user, IdCommand idCommand) {
+        // 需要审核
+        if (!directly) {
+            Long associationId = idCommand.getId();
+            Association association = associationRepository.findById(associationId);
+            Student student = userFactory.getStudent(user);
+            association.request(student);
+        }
     }
 
     /**
@@ -201,61 +194,53 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Transactional
     @Override
-    public Result<?> pass(IdCommand idCommand) {
+    public void pass(IdCommand idCommand) {
         auditAssociationRequest(idCommand, true);
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> reject(IdCommand idCommand) {
+    public void reject(IdCommand idCommand) {
         auditAssociationRequest(idCommand, false);
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> addManager(AddAdminCommand addAdminVO) {
+    public void addManager(AddAdminCommand addAdminVO) {
         // TODO 老师添加负责人的时候只允许老师的社团
         addAdmin(addAdminVO.getAssociationId(), addAdminVO.getUid());
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> addAdmin(AddAdminCommand addAdminVO) {
+    public void addAdmin(AddAdminCommand addAdminVO) {
         addAdmin(addAdminVO.getAssociationId(), addAdminVO.getUid());
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> setName(ChangeNameCommand nameVO) {
+    public void setName(ChangeNameCommand nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
         association.changeName(nameVO.getName());
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> setSummary(ChangeNameCommand nameVO) {
+    public void setSummary(ChangeNameCommand nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
         association.changeSummary(nameVO.getName());
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> removeManager(RemoveAdminCommand removeAdminVO) {
+    public void removeManager(RemoveAdminCommand removeAdminVO) {
         removeAdmin(null, removeAdminVO.getUid());
-        return Result.ok();
     }
 
     @Transactional
     @Override
-    public Result<?> removeAdmin(RemoveAdminCommand removeAdminVO) {
+    public void removeAdmin(RemoveAdminCommand removeAdminVO) {
         removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
-        return Result.ok();
     }
 
     private void addAdmin(Long associationId, Long userId) {

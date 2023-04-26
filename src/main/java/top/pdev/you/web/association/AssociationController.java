@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import top.pdev.you.application.service.association.AssociationService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.validator.intefaces.Association;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.application.service.association.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.association.command.AddAssociationCommand;
-import top.pdev.you.web.user.command.AddAdminCommand;
 import top.pdev.you.web.association.command.ChangeNameCommand;
 import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.user.command.RemoveAdminCommand;
 import top.pdev.you.web.query.command.SearchCommand;
+import top.pdev.you.web.user.command.AddAdminCommand;
+import top.pdev.you.web.user.command.RemoveAdminCommand;
 
 import javax.annotation.Resource;
 
@@ -45,7 +45,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("")
     public Result<?> add(@RequestBody @Validated AddAssociationCommand addAssociationCommand) {
-        return associationService.add(addAssociationCommand);
+        associationService.add(addAssociationCommand);
+        return Result.ok();
     }
 
     /**
@@ -57,7 +58,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.SUPER)
     @DeleteMapping("")
     public Result<?> delete(@RequestBody @Validated IdCommand idCommand) {
-        return associationService.delete(idCommand);
+        associationService.delete(idCommand);
+        return Result.ok();
     }
 
     /**
@@ -69,7 +71,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("name")
     public Result<?> setName(@RequestBody @Validated ChangeNameCommand nameVO) {
-        return associationService.setName(nameVO);
+        associationService.setName(nameVO);
+        return Result.ok();
     }
 
     /**
@@ -81,7 +84,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.SUPER)
     @PutMapping("summary")
     public Result<?> setSummary(@RequestBody @Validated ChangeNameCommand nameVO) {
-        return associationService.setSummary(nameVO);
+        associationService.setSummary(nameVO);
+        return Result.ok();
     }
 
     /**
@@ -94,7 +98,7 @@ public class AssociationController {
     @GetMapping("")
     public Result<?> list(@CurrentUser User user,
                           @Validated(Association.class) SearchCommand searchCommand) {
-        return associationService.list(user, searchCommand);
+        return Result.ok(associationService.list(user, searchCommand));
     }
 
     /**
@@ -109,7 +113,8 @@ public class AssociationController {
     @PostMapping("join/request")
     public Result<?> joinRequest(@CurrentUser User user,
                                  @RequestBody @Validated IdCommand idCommand) {
-        return associationService.join(false, user, idCommand);
+        associationService.join(false, user, idCommand);
+        return Result.ok();
     }
 
     /**
@@ -121,7 +126,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.MANAGER)
     @GetMapping("audit")
     public Result<?> auditList(@CurrentUser User user) {
-        return associationService.auditList(user);
+        associationService.auditList(user);
+        return Result.ok();
     }
 
     /**
@@ -132,7 +138,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.MANAGER)
     @PutMapping("pass")
     public Result<?> pass(@RequestBody @Validated IdCommand idCommand) {
-        return associationService.pass(idCommand);
+        associationService.pass(idCommand);
+        return Result.ok();
     }
 
     /**
@@ -144,7 +151,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.MANAGER)
     @PutMapping("reject")
     public Result<?> reject(@RequestBody @Validated IdCommand idCommand) {
-        return associationService.reject(idCommand);
+        associationService.reject(idCommand);
+        return Result.ok();
     }
 
     /**
@@ -156,7 +164,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.ADMIN)
     @PostMapping("manager")
     public Result<?> addManager(@RequestBody @Validated AddAdminCommand addAdminVO) {
-        return associationService.addManager(addAdminVO);
+        associationService.addManager(addAdminVO);
+        return Result.ok();
     }
 
     /**
@@ -168,7 +177,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.ADMIN)
     @DeleteMapping("manager")
     public Result<?> removeManager(@RequestBody @Validated RemoveAdminCommand removeAdminVO) {
-        return associationService.removeManager(removeAdminVO);
+        associationService.removeManager(removeAdminVO);
+        return Result.ok();
     }
 
     /**
@@ -180,7 +190,8 @@ public class AssociationController {
     @AccessPermission(permission = Permission.SUPER)
     @PostMapping("admin")
     public Result<?> addAdmin(@RequestBody @Validated AddAdminCommand addAdminVO) {
-        return associationService.addAdmin(addAdminVO);
+        associationService.addAdmin(addAdminVO);
+        return Result.ok();
     }
 
     /**
@@ -192,6 +203,7 @@ public class AssociationController {
     @AccessPermission(permission = Permission.ADMIN)
     @DeleteMapping("admin")
     public Result<?> removeAdmin(@RequestBody @Validated RemoveAdminCommand removeAdminVO) {
-        return associationService.removeAdmin(removeAdminVO);
+        associationService.removeAdmin(removeAdminVO);
+        return Result.ok();
     }
 }
