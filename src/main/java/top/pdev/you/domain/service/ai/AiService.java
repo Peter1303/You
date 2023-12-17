@@ -1,5 +1,6 @@
 package top.pdev.you.domain.service.ai;
 
+import top.pdev.you.domain.command.ai.AddKnowledgeCommand;
 import top.pdev.you.domain.command.ai.AiAnswerCommand;
 import top.pdev.you.domain.model.vm.AnswerResponse;
 
@@ -17,4 +18,11 @@ public interface AiService {
      * @return {@link AnswerResponse}
      */
     AnswerResponse ask(AiAnswerCommand command);
+
+    /**
+     * 添加
+     *
+     * @param command 命令
+     */
+    void add(AddKnowledgeCommand command);
 }

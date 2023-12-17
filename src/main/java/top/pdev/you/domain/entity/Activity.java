@@ -56,7 +56,7 @@ public class Activity extends BaseEntity {
     private String location;
 
     /**
-     * 活动时间
+     * 创建时间
      */
     private LocalDateTime time;
 

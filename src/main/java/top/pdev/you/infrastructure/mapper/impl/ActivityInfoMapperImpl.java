@@ -1,5 +1,6 @@
 package top.pdev.you.infrastructure.mapper.impl;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Component;
 import top.pdev.you.common.constant.ActivityRule;
@@ -46,6 +47,11 @@ public class ActivityInfoMapperImpl implements ActivityInfoMapper {
     @Override
     public ActivityInfoDTO convert(Activity activity) {
         List<Activity.Rule> rules = activityRuleRepository.findByActivity(activity);
+        return convert(activity, rules);
+    }
+
+    @Override
+    public ActivityInfoDTO convert(Activity activity, List<Activity.Rule> rules) {
         Long associationId = activity.getAssociationId();
         Association association = associationRepository.findById(associationId);
         AssociationBaseInfoDTO associationBaseInfoDTO = AssociationMapper.INSTANCE.convert(association);
@@ -68,7 +74,7 @@ public class ActivityInfoMapperImpl implements ActivityInfoMapper {
         dto.setSummary(activity.getSummary());
         dto.setDetail(activity.getDetail());
         dto.setLocation(activity.getLocation());
-        dto.setCreatedTime(activity.getTime());
+        dto.setCreatedTime(DateTime.now().toLocalDateTime());
         dto.setAssociation(associationBaseInfoDTO);
         dto.setTime(timeRangeDTO);
         dto.setCurrent((int) current);

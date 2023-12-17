@@ -1,8 +1,10 @@
 package top.pdev.you.domain.service.activity.impl;
 
 import cn.hutool.core.date.DateUtil;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.pdev.you.application.event.ActivityEvent;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.constant.ActivityRule;
 import top.pdev.you.common.entity.role.RoleEntity;
@@ -70,6 +72,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Resource
     private ActivityInfoMapper activityInfoMapper;
 
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
+
     @Override
     public ActivityInfoDTO get(IdCommand command) {
         Long id = command.getId();
@@ -124,6 +129,12 @@ public class ActivityServiceImpl implements ActivityService {
 
         List<Activity.Rule> rules = activity.rules(ruleCommand);
         rules.forEach(rule -> activityRuleRepository.save(rule));
+
+        // 推送事件
+        ActivityEvent event = new ActivityEvent(activity);
+        event.setActivity(activity);
+        event.setRules(rules);
+        applicationEventPublisher.publishEvent(event);
     }
 
     @AccessPermission(permission = Permission.MANAGER)
@@ -158,6 +169,7 @@ public class ActivityServiceImpl implements ActivityService {
             rule.setValue(value);
             activityRuleRepository.saveOrUpdate(rule);
         });
+        // TODO 同步更新新的活动信息到知识库
     }
 
     @AccessPermission(permission = Permission.MANAGER)
@@ -169,6 +181,7 @@ public class ActivityServiceImpl implements ActivityService {
         Optional.ofNullable(activity).orElseThrow(() -> new BusinessException("找不到活动"));
         activityRepository.removeById(id);
         activityRuleRepository.deleteByActivity(activity);
+        // TODO 同步删除知识库
     }
 
     @AccessPermission(permission = Permission.ADMIN, lower = true)
