@@ -2,7 +2,7 @@ package top.pdev.you.persistence.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import top.pdev.you.domain.entity.data.AssociationParticipantDO;
+import top.pdev.you.domain.entity.AssociationParticipant;
 
 /**
  * 社团参与持久化
@@ -11,5 +11,5 @@ import top.pdev.you.domain.entity.data.AssociationParticipantDO;
  * @author Peter1303
  */
 @Mapper
-public interface AssociationParticipateMapper extends BaseMapper<AssociationParticipantDO> {
+public interface AssociationParticipateMapper extends BaseMapper<AssociationParticipant> {
 }

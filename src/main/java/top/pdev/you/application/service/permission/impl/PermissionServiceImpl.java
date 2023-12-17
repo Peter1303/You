@@ -1,20 +1,21 @@
 package top.pdev.you.application.service.permission.impl;
 
 import org.springframework.stereotype.Service;
-import top.pdev.you.common.enums.RedisKey;
-import top.pdev.you.domain.entity.Manager;
+import top.pdev.you.application.service.permission.PermissionService;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import javax.annotation.Resource;
 import java.util.Objects;
@@ -29,6 +30,9 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class PermissionServiceImpl implements PermissionService {
+    @Resource
+    private UserService userService;
+
     @Resource
     private RedisService redisService;
 
@@ -80,7 +84,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (isSelf(currentUser, targetUserId)) {
             return true;
         }
-        RoleEntity role = currentUser.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(currentUser);
         User targetUser = userRepository.findById(targetUserId);
         if (targetUser.getPermission() > currentUser.getPermission()) {
             return false;

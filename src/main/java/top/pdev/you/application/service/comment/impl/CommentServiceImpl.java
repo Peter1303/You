@@ -1,11 +1,15 @@
 package top.pdev.you.application.service.comment.impl;
 
+import cn.hutool.core.date.DateTime;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.comment.CommentService;
+import top.pdev.you.application.service.user.UserService;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.dto.CommentInfoDTO;
 import top.pdev.you.infrastructure.factory.CommentFactory;
 import top.pdev.you.infrastructure.mapper.CommentMapper;
 import top.pdev.you.persistence.repository.CommentRepository;
@@ -13,7 +17,6 @@ import top.pdev.you.persistence.repository.PostRepository;
 import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.comment.command.AddCommentCommand;
-import top.pdev.you.web.comment.command.CommentInfoCommand;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +31,9 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl implements CommentService {
     @Resource
+    private UserService userService;
+
+    @Resource
     private CommentRepository commentRepository;
 
     @Resource
@@ -40,15 +46,17 @@ public class CommentServiceImpl implements CommentService {
     private CommentFactory commentFactory;
 
     @Override
-    public void postComments(IdCommand idCommand) {
+    public List<CommentInfoDTO> postComments(IdCommand idCommand) {
         List<Comment> list = commentRepository.findByPostIdOrderByTimeDesc(idCommand.getId());
-        List<CommentInfoCommand> result = list.stream().map(comment -> {
-            CommentInfoCommand infoVO = CommentMapper.INSTANCE.convert(comment);
-            Long userId = comment.getUserId();
-            User user = userRepository.findById(userId);
-            infoVO.setName(user.getRoleDomain().getName());
-            return infoVO;
-        }).collect(Collectors.toList());
+        return list.stream()
+                .map(comment -> {
+                    CommentInfoDTO infoVO = CommentMapper.INSTANCE.convert(comment);
+                    Long userId = comment.getUserId();
+                    User user = userRepository.findById(userId);
+                    infoVO.setName(userService.getRoleDomain(user).getName());
+                    return infoVO;
+                })
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -59,13 +67,18 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentFactory.newComment();
         comment.setUserId(user.getId());
         comment.setComment(addCommentVO.getComment());
-        comment.save(post);
+        comment.setPostId(post.getId());
+        comment.setTime(DateTime.now().toLocalDateTime());
+        if (!commentRepository.save(comment)) {
+            throw new BusinessException("无法评论");
+        }
     }
 
     @Transactional
     @Override
     public void delete(IdCommand idCommand) {
-        Comment comment = commentRepository.findById(idCommand.getId());
-        comment.delete();
+        if (!commentRepository.deleteById(idCommand.getId())) {
+            throw new BusinessException("删除评论失败");
+        }
     }
 }

@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.pdev.you.common.constant.Constants;
-import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.exception.TokenInvalidException;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.persistence.repository.TokenRepository;
 import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

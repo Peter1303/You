@@ -1,11 +1,16 @@
 package top.pdev.you.application.service.association.impl;
 
-import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.core.date.DateTime;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.event.AssociationAuditEvent;
+import top.pdev.you.application.service.association.AssociationAuditService;
+import top.pdev.you.application.service.association.AssociationManegeService;
+import top.pdev.you.application.service.association.AssociationProcessService;
 import top.pdev.you.application.service.association.AssociationService;
+import top.pdev.you.application.service.student.StudentService;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.common.constant.AssociationStatus;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
@@ -25,6 +30,7 @@ import top.pdev.you.infrastructure.factory.AssociationFactory;
 import top.pdev.you.infrastructure.factory.UserFactory;
 import top.pdev.you.persistence.mapper.AssociationMapper;
 import top.pdev.you.persistence.repository.AssociationAuditRepository;
+import top.pdev.you.persistence.repository.AssociationManagerRepository;
 import top.pdev.you.persistence.repository.AssociationParticipateRepository;
 import top.pdev.you.persistence.repository.AssociationRepository;
 import top.pdev.you.persistence.repository.StudentRepository;
@@ -52,6 +58,21 @@ import java.util.stream.Collectors;
 @Service
 public class AssociationServiceImpl implements AssociationService {
     @Resource
+    private AssociationProcessService associationProcessService;
+
+    @Resource
+    private AssociationManegeService associationManegeService;
+
+    @Resource
+    private AssociationAuditService associationAuditService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
     private AssociationRepository associationRepository;
 
     @Resource
@@ -59,6 +80,9 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Resource
     private AssociationParticipateRepository associationParticipateRepository;
+
+    @Resource
+    private AssociationManagerRepository associationManagerRepository;
 
     @Resource
     private AssociationFactory associationFactory;
@@ -70,6 +94,9 @@ public class AssociationServiceImpl implements AssociationService {
     private StudentRepository studentRepository;
 
     @Resource
+    private AssociationMapper associationMapper;
+
+    @Resource
     private UserFactory userFactory;
 
     @Resource
@@ -77,11 +104,11 @@ public class AssociationServiceImpl implements AssociationService {
 
     @Override
     public List<AssociationAuditResponse> auditList(User user) {
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(user);
         Long associationId = null;
         if (role instanceof Manager) {
             Manager manager = (Manager) role;
-            Association association = manager.belongAssociation();
+            Association association = belongAssociation(manager);
             associationId = association.getId();
         }
         // 没有过滤社团负责人的
@@ -98,10 +125,10 @@ public class AssociationServiceImpl implements AssociationService {
                     Student student = studentRepository.findById(item.getStudentId());
                     StudentInfoDTO dto = new StudentInfoDTO();
                     dto.setName(student.getName());
-                    dto.setClazz(student.getClazz());
+                    dto.setClazz(studentService.getClazz(student));
                     dto.setNo(student.getNo());
-                    dto.setCampus(student.getCampus());
-                    dto.setInstitute(student.getInstitute());
+                    dto.setCampus(studentService.getCampus(student));
+                    dto.setInstitute(studentService.getInstitute(student));
                     auditVO.setStudent(dto);
                     return auditVO;
                 })
@@ -114,14 +141,21 @@ public class AssociationServiceImpl implements AssociationService {
         Association association = associationFactory.newAssociation();
         association.setName(addAssociationCommand.getName());
         association.setSummary(addAssociationCommand.getSummary());
-        association.save();
+        // 查找是否已经存在社团
+        if (associationRepository.existsByName(association.getName())) {
+            throw new BusinessException("已经存在相同的社团");
+        }
+        if (!associationRepository.save(association)) {
+            throw new BusinessException("无法保存社团");
+        }
     }
 
     @Transactional
     @Override
     public void delete(IdCommand idCommand) {
-        Association association = associationRepository.findById(idCommand.getId());
-        association.delete();
+        if (!associationRepository.deleteById(idCommand.getId())) {
+            throw new BusinessException("无法删除社团");
+        }
     }
 
     @Override
@@ -175,9 +209,24 @@ public class AssociationServiceImpl implements AssociationService {
         // 需要审核
         if (!directly) {
             Long associationId = idCommand.getId();
-            Association association = associationRepository.findById(associationId);
             Student student = userFactory.getStudent(user);
-            association.request(student);
+            Long studentId = student.getId();
+            boolean exists = associationParticipateRepository.existsByStudentIdAndAssociationId(studentId, associationId);
+            if (exists) {
+                throw new BusinessException("你已经加入该社团了");
+            }
+            // 是否已经在审核了
+            AssociationAudit audit = associationAuditRepository.findByStudentIdAndAssociationIdAndStatusNull(studentId, associationId);
+            if (Optional.ofNullable(audit).isPresent()) {
+                throw new BusinessException("请等待审核");
+            }
+            AssociationAudit associationAudit = new AssociationAudit();
+            associationAudit.setAssociationId(associationId);
+            associationAudit.setStudentId(studentId);
+            associationAudit.setTime(DateTime.now().toLocalDateTime());
+            if (!associationAuditRepository.save(associationAudit)) {
+                throw new BusinessException("无法保存加入社团审核");
+            }
         }
     }
 
@@ -221,14 +270,20 @@ public class AssociationServiceImpl implements AssociationService {
     @Override
     public void setName(ChangeNameCommand nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
-        association.changeName(nameVO.getName());
+        association.setName(nameVO.getName());
+        if (!associationRepository.saveOrUpdate(association)) {
+            throw new BusinessException("无法更改社团名字");
+        }
     }
 
     @Transactional
     @Override
     public void setSummary(ChangeNameCommand nameVO) {
         Association association = associationRepository.findById(nameVO.getId());
-        association.changeSummary(nameVO.getName());
+        association.setSummary(nameVO.getName());
+        if (!associationRepository.saveOrUpdate(association)) {
+            throw new BusinessException("无法更改社团描述");
+        }
     }
 
     @Transactional
@@ -243,29 +298,37 @@ public class AssociationServiceImpl implements AssociationService {
         removeAdmin(removeAdminVO.getAssociationId(), removeAdminVO.getUid());
     }
 
+    @Override
+    public Association belongAssociation(RoleEntity role) {
+        User user = userService.getUser(role);
+        List<AssociationManager> managers = associationManagerRepository.findByUserIdAndType(user.getId(),
+                Permission.MANAGER.getValue());
+        AssociationManager manager = managers.get(0);
+        return associationRepository.findById(manager.getAssociationId());
+    }
+
     private void addAdmin(Long associationId, Long userId) {
+        Association association = associationRepository.findById(associationId);
         AssociationManager associationManager = associationFactory.newAssociationManger();
         associationManager.setAssociationId(associationId);
         User user = userRepository.findById(userId);
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(user);
         // 检查社团是否已经被相关的管理接管
-        if (associationManager.exists(role)) {
+        if (associationManegeService.exists(association, role)) {
             throw new BusinessException("已经存在了管理者");
         }
-        associationManager.add(role);
+        associationManegeService.add(association, role);
         if (role instanceof Student) {
             // 让负责人直接进入社团
-            Association association = associationRepository.findById(associationId);
-            association.accept((Student) role);
+            associationProcessService.accept(association, (Student) role);
         }
     }
 
     private void removeAdmin(Long associationId, Long userId) {
         User user = userRepository.findById(userId);
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(user);
         // 如果是负责人直接获取管理的社团
         if (role instanceof Manager) {
-            AssociationMapper associationMapper = SpringUtil.getBean(AssociationMapper.class);
             List<AssociationBaseInfoDTO> associations = associationMapper.getListByAdmin(user.getId());
             Optional<AssociationBaseInfoDTO> first = associations.stream().findFirst();
             if (first.isPresent()) {
@@ -275,24 +338,25 @@ public class AssociationServiceImpl implements AssociationService {
             throw new BusinessException("没有这个管理者");
         }
         Optional.ofNullable(associationId).orElseThrow(() -> new BusinessException("没有社团 ID"));
+        Association association = associationRepository.findById(associationId);
         AssociationManager associationManager = associationFactory.newAssociationManger();
         associationManager.setAssociationId(associationId);
         // 检查社团是否已经被相关的管理接管
-        if (!associationManager.exists(role)) {
+        if (!associationManegeService.exists(association, role)) {
             throw new BusinessException("没有该管理者");
         }
         if (role instanceof Manager) {
             // 更改权限
-            role.getUser().permissionTo(Permission.USER);
+            userService.permissionTo(user, Permission.USER);
         }
-        associationManager.remove(role);
+        associationManegeService.remove(association, role);
     }
 
     /**
      * 审计社团请求
      *
-     * @param idCommand   ID VO
-     * @param accept 接受
+     * @param idCommand ID VO
+     * @param accept    接受
      */
     private void auditAssociationRequest(IdCommand idCommand, boolean accept) {
         Long id = idCommand.getId();
@@ -302,12 +366,12 @@ public class AssociationServiceImpl implements AssociationService {
         Association association =
                 associationRepository.findById(audit.getAssociationId());
         if (accept) {
-            association.accept(student);
+            associationProcessService.accept(association, student);
             // 通过审核
-            audit.pass();
+            associationAuditService.changeStatus(audit, true);
         } else {
             // 审核拒绝
-            audit.reject();
+            associationAuditService.changeStatus(audit, true);
         }
         AssociationAuditEvent event = new AssociationAuditEvent(this);
         event.setAssociation(association);

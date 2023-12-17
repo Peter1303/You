@@ -2,8 +2,8 @@ package top.pdev.you.persistence.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.stereotype.Repository;
+import top.pdev.you.domain.entity.AssociationParticipant;
 import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.persistence.mapper.AssociationParticipateMapper;
 import top.pdev.you.persistence.repository.AssociationParticipateRepository;
 import top.pdev.you.persistence.repository.base.BaseRepository;
@@ -19,45 +19,45 @@ import java.util.List;
  */
 @Repository
 public class AssociationParticipateRepositoryImpl
-        extends BaseRepository<AssociationParticipateMapper, AssociationParticipantDO>
+        extends BaseRepository<AssociationParticipateMapper, AssociationParticipant>
         implements AssociationParticipateRepository {
     @Resource
     private AssociationParticipateMapper mapper;
 
     @Override
-    public List<AssociationParticipantDO> getParticipateList(Student student) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getStudentId, student.getId());
+    public List<AssociationParticipant> getParticipateList(Student student) {
+        LambdaQueryWrapper<AssociationParticipant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipant::getStudentId, student.getId());
         return mapper.selectList(queryWrapper);
     }
 
     @Override
-    public List<AssociationParticipantDO> findByAssociationId(Long associationId) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getAssociationId, associationId);
+    public List<AssociationParticipant> findByAssociationId(Long associationId) {
+        LambdaQueryWrapper<AssociationParticipant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipant::getAssociationId, associationId);
         return mapper.selectList(queryWrapper);
     }
 
     @Override
     public long countByAssociationId(long id) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getAssociationId, id);
+        LambdaQueryWrapper<AssociationParticipant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipant::getAssociationId, id);
         return mapper.selectCount(queryWrapper);
     }
 
     @Override
     public boolean deleteByAssociationIdAndStudentId(Long associationId, Long studentId) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getAssociationId, associationId)
-                .eq(AssociationParticipantDO::getStudentId, studentId);
+        LambdaQueryWrapper<AssociationParticipant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipant::getAssociationId, associationId)
+                .eq(AssociationParticipant::getStudentId, studentId);
         return remove(queryWrapper);
     }
 
     @Override
     public boolean existsByStudentIdAndAssociationId(Long studentId, Long associationId) {
-        LambdaQueryWrapper<AssociationParticipantDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationParticipantDO::getStudentId, studentId)
-                .eq(AssociationParticipantDO::getAssociationId, associationId);
+        LambdaQueryWrapper<AssociationParticipant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AssociationParticipant::getStudentId, studentId)
+                .eq(AssociationParticipant::getAssociationId, associationId);
         return mapper.exists(queryWrapper);
     }
 }

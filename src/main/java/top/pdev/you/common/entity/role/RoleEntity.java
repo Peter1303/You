@@ -1,7 +1,6 @@
 package top.pdev.you.common.entity.role;
 
 import lombok.Data;
-import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.entity.base.BaseEntity;
 
 /**
@@ -15,6 +14,4 @@ public abstract class RoleEntity extends BaseEntity {
     private String name;
     private String no;
     private String contact;
-
-    public abstract User getUser();
 }

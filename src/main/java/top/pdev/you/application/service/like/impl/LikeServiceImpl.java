@@ -3,8 +3,8 @@ package top.pdev.you.application.service.like.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.like.LikeService;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Like;
-import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.infrastructure.factory.LikeFactory;
 import top.pdev.you.persistence.repository.LikeRepository;
@@ -33,15 +33,29 @@ public class LikeServiceImpl implements LikeService {
     @Transactional
     @Override
     public void add(User user, IdCommand idCommand) {
-        Post post = postRepository.findById(idCommand.getId());
+        Long postId = idCommand.getId();
+        // 检查是否已经点过赞了
+        if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
+            throw new BusinessException("已经点过赞了");
+        }
+        // 检查帖子是否存在
+        if (!postRepository.existsById(postId)) {
+            throw new BusinessException("帖子不存在");
+        }
         Like like = likeFactory.newLike();
-        like.addLike(user, post);
+        like.setUserId(user.getId());
+        like.setPostId(postId);
+        if (!likeRepository.save(like)) {
+            throw new BusinessException("点赞失败");
+        }
     }
 
     @Transactional
     @Override
     public void delete(User user, IdCommand idCommand) {
         Like like = likeRepository.findByPostIdAndUserId(idCommand.getId(), user.getId());
-        like.cancelLike();
+        if (!likeRepository.removeById(like)) {
+            throw new BusinessException("取消点赞失败");
+        }
     }
 }

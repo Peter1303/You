@@ -5,9 +5,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.persistence.repository.InstituteRepository;
-import top.pdev.you.infrastructure.mapper.InstituteMapper;
 import top.pdev.you.domain.ui.dto.InstituteInfoDTO;
+import top.pdev.you.infrastructure.mapper.InstituteMapper;
+import top.pdev.you.persistence.repository.InstituteRepository;
 
 import javax.annotation.Resource;
 import java.util.List;

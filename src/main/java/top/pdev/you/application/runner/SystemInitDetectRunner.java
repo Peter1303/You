@@ -6,9 +6,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import top.pdev.you.common.enums.RedisKey;
-import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import javax.annotation.Resource;
 

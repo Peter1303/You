@@ -1,15 +1,16 @@
 package top.pdev.you.infrastructure.mapper.impl;
 
 import org.springframework.stereotype.Component;
+import top.pdev.you.application.service.permission.PermissionService;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.vm.PostInfoResponse;
+import top.pdev.you.infrastructure.mapper.PostInfoMapper;
 import top.pdev.you.persistence.repository.CommentRepository;
 import top.pdev.you.persistence.repository.LikeRepository;
 import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.application.service.permission.PermissionService;
-import top.pdev.you.infrastructure.mapper.PostInfoMapper;
-import top.pdev.you.domain.ui.vm.PostInfoResponse;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class PostInfoMapperImpl implements PostInfoMapper {
+    @Resource
+    private UserService userService;
+
     @Resource
     private UserRepository userRepository;
 
@@ -47,7 +51,7 @@ public class PostInfoMapperImpl implements PostInfoMapper {
         PostInfoResponse infoVO = convert(post);
         Long userId = post.getUserId();
         User user = userRepository.findById(userId);
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(user);
         String name = role.getName();
         infoVO.setName(name);
         Long postId = post.getId();

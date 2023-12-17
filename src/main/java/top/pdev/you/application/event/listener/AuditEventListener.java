@@ -6,10 +6,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.application.event.AuditEvent;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.application.service.wechat.WechatMessageService;
 import top.pdev.you.common.entity.wechat.template.AuditTemplate;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
+import top.pdev.you.infrastructure.config.WechatTemplateProperties;
 
 import javax.annotation.Resource;
 
@@ -25,6 +27,12 @@ public class AuditEventListener {
     @Resource
     private WechatMessageService wechatMessageService;
 
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private WechatTemplateProperties wechatTemplateProperties;
+
     @Async
     @EventListener(AuditEvent.class)
     public void onEvent(AuditEvent event) {
@@ -33,8 +41,9 @@ public class AuditEventListener {
             AssociationAuditEvent auditEvent = (AssociationAuditEvent) event;
             Association association = auditEvent.getAssociation();
             Student student = auditEvent.getStudent();
-            String openId = student.getUser().getWechatId();
+            String openId = userService.getUser(student).getWechatId();
             AuditTemplate auditTemplate = new AuditTemplate();
+            auditTemplate.setId(wechatTemplateProperties.getTemplateAudit());
             auditTemplate.setTitle("社团加入审核");
             auditTemplate.setName(association.getName());
             auditTemplate.setResult(auditEvent.isPassed() ? "通过" : "拒绝");

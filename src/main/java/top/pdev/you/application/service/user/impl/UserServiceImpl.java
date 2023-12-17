@@ -1,18 +1,22 @@
 package top.pdev.you.application.service.user.impl;
 
 import cn.hutool.core.date.DateTime;
-import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.permission.PermissionService;
+import top.pdev.you.application.service.student.StudentService;
+import top.pdev.you.application.service.teacher.TeacherService;
 import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.application.service.wechat.WechatService;
 import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.entity.role.SuperEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationManager;
 import top.pdev.you.domain.entity.Manager;
@@ -25,14 +29,17 @@ import top.pdev.you.domain.ui.vm.LoginResultResponse;
 import top.pdev.you.domain.ui.vm.UserInfoResponse;
 import top.pdev.you.domain.ui.vm.UserProfileResponse;
 import top.pdev.you.infrastructure.factory.UserFactory;
-import top.pdev.you.infrastructure.mapper.AssociationMapper;
 import top.pdev.you.infrastructure.redis.RedisService;
 import top.pdev.you.infrastructure.result.ResultCode;
 import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
+import top.pdev.you.persistence.mapper.AssociationMapper;
 import top.pdev.you.persistence.mapper.UserMapper;
 import top.pdev.you.persistence.repository.AssociationManagerRepository;
 import top.pdev.you.persistence.repository.AssociationRepository;
+import top.pdev.you.persistence.repository.ClassRepository;
+import top.pdev.you.persistence.repository.StudentRepository;
+import top.pdev.you.persistence.repository.TeacherRepository;
 import top.pdev.you.persistence.repository.UserRepository;
 import top.pdev.you.web.user.command.RegisterCommand;
 import top.pdev.you.web.user.command.SetProfileCommand;
@@ -40,6 +47,7 @@ import top.pdev.you.web.user.command.UserLoginCommand;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,8 +62,15 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
     @Resource
+    private StudentService studentService;
+
+    @Resource
+    private TeacherService teacherService;
+
+    @Resource
     private WechatService wechatService;
 
+    @Lazy
     @Resource
     private PermissionService permissionService;
 
@@ -72,7 +87,50 @@ public class UserServiceImpl implements UserService {
     private AssociationManagerRepository associationManagerRepository;
 
     @Resource
+    private ClassRepository classRepository;
+
+    @Resource
+    private StudentRepository studentRepository;
+
+    @Resource
+    private TeacherRepository teacherRepository;
+
+    @Resource
+    private AssociationMapper associationMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
     private UserFactory userFactory;
+
+    @Override
+    public User getUser(RoleEntity role) {
+        if (role instanceof Student) {
+            Student student = (Student) role;
+            Long userId = student.getUserId();
+            return userRepository.findById(userId);
+        }
+        if (role instanceof Teacher) {
+            Teacher teacher = (Teacher) role;
+            Long userId = teacher.getUserId();
+            return userRepository.findById(userId);
+        }
+        return null;
+    }
+
+    @Override
+    public RoleEntity getRoleDomain(User user) {
+        Integer permission = user.getPermission();
+        if (permission == Permission.USER.getValue()) {
+            return userFactory.getStudent(user);
+        } else if (permission == Permission.MANAGER.getValue()) {
+            return userFactory.getManager(user);
+        } else if (permission == Permission.ADMIN.getValue()) {
+            return userFactory.getTeacher(user);
+        }
+        return new SuperEntity();
+    }
 
     @Transactional
     @Override
@@ -94,7 +152,9 @@ public class UserServiceImpl implements UserService {
                         user.setTime(DateTime.now().toLocalDateTime());
                         user.setPermission(Permission.SUPER.getValue());
                         user.setWechatId(openId);
-                        user.save();
+                        if (!userRepository.save(user)) {
+                            throw new InternalErrorException("无法保存用户");
+                        }
                         redisService.set(tag, true);
                         return loginResultResponse;
                     }
@@ -122,22 +182,42 @@ public class UserServiceImpl implements UserService {
         switch (role) {
             case STUDENT:
                 Student student = userFactory.newStudent();
+                Long classId = vo.getClassId();
                 student.setNo(vo.getNo());
                 student.setName(vo.getName());
                 student.setContact(vo.getContact());
-                student.setClassId(vo.getClassId());
-                user.save(student);
+                student.setClassId(classId);
+                user.setPermission(Permission.USER.getValue());
+                user.setTime(LocalDateTime.now());
+                if (!userRepository.save(user)) {
+                    throw new InternalErrorException("无法保存用户");
+                }
                 student.setUserId(user.getId());
-                student.save();
+                // 检测班级是否存在
+                if (!Optional.ofNullable(classRepository.findById(classId)).isPresent()) {
+                    throw new BusinessException(ResultCode.FAILED, "班级不存在");
+                }
+                if (!Optional.ofNullable(classId).isPresent()) {
+                    throw new InternalErrorException("班级 ID 空错误");
+                }
+                if (!studentRepository.save(student)) {
+                    throw new InternalErrorException("无法保存学生");
+                }
                 break;
             case TEACHER:
                 Teacher teacher = userFactory.newTeacher();
                 teacher.setNo(vo.getNo());
                 teacher.setName(vo.getName());
                 teacher.setContact(vo.getContact());
-                user.save(teacher);
+                user.setPermission(Permission.ADMIN.getValue());
+                user.setTime(LocalDateTime.now());
+                if (!userRepository.save(user)) {
+                    throw new InternalErrorException("无法保存用户");
+                }
                 teacher.setUserId(user.getId());
-                teacher.save();
+                if (!teacherRepository.save(teacher)) {
+                    throw new InternalErrorException("无法保存老师");
+                }
                 break;
             default:
                 break;
@@ -153,7 +233,7 @@ public class UserServiceImpl implements UserService {
         Integer permission = user.getPermission();
         String association = null;
         List<AssociationBaseInfoDTO> associations = null;
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = getRoleDomain(user);
         String name = role.getName();
         String no = role.getNo();
         // 为学生
@@ -169,20 +249,20 @@ public class UserServiceImpl implements UserService {
                 Association one = associationRepository.findById(manager.getAssociationId());
                 association = one.getName();
             }
-            List<Association> list = student.getAssociations();
+            List<Association> list = studentService.getAssociations(student);
             associations = list
                     .stream()
-                    .map(AssociationMapper.INSTANCE::convert)
+                    .map(top.pdev.you.infrastructure.mapper.AssociationMapper.INSTANCE::convert)
                     .collect(Collectors.toList());
         }
         // 为老师
         if (role instanceof Teacher) {
             Teacher teacher = (Teacher) role;
             no = teacher.getNo();
-            List<Association> managedList = teacher.getManagedAssociationList();
+            List<Association> managedList = teacherService.getManagedAssociationList(teacher);
             associations = managedList
                     .stream()
-                    .map(AssociationMapper.INSTANCE::convert)
+                    .map(top.pdev.you.infrastructure.mapper.AssociationMapper.INSTANCE::convert)
                     .collect(Collectors.toList());
         }
         // 信息
@@ -203,17 +283,17 @@ public class UserServiceImpl implements UserService {
         String campus = null;
         String institute = null;
         Integer grade = null;
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = getRoleDomain(user);
         // 为学生
         String name = role.getName();
         String no = role.getNo();
         String contact = role.getContact();
         if (role instanceof Student) {
             Student student = userFactory.getStudent(user);
-            clazz = student.getClazz();
-            campus = student.getCampus();
-            institute = student.getInstitute();
-            grade = student.getGrade();
+            clazz = studentService.getClazz(student);
+            campus = studentService.getCampus(student);
+            institute = studentService.getInstitute(student);
+            grade = studentService.getGrade(student);
         }
         // 为老师
         if (role instanceof Teacher) {
@@ -234,37 +314,64 @@ public class UserServiceImpl implements UserService {
         return vo;
     }
 
+    @Override
+    public void permissionTo(User user, Permission permission) {
+        user.setPermission(permission.getValue());
+        if (!userRepository.updateById(user)) {
+            throw new BusinessException("变更权限失败");
+        }
+    }
+
     @Transactional
     @Override
     public void setProfile(User user,
-                                SetProfileCommand setProfileCommand) {
+                           SetProfileCommand setProfileCommand) {
         String contact = setProfileCommand.getContact();
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = getRoleDomain(user);
         if (role instanceof Student) {
             // 更改学生
             Student student = (Student) role;
-            student.saveContact(contact);
+            student.setContact(contact);
+            if (!studentRepository.updateById(student)) {
+                throw new BusinessException("无法保存联系方式");
+            }
         } else if (role instanceof Teacher) {
             // 更改老师
             Teacher teacher = (Teacher) role;
-            teacher.saveContact(contact);
+            teacher.setContact(contact);
+            if (!teacherRepository.updateById(teacher)) {
+                throw new BusinessException("无法保存联系方式");
+            }
         }
     }
 
     @Transactional
     @Override
     public void deleteAccount(User user,
-                                   HttpServletRequest request) {
-        user.delete();
+                              HttpServletRequest request) {
+        Integer permission = user.getPermission();
+        if (permission == Permission.SUPER.getValue()) {
+            throw new BusinessException("核心管理员不可删除");
+        }
+        Long id = user.getId();
+        boolean deleted;
+        if (permission == Permission.ADMIN.getValue()) {
+            deleted = teacherRepository.deleteByUserId(id);
+        } else {
+            deleted = studentRepository.deleteByUserId(id);
+        }
+        if (deleted) {
+            deleted = userRepository.deleteById(id);
+        }
+        if (!deleted) {
+            throw new BusinessException("删除失败");
+        }
         String token = TokenUtil.getTokenByHeader(request);
         redisService.delete(TagKeyUtil.get(RedisKey.LOGIN_TOKEN, token));
     }
 
     @Override
     public List<UserInfoResponse> getUsers() {
-        // 时间不足 暂时用 MVC 后续可改为注入
-        top.pdev.you.persistence.mapper.AssociationMapper associationMapper = SpringUtil.getBean(top.pdev.you.persistence.mapper.AssociationMapper.class);
-        UserMapper userMapper = SpringUtil.getBean(UserMapper.class);
         List<User> list = userMapper.selectList(new LambdaQueryWrapper<>());
         List<UserInfoResponse> userInfoList = new ArrayList<>();
         list.forEach(user -> {
@@ -272,7 +379,7 @@ public class UserServiceImpl implements UserService {
             if (Permission.SUPER.getValue() == user.getPermission()) {
                 return;
             }
-            RoleEntity role = user.getRoleDomain();
+            RoleEntity role = getRoleDomain(user);
             Integer permission = user.getPermission();
             String contact;
             String clazz = null;
@@ -286,7 +393,7 @@ public class UserServiceImpl implements UserService {
             } else {
                 Student student = (Student) role;
                 contact = student.getContact();
-                clazz = student.getClazz();
+                clazz = studentService.getClazz(student);
                 // 如果是负责人那么只需要其管理的社团
                 if (permission == Permission.MANAGER.getValue()) {
                     associations = associationMapper.getListByAdmin(user.getId());

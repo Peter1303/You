@@ -25,7 +25,6 @@ import java.util.List;
  *
  * @author Peter1303
  */
-@TableName("activity")
 @Data
 public class Activity extends BaseEntity {
     /**
@@ -34,7 +33,6 @@ public class Activity extends BaseEntity {
     @TableId(type = IdType.AUTO)
     private Long id;
 
-    @TableField("association_id")
     private Long associationId;
 
     /**

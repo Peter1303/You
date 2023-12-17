@@ -1,9 +1,6 @@
 package top.pdev.you.common.entity.role;
 
-import cn.hutool.extra.spring.SpringUtil;
 import lombok.Data;
-import top.pdev.you.domain.entity.User;
-import top.pdev.you.infrastructure.factory.UserFactory;
 
 /**
  * 超级管理员
@@ -14,9 +11,4 @@ import top.pdev.you.infrastructure.factory.UserFactory;
 @Data
 public class SuperEntity extends RoleEntity {
     private String name = "超级管理员";
-
-    @Override
-    public User getUser() {
-        return SpringUtil.getBean(UserFactory.class).newUser();
-    }
 }

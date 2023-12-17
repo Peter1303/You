@@ -1,8 +1,11 @@
 package top.pdev.you.application.service.comment;
 
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.ui.dto.CommentInfoDTO;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.comment.command.AddCommentCommand;
+
+import java.util.List;
 
 /**
  * 评论服务
@@ -15,8 +18,9 @@ public interface CommentService {
      * 帖子评论
      *
      * @param idCommand ID VO
+     * @return {@link List}<{@link CommentInfoDTO}>
      */
-    void postComments(IdCommand idCommand);
+    List<CommentInfoDTO> postComments(IdCommand idCommand);
 
     /**
      * 添加

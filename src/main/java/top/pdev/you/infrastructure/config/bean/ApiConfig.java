@@ -6,8 +6,8 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.pdev.you.common.interceptor.TokenInterceptor;
 import top.pdev.you.application.resover.CurrentUserMethodArgumentResolver;
+import top.pdev.you.common.interceptor.TokenInterceptor;
 
 import javax.annotation.Resource;
 import java.util.List;

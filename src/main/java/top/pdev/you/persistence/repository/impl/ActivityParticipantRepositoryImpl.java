@@ -35,7 +35,7 @@ public class ActivityParticipantRepositoryImpl
     public boolean existsByActivityAndUser(Activity activity, User user) {
         LambdaQueryWrapper<ActivityParticipant> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ActivityParticipant::getActivityId, activity.getId())
-                .eq(ActivityParticipant::getUid, user.getId());
+                .eq(ActivityParticipant::getUserId, user.getId());
         return mapper.exists(queryWrapper);
     }
 }

@@ -40,7 +40,7 @@ public class AssociationManagerRepositoryImpl
     @Override
     public List<AssociationManager> getManagedList(Teacher teacher) {
         LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManager::getUserId, teacher.getUser().getId());
+        queryWrapper.eq(AssociationManager::getUserId, teacher.getUserId());
         return mapper.selectList(queryWrapper);
     }
 

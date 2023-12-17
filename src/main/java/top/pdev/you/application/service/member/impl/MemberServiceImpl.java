@@ -2,10 +2,14 @@ package top.pdev.you.application.service.member.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import top.pdev.you.application.service.association.AssociationService;
 import top.pdev.you.application.service.member.MemberService;
+import top.pdev.you.application.service.student.StudentService;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
+import top.pdev.you.domain.entity.AssociationParticipant;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.User;
@@ -29,6 +33,15 @@ import java.util.stream.Collectors;
 @Service
 public class MemberServiceImpl implements MemberService {
     @Resource
+    private UserService userService;
+
+    @Resource
+    private AssociationService associationService;
+
+    @Resource
+    private StudentService studentService;
+
+    @Resource
     private StudentRepository studentRepository;
 
     @Resource
@@ -40,17 +53,20 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<StudentInfoResponse> list(User user) {
         Manager manager = userFactory.getManager(user);
-        Association association = manager.belongAssociation();
-        List<Student> participants = association.participants();
+        Association association = associationService.belongAssociation(manager);
+        List<AssociationParticipant> all = associationParticipateRepository.findByAssociationId(association.getId());
+        List<Student> participants = all.stream().map(participant ->
+                studentRepository.findById(participant.getStudentId())
+        ).collect(Collectors.toList());
         return participants.stream()
                 .filter(student -> !Objects.equals(student.getUserId(), user.getId()))
                 .map(student -> {
                     StudentInfoResponse infoVO = new StudentInfoResponse();
                     infoVO.setStudentId(student.getId());
                     infoVO.setName(student.getName());
-                    infoVO.setClazz(student.getClazz());
-                    infoVO.setInstitute(student.getInstitute());
-                    infoVO.setCampus(student.getCampus());
+                    infoVO.setClazz(studentService.getClazz(student));
+                    infoVO.setInstitute(studentService.getInstitute(student));
+                    infoVO.setCampus(studentService.getCampus(student));
                     return infoVO;
                 }).collect(Collectors.toList());
     }
@@ -61,10 +77,10 @@ public class MemberServiceImpl implements MemberService {
         Long studentId = idCommand.getId();
         // 目标学生
         Student student = studentRepository.findById(studentId);
-        RoleEntity role = user.getRoleDomain();
+        RoleEntity role = userService.getRoleDomain(user);
         Manager manager = (Manager) role;
-        // 用户管理的社团48
-        Association association = manager.belongAssociation();
+        // 用户管理的社团
+        Association association = associationService.belongAssociation(manager);
         Long associationId = association.getId();
         if (Objects.equals(manager.getId(), studentId)) {
             throw new BusinessException("不可以剔除自己");
@@ -74,6 +90,12 @@ public class MemberServiceImpl implements MemberService {
             throw new BusinessException("没有这个成员");
         }
         // 踢出
-        association.kick(student);
+        boolean ok = associationParticipateRepository.deleteByAssociationIdAndStudentId(
+                associationId,
+                student.getId()
+        );
+        if (!ok) {
+            throw new BusinessException("无法移出社团");
+        }
     }
 }

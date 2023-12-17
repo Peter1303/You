@@ -9,14 +9,10 @@ import top.pdev.you.infrastructure.result.ResultCode;
  *
  * @author Peter1303
  */
+@Getter
 public class BusinessException extends RuntimeException {
-    @Getter
     private String message;
-
-    @Getter
     private final ResultCode code;
-
-    @Getter
     private Throwable cause;
 
     public BusinessException() {

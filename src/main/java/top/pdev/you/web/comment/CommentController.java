@@ -36,8 +36,7 @@ public class CommentController {
      */
     @GetMapping("post")
     public Result<?> postComments(@Validated IdCommand idCommand) {
-        commentService.postComments(idCommand);
-        return Result.ok();
+        return Result.ok(commentService.postComments(idCommand));
     }
 
     /**

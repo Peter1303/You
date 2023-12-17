@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.application.service.post.PostService;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.Comment;
 import top.pdev.you.domain.entity.Post;
@@ -66,7 +67,9 @@ public class PostServiceImpl implements PostService {
         post.setContent(postCommand.getContent());
         post.setUserId(user.getId());
         post.setAssociationId(associationId);
-        post.save();
+        if (!postRepository.save(post)) {
+            throw new BusinessException("无法发布帖子");
+        }
     }
 
     @Transactional
@@ -116,7 +119,9 @@ public class PostServiceImpl implements PostService {
         if (!permissionService.editable(user, post.getUserId())) {
             throw new PermissionDeniedException();
         }
-        post.delete();
+        if (!postRepository.deleteById(post.getId())) {
+            throw new BusinessException("无法删除帖子");
+        }
     }
 
     @Transactional
@@ -124,7 +129,10 @@ public class PostServiceImpl implements PostService {
     public void changePost(ChangePostCommand changePostVO) {
         Long id = changePostVO.getId();
         Post post = postRepository.findById(id);
-        // TODO changeTopicId
-        post.changeContent(changePostVO.getContent());
+        post.setId(id);
+        post.setContent(changePostVO.getContent());
+        if (!postRepository.saveOrUpdate(post)) {
+            throw new BusinessException("无法更改内容");
+        }
     }
 }

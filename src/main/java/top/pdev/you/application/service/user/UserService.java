@@ -1,5 +1,7 @@
 package top.pdev.you.application.service.user;
 
+import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.ui.vm.LoginResultResponse;
@@ -20,6 +22,16 @@ import java.util.List;
  * @author Peter1303
  */
 public interface UserService {
+    User getUser(RoleEntity role);
+
+    /**
+     * 获取角色领域
+     *
+     * @param user 用户
+     * @return {@link RoleEntity}
+     */
+    RoleEntity getRoleDomain(User user);
+
     /**
      * 登录
      *
@@ -52,6 +64,14 @@ public interface UserService {
      * @return {@link UserProfileResponse}
      */
     UserProfileResponse profile(User user);
+
+    /**
+     * 权限到
+     *
+     * @param user       用户
+     * @param permission 权限
+     */
+    void permissionTo(User user, Permission permission);
 
     /**
      * 设置资料

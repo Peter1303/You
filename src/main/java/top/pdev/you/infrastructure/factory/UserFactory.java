@@ -1,10 +1,16 @@
 package top.pdev.you.infrastructure.factory;
 
 import org.springframework.stereotype.Component;
+import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Manager;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.persistence.repository.StudentRepository;
+import top.pdev.you.persistence.repository.TeacherRepository;
+
+import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * 用户工厂
@@ -14,6 +20,12 @@ import top.pdev.you.domain.entity.User;
  */
 @Component
 public class UserFactory {
+    @Resource
+    private TeacherRepository teacherRepository;
+
+    @Resource
+    private StudentRepository studentRepository;
+
     /**
      * 新用户
      *
@@ -39,7 +51,14 @@ public class UserFactory {
      * @return {@link Student}
      */
     public Student getStudent(User user) {
-        return new Student(user);
+        if (!Optional.ofNullable(user).isPresent()) {
+            return new Student();
+        }
+        Long userId = user.getId();
+        Student student = studentRepository.findByUserId(userId);
+        Optional.ofNullable(student)
+                .orElseThrow(() -> new BusinessException("没有找到学生"));
+        return student;
     }
 
     /**
@@ -49,17 +68,8 @@ public class UserFactory {
      * @return {@link Manager}
      */
     public Manager getManager(User user) {
-        return new Manager(user);
-    }
-
-    /**
-     * 获取负责人
-     *
-     * @param student 学生
-     * @return {@link Manager}
-     */
-    public Manager getManager(Student student) {
-        return new Manager(student.getUser());
+        Student student = studentRepository.findByUserId(user.getId());
+        return new Manager(student);
     }
 
     /**
@@ -78,6 +88,10 @@ public class UserFactory {
      * @return {@link Teacher}
      */
     public Teacher getTeacher(User user) {
-        return new Teacher(user);
+        if (!Optional.ofNullable(user).isPresent()) {
+            return new Teacher();
+        }
+        Long userId = user.getId();
+        return teacherRepository.findByUserId(userId);
     }
 }

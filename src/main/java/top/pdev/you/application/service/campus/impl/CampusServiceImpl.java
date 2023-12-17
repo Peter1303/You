@@ -34,8 +34,15 @@ public class CampusServiceImpl implements CampusService {
     @Override
     public void add(AddCampusCommand addCampusCommand) {
         Campus campus = campusFactory.newCampus();
-        campus.setName(addCampusCommand.getName());
-        campus.save();
+        String name = addCampusCommand.getName();
+        campus.setName(name);
+        // 是否存在相同的
+        if (campusRepository.existsByName(name)) {
+            throw new BusinessException("已经存在相同的校区");
+        }
+        if (!campusRepository.save(campus)) {
+            throw new BusinessException("保存校区失败");
+        }
     }
 
     @Transactional

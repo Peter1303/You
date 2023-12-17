@@ -1,5 +1,7 @@
 package top.pdev.you.application.service.association;
 
+import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.ui.vm.AssociationAuditResponse;
 import top.pdev.you.domain.ui.vm.AssociationInfoResponse;
@@ -114,4 +116,12 @@ public interface AssociationService {
      * @param removeAdminVO 删除管理 VO
      */
     void removeAdmin(RemoveAdminCommand removeAdminVO);
+
+    /**
+     * 归属社团
+     *
+     * @param role 角色
+     * @return {@link Association}
+     */
+    Association belongAssociation(RoleEntity role);
 }

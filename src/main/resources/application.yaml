@@ -56,9 +56,9 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     locale: zh
 mybatis-plus:
-  configuration:
+#  configuration:
     # 开启下划线转驼峰
-    map-underscore-to-camel-case: true
+#    map-underscore-to-camel-case: true
   global-config:
     db-config:
       logic-delete-field: flag  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)

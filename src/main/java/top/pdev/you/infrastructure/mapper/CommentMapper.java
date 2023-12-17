@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Comment;
-import top.pdev.you.web.comment.command.CommentInfoCommand;
+import top.pdev.you.domain.ui.dto.CommentInfoDTO;
 
 /**
  * 评论封装器
@@ -19,5 +19,5 @@ public interface CommentMapper {
     @Mapping(target = "id", source = "id")
     @Mapping(target = "comment", source = "comment")
     @Mapping(target = "time", source = "time")
-    CommentInfoCommand convert(Comment comment);
+    CommentInfoDTO convert(Comment comment);
 }

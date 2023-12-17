@@ -39,8 +39,15 @@ public class InstituteServiceImpl implements InstituteService {
     @Override
     public void add(AddInstituteCommand addInstituteCommand) {
         Institute institute = instituteFactory.newInstitute();
-        institute.setName(addInstituteCommand.getName());
-        institute.save();
+        String name = addInstituteCommand.getName();
+        institute.setName(name);
+        // 检查存在
+        if (instituteRepository.existsByName(name)) {
+            throw new BusinessException("该学院已经存在");
+        }
+        if (!instituteRepository.save(institute)) {
+            throw new BusinessException("保存学院失败");
+        }
     }
 
     /**

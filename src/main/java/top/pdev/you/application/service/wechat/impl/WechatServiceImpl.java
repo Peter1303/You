@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import top.pdev.you.application.service.wechat.WechatService;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.common.exception.InternalErrorException;
+import top.pdev.you.domain.ui.dto.WechatLoginDTO;
 import top.pdev.you.infrastructure.config.WechatProperties;
 import top.pdev.you.infrastructure.result.ResultCode;
-import top.pdev.you.domain.ui.dto.WechatLoginDTO;
 
 import javax.annotation.Resource;
 import java.util.Optional;

@@ -5,9 +5,9 @@ import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.AssociationManager;
+import top.pdev.you.domain.entity.AssociationParticipant;
 import top.pdev.you.domain.entity.Student;
 import top.pdev.you.domain.entity.Teacher;
-import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 import top.pdev.you.persistence.mapper.AssociationMapper;
 import top.pdev.you.persistence.repository.AssociationManagerRepository;
 import top.pdev.you.persistence.repository.AssociationParticipateRepository;
@@ -64,7 +64,7 @@ public class AssociationRepositoryImpl
 
     @Override
     public List<Association> ofStudentList(Student student) {
-        List<AssociationParticipantDO> participantDOs =
+        List<AssociationParticipant> participantDOs =
                 associationParticipateRepository.getParticipateList(student);
         if (participantDOs.isEmpty()) {
             return new ArrayList<>();
@@ -72,7 +72,7 @@ public class AssociationRepositoryImpl
         LambdaQueryWrapper<Association> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         List<Long> list = participantDOs
                 .stream()
-                .map(AssociationParticipantDO::getAssociationId)
+                .map(AssociationParticipant::getAssociationId)
                 .collect(Collectors.toList());
         lambdaQueryWrapper.in(Association::getId, list);
         return mapper.selectList(lambdaQueryWrapper);

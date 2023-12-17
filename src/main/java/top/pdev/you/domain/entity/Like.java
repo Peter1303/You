@@ -1,13 +1,10 @@
 package top.pdev.you.domain.entity;
 
-import cn.hutool.extra.spring.SpringUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.persistence.repository.LikeRepository;
 
 /**
  * 点赞领域
@@ -33,35 +30,4 @@ public class Like extends BaseEntity {
      * 用户 ID
      */
     private Long userId;
-
-    /**
-     * 添加点赞
-     *
-     * @param user 用户
-     * @param post 帖子
-     */
-    public void addLike(User user, Post post) {
-        this.userId = user.getId();
-        this.postId = post.getId();
-        LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
-        // 检查是否已经点过赞了
-        if (likeRepository.existsByUserIdAndPostId(user.getId(), postId)) {
-            throw new BusinessException("已经点过赞了");
-        }
-        setPostId(postId);
-        setUserId(userId);
-        if (!likeRepository.save(this)) {
-            throw new BusinessException("点赞失败");
-        }
-    }
-
-    /**
-     * 取消点赞
-     */
-    public void cancelLike() {
-        LikeRepository likeRepository = SpringUtil.getBean(LikeRepository.class);
-        if (!likeRepository.deleteById(id)) {
-            throw new BusinessException("取消点赞失败");
-        }
-    }
 }

@@ -4,6 +4,9 @@ import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.application.service.activity.ActivityService;
+import top.pdev.you.application.service.association.AssociationService;
+import top.pdev.you.application.service.student.StudentService;
+import top.pdev.you.application.service.user.UserService;
 import top.pdev.you.application.service.verification.VerificationService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.constant.ActivityRule;
@@ -43,6 +46,15 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ActivityServiceImpl implements ActivityService {
+    @Resource
+    private AssociationService associationService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private StudentService studentService;
+
     @Resource
     private ActivityRepository activityRepository;
 
@@ -87,11 +99,11 @@ public class ActivityServiceImpl implements ActivityService {
         TimeCommand time = command.getTime();
         // 生成活动
         User user = verificationService.currentUser();
-        RoleEntity roleDomain = user.getRoleDomain();
+        RoleEntity roleDomain = userService.getRoleDomain(user);
         Long associationId;
         if (roleDomain instanceof Manager) {
             Manager manager = (Manager) roleDomain;
-            Association association = manager.belongAssociation();
+            Association association = associationService.belongAssociation(manager);
             associationId = association.getId();
         } else {
             throw new BusinessException("必须负责人才可以发起活动");
@@ -168,10 +180,10 @@ public class ActivityServiceImpl implements ActivityService {
         Optional.ofNullable(activity).orElseThrow(() -> new BusinessException("找不到活动"));
         User user = verificationService.currentUser();
         // 如果当前用户是社团管理员
-        RoleEntity roleDomain = user.getRoleDomain();
+        RoleEntity roleDomain = userService.getRoleDomain(user);
         if (roleDomain instanceof Manager) {
             Manager manager = (Manager) roleDomain;
-            Association association = manager.belongAssociation();
+            Association association = associationService.belongAssociation(manager);
             Long associationId = association.getId();
             // 如果活动就是该管理员的不允许参加
             if (associationId.equals(activity.getAssociationId())) {
@@ -194,7 +206,7 @@ public class ActivityServiceImpl implements ActivityService {
             if (tag == ActivityRule.GRADE) {
                 if (roleDomain instanceof Student) {
                     Student student = (Student) roleDomain;
-                    Integer grade = student.getGrade();
+                    Integer grade = studentService.getGrade(student);
                     if (grade != 0) {
                         rule.validate(grade);
                     }
@@ -210,7 +222,7 @@ public class ActivityServiceImpl implements ActivityService {
                 rule.validate(total);
                 // 人数有效顺便报名
                 ActivityParticipant participant = new ActivityParticipant();
-                participant.setUid(user.getId());
+                participant.setUserId(user.getId());
                 participant.setActivityId(activity.getId());
                 participant.setTime(LocalDateTime.now());
                 activityParticipantRepository.save(participant);

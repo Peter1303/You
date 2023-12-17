@@ -1,8 +1,8 @@
 package top.pdev.you.persistence.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import top.pdev.you.domain.entity.AssociationParticipant;
 import top.pdev.you.domain.entity.Student;
-import top.pdev.you.domain.entity.data.AssociationParticipantDO;
 
 import java.util.List;
 
@@ -13,22 +13,22 @@ import java.util.List;
  * @author Peter1303
  */
 public interface AssociationParticipateRepository
-        extends IService<AssociationParticipantDO> {
+        extends IService<AssociationParticipant> {
     /**
      * 获取参与列表
      *
      * @param student 学生
-     * @return {@link List}<{@link AssociationParticipantDO}>
+     * @return {@link List}<{@link AssociationParticipant}>
      */
-    List<AssociationParticipantDO> getParticipateList(Student student);
+    List<AssociationParticipant> getParticipateList(Student student);
 
     /**
      * 通过社团 ID 查找
      *
      * @param associationId 社团 ID
-     * @return {@link List}<{@link AssociationParticipantDO}>
+     * @return {@link List}<{@link AssociationParticipant}>
      */
-    List<AssociationParticipantDO> findByAssociationId(Long associationId);
+    List<AssociationParticipant> findByAssociationId(Long associationId);
 
     /**
      * 通过 社团ID 统计

@@ -1,8 +1,8 @@
 package top.pdev.you.persistence.repository.base;
 
 import org.springframework.stereotype.Repository;
-import top.pdev.you.persistence.repository.base.interfaces.CacheRepository;
 import top.pdev.you.infrastructure.redis.RedisService;
+import top.pdev.you.persistence.repository.base.interfaces.CacheRepository;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;

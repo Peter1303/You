@@ -5,14 +5,14 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
+import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.PermissionDeniedException;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.persistence.repository.UserRepository;
-import top.pdev.you.application.service.permission.PermissionService;
 import top.pdev.you.infrastructure.util.RequestUtil;
 import top.pdev.you.infrastructure.util.TokenUtil;
+import top.pdev.you.persistence.repository.UserRepository;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

@@ -2,7 +2,6 @@ package top.pdev.you.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import top.pdev.you.domain.entity.base.BaseEntity;
 
@@ -12,7 +11,6 @@ import top.pdev.you.domain.entity.base.BaseEntity;
  *
  * @author Peter1303
  */
-@TableName("activity_rule")
 @Data
 public class ActivityRule extends BaseEntity {
     /**

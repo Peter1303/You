@@ -1,11 +1,11 @@
 package top.pdev.you.persistence.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import top.pdev.you.common.enums.RedisKey;
 import top.pdev.you.common.entity.TokenInfo;
+import top.pdev.you.common.enums.RedisKey;
+import top.pdev.you.infrastructure.util.TagKeyUtil;
 import top.pdev.you.persistence.repository.TokenRepository;
 import top.pdev.you.persistence.repository.base.CacheRepositoryImpl;
-import top.pdev.you.infrastructure.util.TagKeyUtil;
 
 /**
  * 令牌仓库实现类
