@@ -4,7 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.application.service.ai.AiService;
+import top.pdev.you.domain.service.ai.AiService;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.ai.command.AiAnswerCommand;
 

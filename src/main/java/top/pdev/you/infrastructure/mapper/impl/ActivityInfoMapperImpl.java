@@ -2,7 +2,7 @@ package top.pdev.you.infrastructure.mapper.impl;
 
 import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Component;
-import top.pdev.you.application.service.verification.VerificationService;
+import top.pdev.you.domain.service.verification.VerificationService;
 import top.pdev.you.common.constant.ActivityRule;
 import top.pdev.you.common.constant.ActivityTarget;
 import top.pdev.you.domain.entity.Activity;

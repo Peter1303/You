@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.application.service.association.AssociationService;
+import top.pdev.you.domain.service.association.AssociationService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.enums.Permission;
@@ -102,7 +102,6 @@ public class AssociationController {
     }
 
     /**
-     * 连接请求
      * 请求加入
      *
      * @param user 用户
@@ -126,8 +125,7 @@ public class AssociationController {
     @AccessPermission(permission = Permission.MANAGER)
     @GetMapping("audit")
     public Result<?> auditList(@CurrentUser User user) {
-        associationService.auditList(user);
-        return Result.ok();
+        return Result.ok(associationService.auditList(user));
     }
 
     /**

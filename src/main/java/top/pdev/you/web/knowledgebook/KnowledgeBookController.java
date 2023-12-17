@@ -4,7 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.application.service.knowledgebook.KnowledgeBookService;
+import top.pdev.you.domain.service.knowledgebook.KnowledgeBookService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.domain.ui.vm.KnowledgeBookResponse;

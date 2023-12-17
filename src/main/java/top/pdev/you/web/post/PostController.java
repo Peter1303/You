@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.application.service.post.PostService;
+import top.pdev.you.domain.service.post.PostService;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.validator.intefaces.Association;
 import top.pdev.you.domain.entity.User;

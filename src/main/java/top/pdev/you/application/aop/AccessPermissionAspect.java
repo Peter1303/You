@@ -5,7 +5,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
-import top.pdev.you.application.service.permission.PermissionService;
+import top.pdev.you.domain.service.permission.PermissionService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.exception.PermissionDeniedException;
