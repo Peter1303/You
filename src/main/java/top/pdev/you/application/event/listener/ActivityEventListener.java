@@ -1,5 +1,6 @@
 package top.pdev.you.application.event.listener;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -53,9 +54,10 @@ public class ActivityEventListener {
         command.setPoint(activity.getTitle() + activity.getSummary());
         ActivityInfoDTO activityInfoDTO = activityInfoMapper.convert(activity, rules);
         TimeRangeDTO time = activityInfoDTO.getTime();
-        String content = StrUtil.format("开始：{}|结束：{}|内容：{}",
-                time.getStart(),
-                time.getEnd(),
+        String content = StrUtil.format("开始：{}|结束：{}|地点：{}|内容：{}",
+                DateUtil.format(time.getStart(), "yyyy-MM-dd HH:mm"),
+                DateUtil.format(time.getEnd(), "yyyy-MM-dd HH:mm"),
+                activity.getLocation(),
                 activity.getDetail());
         command.setContent(content);
         command.setKnowledgeBookId(aiConfig.getKnowledgeId());
