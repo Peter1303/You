@@ -2,7 +2,7 @@ package top.pdev.you.persistence.repository;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.domain.ui.dto.ClassInfoDTO;
+import top.pdev.you.domain.model.dto.ClassInfoDTO;
 import top.pdev.you.web.query.command.SearchCommand;
 
 import java.util.List;

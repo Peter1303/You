@@ -20,7 +20,7 @@ import top.pdev.you.domain.service.association.AssociationService;
 import top.pdev.you.domain.service.student.StudentService;
 import top.pdev.you.domain.service.user.UserService;
 import top.pdev.you.domain.service.verification.VerificationService;
-import top.pdev.you.domain.ui.dto.ActivityInfoDTO;
+import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 import top.pdev.you.infrastructure.mapper.ActivityInfoMapper;
 import top.pdev.you.persistence.repository.ActivityParticipantRepository;
 import top.pdev.you.persistence.repository.ActivityRepository;

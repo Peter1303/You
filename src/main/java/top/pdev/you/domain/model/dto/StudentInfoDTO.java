@@ -1,20 +1,17 @@
-package top.pdev.you.domain.ui.vm;
+package top.pdev.you.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
- * 用户资料 VO
- * Created in 2022/10/26 10:07
+ * 学生信息 DTO
+ * Created in 2022/11/9 19:30
  *
  * @author Peter1303
  */
 @Data
-public class UserProfileResponse {
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String no;
-
+public class StudentInfoDTO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String name;
 
@@ -23,17 +20,11 @@ public class UserProfileResponse {
     private String clazz;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String no;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String campus;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String institute;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String contact;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer grade;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Integer permission;
 }

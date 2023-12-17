@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui.vm;
+package top.pdev.you.domain.model.vm;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

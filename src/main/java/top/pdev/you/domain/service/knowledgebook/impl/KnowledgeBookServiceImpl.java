@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import top.pdev.you.domain.service.knowledgebook.KnowledgeBookService;
-import top.pdev.you.domain.ui.dto.KnowledgeApiDTO;
-import top.pdev.you.domain.ui.dto.KnowledgeApiItemDTO;
-import top.pdev.you.domain.ui.vm.KnowledgeBookResponse;
+import top.pdev.you.domain.model.dto.KnowledgeApiDTO;
+import top.pdev.you.domain.model.dto.KnowledgeApiItemDTO;
+import top.pdev.you.domain.model.vm.KnowledgeBookResponse;
 import top.pdev.you.infrastructure.config.bean.AiConfig;
 import top.pdev.you.web.knowledgebook.command.QuestionCommand;
 

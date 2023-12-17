@@ -2,7 +2,7 @@ package top.pdev.you.infrastructure.mapper;
 
 import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.ui.vm.PostInfoResponse;
+import top.pdev.you.domain.model.vm.PostInfoResponse;
 
 import java.util.List;
 

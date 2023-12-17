@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui.dto;
+package top.pdev.you.domain.model.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;

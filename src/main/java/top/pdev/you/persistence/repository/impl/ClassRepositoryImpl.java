@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.domain.entity.Clazz;
-import top.pdev.you.domain.ui.dto.ClassInfoDTO;
+import top.pdev.you.domain.model.dto.ClassInfoDTO;
 import top.pdev.you.persistence.mapper.ClassMapper;
 import top.pdev.you.persistence.repository.ClassRepository;
 import top.pdev.you.web.query.command.SearchCommand;

@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Comment;
-import top.pdev.you.domain.ui.dto.CommentInfoDTO;
+import top.pdev.you.domain.model.dto.CommentInfoDTO;
 
 /**
  * 评论封装器

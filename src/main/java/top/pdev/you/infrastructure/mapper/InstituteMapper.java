@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Institute;
-import top.pdev.you.domain.ui.dto.InstituteInfoDTO;
+import top.pdev.you.domain.model.dto.InstituteInfoDTO;
 
 /**
  * 学院组装器

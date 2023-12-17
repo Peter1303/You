@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="top.pdev.you.persistence.mapper.ClassMapper">
-    <select id="getClassInfoList" resultType="top.pdev.you.domain.ui.dto.ClassInfoDTO">
+    <select id="getClassInfoList" resultType="top.pdev.you.domain.model.dto.ClassInfoDTO">
         SELECT c.id    AS id,
                c.name  AS name,
                cp.name AS campus,

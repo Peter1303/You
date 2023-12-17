@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import top.pdev.you.domain.entity.Association;
-import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
+import top.pdev.you.domain.model.dto.AssociationBaseInfoDTO;
 
 import java.util.List;
 

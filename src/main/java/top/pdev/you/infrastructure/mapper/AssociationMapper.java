@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import top.pdev.you.domain.entity.Association;
-import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
+import top.pdev.you.domain.model.dto.AssociationBaseInfoDTO;
 
 /**
  * 社团组装器

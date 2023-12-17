@@ -13,7 +13,7 @@ import top.pdev.you.domain.service.association.AssociationService;
 import top.pdev.you.domain.service.member.MemberService;
 import top.pdev.you.domain.service.student.StudentService;
 import top.pdev.you.domain.service.user.UserService;
-import top.pdev.you.domain.ui.vm.StudentInfoResponse;
+import top.pdev.you.domain.model.vm.StudentInfoResponse;
 import top.pdev.you.infrastructure.factory.UserFactory;
 import top.pdev.you.persistence.repository.AssociationParticipateRepository;
 import top.pdev.you.persistence.repository.StudentRepository;

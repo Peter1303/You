@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.post;
 
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.ui.vm.PostInfoResponse;
+import top.pdev.you.domain.model.vm.PostInfoResponse;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.post.command.ChangePostCommand;
 import top.pdev.you.web.post.command.PostCommand;

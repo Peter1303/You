@@ -9,7 +9,7 @@ import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.comment.CommentService;
 import top.pdev.you.domain.service.user.UserService;
-import top.pdev.you.domain.ui.dto.CommentInfoDTO;
+import top.pdev.you.domain.model.dto.CommentInfoDTO;
 import top.pdev.you.infrastructure.factory.CommentFactory;
 import top.pdev.you.infrastructure.mapper.CommentMapper;
 import top.pdev.you.persistence.repository.CommentRepository;

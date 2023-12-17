@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.service.ai.AiService;
-import top.pdev.you.domain.ui.dto.AiChoiceMessageItemDTO;
-import top.pdev.you.domain.ui.dto.AiMessageItemDTO;
-import top.pdev.you.domain.ui.dto.AiRequestDTO;
-import top.pdev.you.domain.ui.dto.AiResponseDTO;
-import top.pdev.you.domain.ui.vm.AnswerResponse;
+import top.pdev.you.domain.model.dto.AiChoiceMessageItemDTO;
+import top.pdev.you.domain.model.dto.AiMessageItemDTO;
+import top.pdev.you.domain.model.dto.AiRequestDTO;
+import top.pdev.you.domain.model.dto.AiResponseDTO;
+import top.pdev.you.domain.model.vm.AnswerResponse;
 import top.pdev.you.infrastructure.config.bean.AiConfig;
 import top.pdev.you.web.ai.command.AiAnswerCommand;
 

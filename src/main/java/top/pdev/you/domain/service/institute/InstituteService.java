@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.institute;
 
-import top.pdev.you.domain.ui.dto.InstituteInfoDTO;
-import top.pdev.you.domain.ui.vm.ListResponse;
+import top.pdev.you.domain.model.dto.InstituteInfoDTO;
+import top.pdev.you.domain.model.vm.ListResponse;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.institute.command.AddInstituteCommand;
 import top.pdev.you.web.query.command.SearchCommand;

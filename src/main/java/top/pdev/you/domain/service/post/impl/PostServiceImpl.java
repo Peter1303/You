@@ -9,7 +9,7 @@ import top.pdev.you.domain.entity.Post;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.permission.PermissionService;
 import top.pdev.you.domain.service.post.PostService;
-import top.pdev.you.domain.ui.vm.PostInfoResponse;
+import top.pdev.you.domain.model.vm.PostInfoResponse;
 import top.pdev.you.infrastructure.factory.PostFactory;
 import top.pdev.you.infrastructure.mapper.PostInfoMapper;
 import top.pdev.you.persistence.repository.AssociationRepository;

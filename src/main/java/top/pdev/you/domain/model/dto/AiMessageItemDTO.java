@@ -1,4 +1,4 @@
-package top.pdev.you.domain.ui.dto;
+package top.pdev.you.domain.model.dto;
 
 import lombok.Data;
 

@@ -1,9 +1,9 @@
-package top.pdev.you.domain.ui.vm;
+package top.pdev.you.domain.model.vm;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import top.pdev.you.domain.ui.dto.AssociationBaseInfoDTO;
+import top.pdev.you.domain.model.dto.AssociationBaseInfoDTO;
 
 import java.util.List;
 

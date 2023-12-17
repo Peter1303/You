@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.comment;
 
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.domain.ui.dto.CommentInfoDTO;
+import top.pdev.you.domain.model.dto.CommentInfoDTO;
 import top.pdev.you.web.command.IdCommand;
 import top.pdev.you.web.comment.command.AddCommentCommand;
 

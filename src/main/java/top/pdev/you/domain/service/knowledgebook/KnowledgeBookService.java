@@ -1,6 +1,6 @@
 package top.pdev.you.domain.service.knowledgebook;
 
-import top.pdev.you.domain.ui.vm.KnowledgeBookResponse;
+import top.pdev.you.domain.model.vm.KnowledgeBookResponse;
 import top.pdev.you.web.knowledgebook.command.QuestionCommand;
 
 /**

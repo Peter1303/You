@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Repository;
 import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.entity.Campus;
-import top.pdev.you.domain.ui.dto.CampusInfoDTO;
+import top.pdev.you.domain.model.dto.CampusInfoDTO;
 import top.pdev.you.infrastructure.mapper.CampusMapper;
 import top.pdev.you.persistence.repository.CampusRepository;
 

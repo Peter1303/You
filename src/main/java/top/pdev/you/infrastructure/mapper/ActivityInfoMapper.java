@@ -1,7 +1,7 @@
 package top.pdev.you.infrastructure.mapper;
 
 import top.pdev.you.domain.entity.Activity;
-import top.pdev.you.domain.ui.dto.ActivityInfoDTO;
+import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 
 /**
  * 活动信息映射器

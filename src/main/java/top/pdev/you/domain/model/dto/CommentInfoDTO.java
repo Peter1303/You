@@ -1,24 +1,21 @@
-package top.pdev.you.domain.ui.vm;
+package top.pdev.you.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import top.pdev.you.domain.ui.dto.StudentInfoDTO;
 
 import java.time.LocalDateTime;
 
 /**
- * 协会审计响应
- * 社团审核
- * Created in 2022/11/9 18:49
+ * 评论信息 DTO
+ * Created in 2023/1/2 22:27
  *
  * @author Peter1303
- * @date 2023/04/26
  */
 @Data
-public class AssociationAuditResponse {
+public class CommentInfoDTO {
     private Long id;
     private String name;
-    private StudentInfoDTO student;
+    private String comment;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime time;

@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.campus;
 
-import top.pdev.you.domain.ui.dto.CampusInfoDTO;
-import top.pdev.you.domain.ui.vm.ListResponse;
+import top.pdev.you.domain.model.dto.CampusInfoDTO;
+import top.pdev.you.domain.model.vm.ListResponse;
 import top.pdev.you.infrastructure.result.Result;
 import top.pdev.you.web.campus.command.AddCampusCommand;
 import top.pdev.you.web.command.IdCommand;

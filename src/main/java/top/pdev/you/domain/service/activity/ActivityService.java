@@ -1,6 +1,6 @@
 package top.pdev.you.domain.service.activity;
 
-import top.pdev.you.domain.ui.dto.ActivityInfoDTO;
+import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 import top.pdev.you.web.activity.command.AddActivityCommand;
 import top.pdev.you.web.activity.command.UpdateActivityCommand;
 import top.pdev.you.web.command.IdCommand;
