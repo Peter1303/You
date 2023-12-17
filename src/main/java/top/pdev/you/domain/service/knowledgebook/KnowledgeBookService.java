@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.knowledgebook;
 
+import top.pdev.you.domain.command.knowledgebook.QuestionCommand;
 import top.pdev.you.domain.model.vm.KnowledgeBookResponse;
-import top.pdev.you.web.knowledgebook.command.QuestionCommand;
 
 /**
  * 知识库服务

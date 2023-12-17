@@ -2,7 +2,6 @@ package top.pdev.you.infrastructure.mapper.impl;
 
 import cn.hutool.core.date.DateUtil;
 import org.springframework.stereotype.Component;
-import top.pdev.you.domain.service.verification.VerificationService;
 import top.pdev.you.common.constant.ActivityRule;
 import top.pdev.you.common.constant.ActivityTarget;
 import top.pdev.you.domain.entity.Activity;
@@ -11,6 +10,7 @@ import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 import top.pdev.you.domain.model.dto.AssociationBaseInfoDTO;
 import top.pdev.you.domain.model.dto.TimeRangeDTO;
+import top.pdev.you.domain.service.verification.VerificationService;
 import top.pdev.you.infrastructure.mapper.ActivityInfoMapper;
 import top.pdev.you.infrastructure.mapper.AssociationMapper;
 import top.pdev.you.persistence.repository.ActivityParticipantRepository;

@@ -1,11 +1,11 @@
 package top.pdev.you.domain.service.campus;
 
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.campus.AddCampusCommand;
+import top.pdev.you.domain.command.query.SearchCommand;
 import top.pdev.you.domain.model.dto.CampusInfoDTO;
 import top.pdev.you.domain.model.vm.ListResponse;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.campus.command.AddCampusCommand;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.query.command.SearchCommand;
 
 /**
  * 校区服务

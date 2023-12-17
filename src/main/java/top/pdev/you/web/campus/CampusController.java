@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.campus.CampusService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.campus.AddCampusCommand;
+import top.pdev.you.domain.service.campus.CampusService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.campus.command.AddCampusCommand;
-import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
 

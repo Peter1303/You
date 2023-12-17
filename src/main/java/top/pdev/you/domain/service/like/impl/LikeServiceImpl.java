@@ -3,13 +3,13 @@ package top.pdev.you.domain.service.like.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.command.IdCommand;
 import top.pdev.you.domain.entity.Like;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.service.like.LikeService;
 import top.pdev.you.infrastructure.factory.LikeFactory;
 import top.pdev.you.persistence.repository.LikeRepository;
 import top.pdev.you.persistence.repository.PostRepository;
-import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
 

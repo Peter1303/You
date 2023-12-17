@@ -1,11 +1,11 @@
 package top.pdev.you.domain.service.clazz;
 
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.clazz.AddClassCommand;
+import top.pdev.you.domain.command.query.SearchCommand;
 import top.pdev.you.domain.model.dto.ClassInfoDTO;
 import top.pdev.you.domain.model.vm.ListResponse;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.clazz.command.AddClassCommand;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.query.command.SearchCommand;
 
 /**
  * 班级服务

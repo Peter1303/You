@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.like;
 
+import top.pdev.you.domain.command.IdCommand;
 import top.pdev.you.domain.entity.User;
-import top.pdev.you.web.command.IdCommand;
 
 /**
  * 点赞服务

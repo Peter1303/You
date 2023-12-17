@@ -1,9 +1,9 @@
 package top.pdev.you.domain.service.activity;
 
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.activity.AddActivityCommand;
+import top.pdev.you.domain.command.activity.UpdateActivityCommand;
 import top.pdev.you.domain.model.dto.ActivityInfoDTO;
-import top.pdev.you.web.activity.command.AddActivityCommand;
-import top.pdev.you.web.activity.command.UpdateActivityCommand;
-import top.pdev.you.web.command.IdCommand;
 
 import java.util.List;
 

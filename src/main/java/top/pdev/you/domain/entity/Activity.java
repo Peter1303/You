@@ -11,9 +11,9 @@ import lombok.Data;
 import top.pdev.you.common.constant.ActivityRule;
 import top.pdev.you.common.constant.ActivityTarget;
 import top.pdev.you.common.exception.BusinessException;
+import top.pdev.you.domain.command.TimeCommand;
+import top.pdev.you.domain.command.activity.RuleCommand;
 import top.pdev.you.domain.entity.base.BaseEntity;
-import top.pdev.you.web.activity.command.RuleCommand;
-import top.pdev.you.web.command.TimeCommand;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

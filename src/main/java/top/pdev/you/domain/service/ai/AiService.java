@@ -1,7 +1,7 @@
 package top.pdev.you.domain.service.ai;
 
+import top.pdev.you.domain.command.ai.AiAnswerCommand;
 import top.pdev.you.domain.model.vm.AnswerResponse;
-import top.pdev.you.web.ai.command.AiAnswerCommand;
 
 /**
  * AI 服务

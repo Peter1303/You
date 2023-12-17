@@ -3,9 +3,9 @@ package top.pdev.you.persistence.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import top.pdev.you.domain.command.query.SearchCommand;
 import top.pdev.you.domain.entity.Clazz;
 import top.pdev.you.domain.model.dto.ClassInfoDTO;
-import top.pdev.you.web.query.command.SearchCommand;
 
 import java.util.List;
 

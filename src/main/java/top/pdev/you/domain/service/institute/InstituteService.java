@@ -1,10 +1,10 @@
 package top.pdev.you.domain.service.institute;
 
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.institute.AddInstituteCommand;
+import top.pdev.you.domain.command.query.SearchCommand;
 import top.pdev.you.domain.model.dto.InstituteInfoDTO;
 import top.pdev.you.domain.model.vm.ListResponse;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.institute.command.AddInstituteCommand;
-import top.pdev.you.web.query.command.SearchCommand;
 
 /**
  * 学院服务

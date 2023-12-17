@@ -4,15 +4,15 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.campus.CampusService;
-import top.pdev.you.domain.service.clazz.ClassService;
-import top.pdev.you.domain.service.institute.InstituteService;
 import top.pdev.you.common.annotation.SkipCheckLogin;
 import top.pdev.you.common.validator.intefaces.Campus;
 import top.pdev.you.common.validator.intefaces.Clazz;
 import top.pdev.you.common.validator.intefaces.Institute;
+import top.pdev.you.domain.command.query.SearchCommand;
+import top.pdev.you.domain.service.campus.CampusService;
+import top.pdev.you.domain.service.clazz.ClassService;
+import top.pdev.you.domain.service.institute.InstituteService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.query.command.SearchCommand;
 
 import javax.annotation.Resource;
 

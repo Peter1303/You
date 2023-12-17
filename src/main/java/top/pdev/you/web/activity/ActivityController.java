@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.activity.ActivityService;
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.activity.AddActivityCommand;
+import top.pdev.you.domain.command.activity.UpdateActivityCommand;
 import top.pdev.you.domain.model.dto.ActivityInfoDTO;
+import top.pdev.you.domain.service.activity.ActivityService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.activity.command.AddActivityCommand;
-import top.pdev.you.web.activity.command.UpdateActivityCommand;
-import top.pdev.you.web.command.IdCommand;
 
 import javax.annotation.Resource;
 import java.util.List;

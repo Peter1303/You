@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.association.AssociationService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.annotation.CurrentUser;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.validator.intefaces.Association;
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.association.AddAssociationCommand;
+import top.pdev.you.domain.command.association.ChangeNameCommand;
+import top.pdev.you.domain.command.query.SearchCommand;
+import top.pdev.you.domain.command.user.AddAdminCommand;
+import top.pdev.you.domain.command.user.RemoveAdminCommand;
 import top.pdev.you.domain.entity.User;
+import top.pdev.you.domain.service.association.AssociationService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.association.command.AddAssociationCommand;
-import top.pdev.you.web.association.command.ChangeNameCommand;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.query.command.SearchCommand;
-import top.pdev.you.web.user.command.AddAdminCommand;
-import top.pdev.you.web.user.command.RemoveAdminCommand;
 
 import javax.annotation.Resource;
 

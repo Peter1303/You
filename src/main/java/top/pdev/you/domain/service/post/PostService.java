@@ -1,11 +1,11 @@
 package top.pdev.you.domain.service.post;
 
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.post.ChangePostCommand;
+import top.pdev.you.domain.command.post.PostCommand;
+import top.pdev.you.domain.command.post.PostListCommand;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.model.vm.PostInfoResponse;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.post.command.ChangePostCommand;
-import top.pdev.you.web.post.command.PostCommand;
-import top.pdev.you.web.post.command.PostListCommand;
 
 import java.util.List;
 

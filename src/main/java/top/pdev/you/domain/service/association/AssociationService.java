@@ -1,16 +1,16 @@
 package top.pdev.you.domain.service.association;
 
 import top.pdev.you.common.entity.role.RoleEntity;
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.association.AddAssociationCommand;
+import top.pdev.you.domain.command.association.ChangeNameCommand;
+import top.pdev.you.domain.command.query.SearchCommand;
+import top.pdev.you.domain.command.user.AddAdminCommand;
+import top.pdev.you.domain.command.user.RemoveAdminCommand;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.model.vm.AssociationAuditResponse;
 import top.pdev.you.domain.model.vm.AssociationInfoResponse;
-import top.pdev.you.web.association.command.AddAssociationCommand;
-import top.pdev.you.web.association.command.ChangeNameCommand;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.query.command.SearchCommand;
-import top.pdev.you.web.user.command.AddAdminCommand;
-import top.pdev.you.web.user.command.RemoveAdminCommand;
 
 import java.util.List;
 

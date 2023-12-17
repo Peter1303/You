@@ -4,12 +4,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.knowledgebook.KnowledgeBookService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.domain.command.knowledgebook.QuestionCommand;
 import top.pdev.you.domain.model.vm.KnowledgeBookResponse;
+import top.pdev.you.domain.service.knowledgebook.KnowledgeBookService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.knowledgebook.command.QuestionCommand;
 
 import javax.annotation.Resource;
 

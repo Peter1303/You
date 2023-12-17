@@ -3,14 +3,14 @@ package top.pdev.you.domain.service.user;
 import top.pdev.you.common.entity.role.RoleEntity;
 import top.pdev.you.common.enums.Permission;
 import top.pdev.you.common.enums.Role;
+import top.pdev.you.domain.command.user.RegisterCommand;
+import top.pdev.you.domain.command.user.SetProfileCommand;
+import top.pdev.you.domain.command.user.UserLoginCommand;
 import top.pdev.you.domain.entity.User;
 import top.pdev.you.domain.model.vm.LoginResultResponse;
 import top.pdev.you.domain.model.vm.UserInfoResponse;
 import top.pdev.you.domain.model.vm.UserProfileResponse;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.user.command.RegisterCommand;
-import top.pdev.you.web.user.command.SetProfileCommand;
-import top.pdev.you.web.user.command.UserLoginCommand;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

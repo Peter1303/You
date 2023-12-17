@@ -6,11 +6,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.pdev.you.application.event.AssociationAuditEvent;
 import top.pdev.you.application.event.AuditEvent;
-import top.pdev.you.domain.service.user.UserService;
-import top.pdev.you.domain.service.wechat.WechatMessageService;
 import top.pdev.you.common.entity.wechat.template.AuditTemplate;
 import top.pdev.you.domain.entity.Association;
 import top.pdev.you.domain.entity.Student;
+import top.pdev.you.domain.service.user.UserService;
+import top.pdev.you.domain.service.wechat.WechatMessageService;
 import top.pdev.you.infrastructure.config.WechatTemplateProperties;
 
 import javax.annotation.Resource;

@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.pdev.you.domain.service.institute.InstituteService;
 import top.pdev.you.common.annotation.AccessPermission;
 import top.pdev.you.common.enums.Permission;
+import top.pdev.you.domain.command.IdCommand;
+import top.pdev.you.domain.command.institute.AddInstituteCommand;
+import top.pdev.you.domain.service.institute.InstituteService;
 import top.pdev.you.infrastructure.result.Result;
-import top.pdev.you.web.command.IdCommand;
-import top.pdev.you.web.institute.command.AddInstituteCommand;
 
 import javax.annotation.Resource;
 
