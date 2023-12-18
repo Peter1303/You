@@ -1,9 +1,12 @@
 package top.pdev.you.domain.command;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 /**
  * 时间命令
@@ -15,9 +18,11 @@ import javax.validation.constraints.NotNull;
 public class TimeCommand {
     @JsonProperty("start")
     @NotNull
-    private String startTime;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm")
+    private LocalDateTime startTime;
 
     @JsonProperty("end")
     @NotNull
-    private String endTime;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm")
+    private LocalDateTime endTime;
 }

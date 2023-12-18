@@ -1,8 +1,8 @@
 package top.pdev.you.domain.entity;
 
-import cn.hutool.core.date.DateException;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -64,60 +64,53 @@ public class Activity extends BaseEntity {
         notNull(Activity::getId);
         Integer target = command.getTarget();
         TimeCommand timeCommand = command.getTimeCommand();
-        String startTime = timeCommand.getStartTime();
-        String endTime = timeCommand.getEndTime();
-        try {
-            // 解析时间
-            DateTime start = DateUtil.parse(startTime);
-            DateTime end = DateUtil.parse(endTime);
-            if (start == null
-                    || end == null
-                    || start.isBefore(DateTime.now())
-                    || end.isBefore(DateTime.now())) {
-                throw new BusinessException("时间错误");
-            }
-            // 解析对象
-            int grade = target;
-            if (target >= ActivityTarget.TEACHER_FLAG) {
-                grade = target - ActivityTarget.TEACHER_FLAG;
-            }
-            boolean teacher = (target & ActivityTarget.TEACHER_FLAG) > 0;
-            List<Rule> rules = new ArrayList<>();
-
-            Activity.Rule rule = new Activity.Rule();
-            rule.setActivityId(this.getId());
-            rule.setRule(ActivityRule.GRADE);
-            rule.setValue(String.valueOf(grade));
-            rules.add(rule);
-
-            String startTimeString = start.toString();
-            String endTimeString = end.toString();
-            rule = new Activity.Rule();
-            rule.setActivityId(this.getId());
-            rule.setRule(ActivityRule.START_TIME);
-            rule.setValue(startTimeString);
-            rules.add(rule);
-            rule = new Activity.Rule();
-            rule.setActivityId(this.getId());
-            rule.setRule(ActivityRule.END_TIME);
-            rule.setValue(endTimeString);
-            rules.add(rule);
-
-            rule = new Activity.Rule();
-            rule.setActivityId(this.getId());
-            rule.setRule(ActivityRule.TEACHER);
-            rule.setValue(String.valueOf(teacher ? 1 : 0));
-            rules.add(rule);
-
-            rule = new Activity.Rule();
-            rule.setActivityId(this.getId());
-            rule.setRule(ActivityRule.TOTAL);
-            rule.setValue(String.valueOf(command.getTotal()));
-            rules.add(rule);
-            return rules;
-        } catch (DateException ignored) {
+        LocalDateTime startTime = timeCommand.getStartTime();
+        LocalDateTime endTime = timeCommand.getEndTime();
+        // 解析时间
+        LocalDateTime start = LocalDateTimeUtil.of(startTime);
+        LocalDateTime end = LocalDateTimeUtil.of(endTime);
+        if (start.isBefore(LocalDateTime.now()) || end.isBefore(LocalDateTime.now())) {
             throw new BusinessException("时间错误");
         }
+        // 解析对象
+        int grade = target;
+        if (target >= ActivityTarget.TEACHER_FLAG) {
+            grade = target - ActivityTarget.TEACHER_FLAG;
+        }
+        boolean teacher = (target & ActivityTarget.TEACHER_FLAG) > 0;
+        List<Rule> rules = new ArrayList<>();
+
+        Activity.Rule rule = new Activity.Rule();
+        rule.setActivityId(this.getId());
+        rule.setRule(ActivityRule.GRADE);
+        rule.setValue(String.valueOf(grade));
+        rules.add(rule);
+
+        String startTimeString = start.toString();
+        String endTimeString = end.toString();
+        rule = new Activity.Rule();
+        rule.setActivityId(this.getId());
+        rule.setRule(ActivityRule.START_TIME);
+        rule.setValue(startTimeString);
+        rules.add(rule);
+        rule = new Activity.Rule();
+        rule.setActivityId(this.getId());
+        rule.setRule(ActivityRule.END_TIME);
+        rule.setValue(endTimeString);
+        rules.add(rule);
+
+        rule = new Activity.Rule();
+        rule.setActivityId(this.getId());
+        rule.setRule(ActivityRule.TEACHER);
+        rule.setValue(String.valueOf(teacher ? 1 : 0));
+        rules.add(rule);
+
+        rule = new Activity.Rule();
+        rule.setActivityId(this.getId());
+        rule.setRule(ActivityRule.TOTAL);
+        rule.setValue(String.valueOf(command.getTotal()));
+        rules.add(rule);
+        return rules;
     }
 
     @TableName("activity_rule")
