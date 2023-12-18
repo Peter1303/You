@@ -1,6 +1,7 @@
 package top.pdev.you.domain.service.activity.impl;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -87,6 +88,11 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityInfoDTO> list() {
         List<Activity> activities = activityRepository.list();
         return activities.stream()
+                .sorted((a1, a2) -> {
+                    LocalDateTime a1Time = a1.getTime();
+                    LocalDateTime a2Time = a2.getTime();
+                    return a2Time.compareTo(a1Time);
+                })
                 .map(activity -> activityInfoMapper.convert(activity))
                 .collect(Collectors.toList());
     }
