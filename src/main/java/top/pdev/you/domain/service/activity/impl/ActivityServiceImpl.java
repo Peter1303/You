@@ -1,7 +1,8 @@
 package top.pdev.you.domain.service.activity.impl;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import top.pdev.you.common.exception.BusinessException;
 import top.pdev.you.domain.command.IdCommand;
 import top.pdev.you.domain.command.TimeCommand;
 import top.pdev.you.domain.command.activity.AddActivityCommand;
+import top.pdev.you.domain.command.activity.GetActivityCommand;
 import top.pdev.you.domain.command.activity.RuleCommand;
 import top.pdev.you.domain.command.activity.UpdateActivityCommand;
 import top.pdev.you.domain.entity.Activity;
@@ -85,8 +87,19 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityInfoDTO> list() {
-        List<Activity> activities = activityRepository.list();
+    public List<ActivityInfoDTO> list(GetActivityCommand command) {
+        String search = command.getSearch();
+        LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
+        if (StrUtil.isNotBlank(search)) {
+            queryWrapper.like(Activity::getTitle, search)
+                    .or()
+                    .like(Activity::getSummary, search)
+                    .or()
+                    .like(Activity::getDetail, search)
+                    .or()
+                    .like(Activity::getLocation, search);
+        }
+        List<Activity> activities = activityRepository.list(queryWrapper);
         return activities.stream()
                 .sorted((a1, a2) -> {
                     LocalDateTime a1Time = a1.getTime();

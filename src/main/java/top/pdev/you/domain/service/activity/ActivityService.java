@@ -2,6 +2,7 @@ package top.pdev.you.domain.service.activity;
 
 import top.pdev.you.domain.command.IdCommand;
 import top.pdev.you.domain.command.activity.AddActivityCommand;
+import top.pdev.you.domain.command.activity.GetActivityCommand;
 import top.pdev.you.domain.command.activity.UpdateActivityCommand;
 import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public interface ActivityService {
     ActivityInfoDTO get(IdCommand command);
 
-    List<ActivityInfoDTO> list();
+    List<ActivityInfoDTO> list(GetActivityCommand command);
 
     void add(AddActivityCommand command);
 

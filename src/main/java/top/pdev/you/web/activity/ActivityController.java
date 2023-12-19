@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import top.pdev.you.domain.command.IdCommand;
 import top.pdev.you.domain.command.activity.AddActivityCommand;
+import top.pdev.you.domain.command.activity.GetActivityCommand;
 import top.pdev.you.domain.command.activity.UpdateActivityCommand;
 import top.pdev.you.domain.model.dto.ActivityInfoDTO;
 import top.pdev.you.domain.service.activity.ActivityService;
@@ -55,8 +56,8 @@ public class ActivityController {
     }
 
     @GetMapping("list")
-    public Result<?> list() {
-        List<ActivityInfoDTO> list = activityService.list();
+    public Result<?> list(@Validated GetActivityCommand command) {
+        List<ActivityInfoDTO> list = activityService.list(command);
         return Result.ok(list);
     }
 
