@@ -31,18 +31,6 @@ public interface AssociationManagerRepository extends IService<AssociationManage
     List<AssociationManager> getManagedList(Teacher teacher);
 
     /**
-     * 通过协会 ID和用户 ID 是否存在
-     *
-     * @param associationId 社团 ID
-     * @param userId        用户 ID
-     * @param permission    权限
-     * @return boolean
-     */
-    boolean existsByAssociationIdAndUserIdAndType(Long associationId,
-                                                  Long userId,
-                                                  Integer permission);
-
-    /**
      * 通过社团和用户 ID 删除
      *
      * @param associationId 协会 ID

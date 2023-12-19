@@ -16,6 +16,7 @@ import top.pdev.you.persistence.repository.AssociationManagerRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -56,10 +57,18 @@ public class AssociationManegeServiceImpl implements AssociationManegeService {
     @Override
     public boolean exists(Association association, RoleEntity role) {
         User user = userService.getUser(role);
-        return associationManagerRepository.existsByAssociationIdAndUserIdAndType(
-                association.getId(),
-                user.getId(),
-                user.getPermission());
+        List<AssociationManager> managers = associationManagerRepository.lambdaQuery()
+                .eq(AssociationManager::getAssociationId, association.getId())
+                .list();
+        return managers.stream()
+                .anyMatch(m -> {
+                    Integer type = m.getType();
+                    if (type == Permission.MANAGER.getValue()) {
+                        return true;
+                    }
+                    Long userId = m.getUserId();
+                    return Objects.equals(userId, user.getId());
+                });
     }
 
     @Override

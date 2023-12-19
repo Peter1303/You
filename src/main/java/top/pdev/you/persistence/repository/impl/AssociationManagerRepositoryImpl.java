@@ -45,17 +45,6 @@ public class AssociationManagerRepositoryImpl
     }
 
     @Override
-    public boolean existsByAssociationIdAndUserIdAndType(Long associationId,
-                                                         Long userId,
-                                                         Integer permission) {
-        LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(AssociationManager::getAssociationId, associationId)
-                .eq(AssociationManager::getUserId, userId)
-                .eq(AssociationManager::getType, permission);
-        return mapper.exists(queryWrapper);
-    }
-
-    @Override
     public boolean deleteByAssociationAndUserId(Long associationId, Long userId) {
         LambdaQueryWrapper<AssociationManager> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AssociationManager::getAssociationId, associationId)
