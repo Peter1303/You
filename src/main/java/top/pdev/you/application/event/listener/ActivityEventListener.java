@@ -7,6 +7,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import top.pdev.you.application.event.ActivityEvent;
+import top.pdev.you.common.constant.ActivityRule;
+import top.pdev.you.common.exception.InternalErrorException;
 import top.pdev.you.domain.command.ai.AddKnowledgeCommand;
 import top.pdev.you.domain.entity.Activity;
 import top.pdev.you.domain.entity.Association;
@@ -19,6 +21,7 @@ import top.pdev.you.persistence.repository.AssociationRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 活动事件监听器
@@ -54,10 +57,24 @@ public class ActivityEventListener {
         command.setPoint(activity.getTitle() + activity.getSummary());
         ActivityInfoDTO activityInfoDTO = activityInfoMapper.convert(activity, rules);
         TimeRangeDTO time = activityInfoDTO.getTime();
-        String content = StrUtil.format("开始：{}|结束：{}|地点：{}|内容：{}",
+        // 年级
+        Optional<Activity.Rule> gradeOne = rules.stream()
+                .filter(r -> r.getRule() == ActivityRule.GRADE)
+                .findFirst();
+        // 人数
+        Optional<Activity.Rule> totalOne = rules.stream()
+                .filter(r -> r.getRule() == ActivityRule.TOTAL)
+                .findFirst();
+        gradeOne.orElseThrow(() -> new InternalErrorException("找不到活动对象规则"));
+        totalOne.orElseThrow(() -> new InternalErrorException("找不到活动人数"));
+        Integer grade = gradeOne.map(r -> Integer.valueOf(r.getValue())).get();
+        Integer total = totalOne.map(r -> Integer.valueOf(r.getValue())).get();
+        String content = StrUtil.format("开始{}|结束{}|地点{}|年级{}|人数{}|内容：{}",
                 DateUtil.format(time.getStart(), "yyyy-MM-dd HH:mm"),
                 DateUtil.format(time.getEnd(), "yyyy-MM-dd HH:mm"),
                 activity.getLocation(),
+                grade,
+                total,
                 activity.getDetail());
         command.setContent(content);
         command.setKnowledgeBookId(aiConfig.getKnowledgeId());
